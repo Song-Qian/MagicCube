@@ -1,10 +1,10 @@
 {
   "name": "magic-cube",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
-    "test": "dev"
+    "dev": "tsc"
   },
   "keywords": [
     "vue",

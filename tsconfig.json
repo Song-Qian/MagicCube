@@ -1,0 +1,42 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "baseUrl": ".",
+    "sourceMap": true,
+    "lib": [
+      "esnext",
+      "dom",
+      "ES2015"
+    ],
+    "types": [],
+    "stripInternal": true,
+    "declaration": true,
+    "declarationDir": "./typings",
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "noEmitOnError": true,
+    "removeComments": true,
+    "allowJs": true,
+    "emitDecoratorMetadata": true,
+    "paths": {
+      "~/*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}
