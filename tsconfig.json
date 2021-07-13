@@ -20,7 +20,9 @@
       "dom",
       "ES2015"
     ],
-    "types": [],
+    "types": [
+      "node"
+    ],
     "stripInternal": true,
     "declaration": true,
     "declarationDir": "./typings",

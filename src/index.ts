@@ -5,8 +5,12 @@
  * Description  :   Magic Cube Project Start
  */
 
+import express from "express";
+import * as configure from "./conf";
+
 const Run = function() : void {
-    console.log("service running");
 }
 
-export const MagicCube = Run;
+export const MagicCube = {
+    Run
+};
