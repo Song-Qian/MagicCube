@@ -7,9 +7,12 @@
 
 import express from 'express'
 import conf from './conf'
-import tortoiseshell from './helmet'
+import helmet from './helmet'
+import cors from './cors'
+import compress from 'compression'
+import logger from './utils/logger'
 
-export default class Cube {
+export class Cube {
 
     constructor() {
         this.server = express();
@@ -22,7 +25,19 @@ export default class Cube {
     }
 
     public Run(): void {
-        tortoiseshell(this.configure.get("http.helmet"), this.server)
+        const me = this;
+        let local = String(me.configure.get("http.listener")) || "localhost";
+        let port = ~me.configure.get("http.port") || 8080;
+        helmet(me.configure.get("http.helmet"), me.server)
+        cors(me.configure.get("http.cors"), me.server)
+
+        me.server.use(compress())
+        me.server.use(express.json({ limit : '15mb' }))
+        me.server.use(express.urlencoded({ extended : true }))
+
+        me.server.listen(port, local, () => {
+            logger.info('magic cube application started on http://%s:%d', local, port)
+        })
     }
 
 }
