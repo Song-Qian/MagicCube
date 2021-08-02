@@ -6,7 +6,6 @@
  */
 
 import express from 'express'
-import conf from './conf'
 import helmet from './helmet'
 import cors from './cors'
 import compress from 'compression'
@@ -19,9 +18,10 @@ export class Cube {
     }
 
     private server !: express.Express;
+    private configure !: any;
 
-    public get configure() {
-        return conf();
+    public setConfig(config): void {
+        this.configure = config;
     }
 
     public Run(): void {

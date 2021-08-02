@@ -4,8 +4,7 @@
  * eMail        :   onlylove1172559463@vip.qq.com
  * Description  :   Magic Cube Project Start
  */
+import Config from './conf'
 import { Cube } from './cube'
 
-export const MagicCube = {
-    Cube
-};
+export default { Cube, Config }

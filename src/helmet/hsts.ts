@@ -5,7 +5,7 @@
  * Description  :   设置Strict-Transport-Security标头，它告诉浏览器更喜欢 HTTPS 而不是不安全的 HTTP
  */
 
- import helmet from 'helmet'
+ import * as helmet from 'helmet'
 
  export default function(hsts) : (req, res, next: (err?: Error) => void) => void {
     if (Boolean(hsts) && typeof hsts === 'boolean') {

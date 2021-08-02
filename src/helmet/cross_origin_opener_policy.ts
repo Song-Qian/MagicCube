@@ -5,7 +5,7 @@
  * Description  :   设置Cross-Origin-Opener-Policy标题
  */
 
- import helmet from 'helmet'
+ import * as helmet from 'helmet'
 
  export default function(coop) : (req, res, next: (err?: Error) => void) => void {
     if (Boolean(coop) && typeof coop === 'boolean') {

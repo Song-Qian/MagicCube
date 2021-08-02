@@ -5,7 +5,7 @@
  * Description  :   设置Expect-CT有助于缓解错误颁发的 SSL 证书的标头
  */
 
- import helmet from 'helmet'
+ import * as helmet from 'helmet'
 
  export default function(ec) : (req, res, next: (err?: Error) => void) => void {
     if (Boolean(ec) && typeof ec === 'boolean') {
