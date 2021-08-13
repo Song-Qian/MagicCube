@@ -11,5 +11,5 @@
     if (Boolean(coop) && typeof coop === 'boolean') {
         return helmet.crossOriginOpenerPolicy();
     }
-    return helmet.crossOriginOpenerPolicy({ policy : coop.policy || "unsafe-none" });
+    return helmet.crossOriginOpenerPolicy({ policy : coop.policy || "same-origin" });
  }

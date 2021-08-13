@@ -12,5 +12,5 @@
         return helmet.expectCt()
     }
 
-    return helmet.expectCt({ maxAge : ec.maxAge || 86400, enforce : ec.enforce || false, reportUri : ec.reportUri || "" });
+    return helmet.expectCt({ maxAge : Number(ec.maxAge) || 86400, enforce : ec.enforce || false, reportUri : ec.reportUri || "" });
  }

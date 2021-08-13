@@ -9,6 +9,5 @@ var path = require("path");
 module.exports = {
   path : path.resolve(__dirname, '../', 'lib'),
   publicPath: '/',
-  filename: '[name].js',
-  // chunkFilename: 'views/[name]/[name].[chunkhash:5].js',
+  filename: '[name].js'
 }

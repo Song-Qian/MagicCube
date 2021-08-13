@@ -11,5 +11,5 @@
     if (Boolean(frameguard) && typeof frameguard === 'boolean') {
         return helmet.frameguard()
     }
-    return helmet.frameguard({ action : frameguard.action || 'deny' });
+    return helmet.frameguard({ action : frameguard.action || 'SAMEORIGIN' });
  }

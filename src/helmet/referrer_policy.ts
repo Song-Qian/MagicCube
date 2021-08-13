@@ -12,5 +12,5 @@
         return helmet.referrerPolicy();
     }
 
-    return helmet.referrerPolicy({ policy: rp.policy || "strict-origin-when-cross-origin" });
+    return helmet.referrerPolicy({ policy: rp.policy || "no-referrer" });
  }

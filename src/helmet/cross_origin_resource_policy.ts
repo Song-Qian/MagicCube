@@ -11,5 +11,5 @@
     if (Boolean(corp) && typeof corp === 'boolean') {
         return helmet.crossOriginResourcePolicy()
     }
-    return helmet.crossOriginResourcePolicy({ policy : corp.policy || "same-site" });
+    return helmet.crossOriginResourcePolicy({ policy : corp.policy || "same-origin" });
  }

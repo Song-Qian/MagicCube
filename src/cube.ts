@@ -27,7 +27,7 @@ export class Cube {
     public Run(): void {
         const me = this;
         let local = String(me.configure.get("http.listener")) || "localhost";
-        let port = ~me.configure.get("http.port") || 8080;
+        let port = ~~me.configure.get("http.port") || 8080;
         helmet(me.configure.get("http.helmet"), me.server)
         cors(me.configure.get("http.cors"), me.server)
 

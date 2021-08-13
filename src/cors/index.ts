@@ -16,6 +16,6 @@
  export default function(corsOptions : any, server : express.Express) {
      if (Boolean(corsOptions)) {
         const options = typeof corsOptions === 'boolean' ? undefined : corsOptions;
-        server.use(cors(corsOptions))
+        server.use(cors(options))
      }
  }

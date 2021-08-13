@@ -35,7 +35,7 @@ Description :  基于NodeJS服务端即时通信的SSR技术方案，并且支�
         
     var definePlugin = new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: process.env.NODE_ENV === 'development' ?  '""' : '"production"'
+          NODE_ENV: 'development'
         }
     });
 
@@ -43,6 +43,11 @@ Description :  基于NodeJS服务端即时通信的SSR技术方案，并且支�
 
     if(process.env.NODE_ENV === 'production') {
 
+        var definePlugin = new webpack.DefinePlugin({
+            'process.env': {
+              NODE_ENV: 'production'
+            }
+        });
         // var uglifyJsPlugin = new webpack.optimize.UglifyJsPlugin({
         //     sourceMap: false,
         //     test : /\.(vue|js|ts)$/,

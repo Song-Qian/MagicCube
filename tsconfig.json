@@ -40,7 +40,8 @@
   },
   "include": [
     "src/**/*.ts",
-    "test/**/*.ts"
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
   ],
   "exclude": [
     "./lib"

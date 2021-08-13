@@ -14,7 +14,7 @@ module.exports = merge(webpackConf, {
     'index': path.resolve(__dirname, '../', 'tests/index')
   },
   output: {
-    libraryTarget : 'commonjs2',
+    libraryTarget : 'commonjs2'
   },
   //运行目标平台
   target : 'node',

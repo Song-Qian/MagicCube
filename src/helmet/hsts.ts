@@ -12,5 +12,5 @@
         return helmet.hsts();
     }
 
-    return helmet.hsts({ maxAge : hsts.maxAge || 15552000, includeSubDomains: hsts.includeSubDomains || false, preload: hsts.preload || false });
+    return helmet.hsts({ maxAge : Number(hsts.maxAge) || 15552000, includeSubDomains: hsts.includeSubDomains || false, preload: hsts.preload || false });
  }
