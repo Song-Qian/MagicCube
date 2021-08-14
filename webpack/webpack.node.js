@@ -11,7 +11,7 @@ const webpackConf = require('./webpack.config')
 
 module.exports = merge(webpackConf, {
   entry: {
-    'index': path.resolve(__dirname, '../', 'tests/index')
+    'index': path.resolve(__dirname, '../', 'src/index')
   },
   output: {
     libraryTarget : 'commonjs2'

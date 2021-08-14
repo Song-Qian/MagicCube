@@ -7,4 +7,4 @@
 import Config from './conf'
 import { Cube } from './cube'
 
-export default { Cube, Config }
+export default { Config, Cube }

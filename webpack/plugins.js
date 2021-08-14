@@ -6,15 +6,8 @@
  */
 const webpack = require('webpack')
 const path = require('path')
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = function() {
-
-    // var commonsChunkPlugin = new webpack.optimize.CommonsChunkPlugin({
-    //     name : ['common', 'app', 'load'],
-    //     minChunks : 2
-    // });
-    // var vueLoader = new vueLoaderPlugin();
 
     var bannerPlugin = new webpack.BannerPlugin({
         banner : `Developer :   SongQian
@@ -26,16 +19,10 @@ Description :  基于NodeJS服务端即时通信的SSR技术方案，并且支�
         test : /(\.tsx|js)/,
         exclude : /node_modules/
     });
-
-    // const copyPlugin = new CopyWebpackPlugin({ 
-    //     patterns : [
-    //         { from :  path.join(__dirname, '../src/assets/images'), to : 'assets/images' }
-    //     ]
-    // })
         
     var definePlugin = new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: 'development'
+          NODE_ENV: '"development"'
         }
     });
 
@@ -43,9 +30,9 @@ Description :  基于NodeJS服务端即时通信的SSR技术方案，并且支�
 
     if(process.env.NODE_ENV === 'production') {
 
-        var definePlugin = new webpack.DefinePlugin({
+        definePlugin = new webpack.DefinePlugin({
             'process.env': {
-              NODE_ENV: 'production'
+              NODE_ENV: '"production"'
             }
         });
         // var uglifyJsPlugin = new webpack.optimize.UglifyJsPlugin({
@@ -69,9 +56,6 @@ Description :  基于NodeJS服务端即时通信的SSR技术方案，并且支�
     }
 
     return [
-        // commonsChunkPlugin,
-        // vueLoader,
-        // copyPlugin,
         bannerPlugin,
         ...extensionPlugin
     ]

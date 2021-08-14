@@ -1,0 +1,15 @@
+{
+    "presets": ["@babel/preset-env"],
+    "plugins": [
+        // "@vue/babel-plugin-jsx",
+        "@babel/plugin-proposal-class-properties",
+        ["@babel/plugin-proposal-decorators", { "legacy" : true }],
+        [
+            "@babel/plugin-transform-typescript",
+            {
+              "isTSX": true,
+              "allowNamespace": true
+            }
+        ]
+    ]
+}

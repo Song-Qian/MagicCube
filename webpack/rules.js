@@ -7,24 +7,17 @@
 
 let path = require("path");
 
-module.exports = function(basicExtract, skinExtract) {
+module.exports = function() {
 
-    const JS_Loader = {
-        test: /\.(js|tsx)$/,
+    const TS_Loader = {
+        test: /\.(js|tsx|ts)$/,
         exclude: /node_modules/,
         use: {
-            loader: 'babel-loader',
-            options: {
-                presets:[['@babel/preset-env', { targets : { node : '12.16.2' } }]]
-            }
+          loader: 'babel-loader',
+          options: {
+            presets:['@babel/preset-env']
+          }
         }
-    }
-
-    const TS_Loader = { 
-      test: /\.ts$/,
-      loader: 'ts-loader',
-      exclude: /node_modules/
-      // options: { appendTsSuffixTo: [/\.vue$/] }
     }
 
     // const URL_Loaer  = {
@@ -63,7 +56,6 @@ module.exports = function(basicExtract, skinExtract) {
     // }
 
     return [
-        JS_Loader,
         TS_Loader
         // URL_Loaer,
         // cssLoader,
