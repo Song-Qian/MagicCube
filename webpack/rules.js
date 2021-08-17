@@ -9,15 +9,21 @@ let path = require("path");
 
 module.exports = function() {
 
-    const TS_Loader = {
-        test: /\.(js|tsx|ts)$/,
+    const JS_Loader = {
+        test: /\.(js)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
-            presets:['@babel/preset-env']
+            presets:[['@babel/preset-env', { targets : { node: 'v14.17.2' } }]]
           }
         }
+    }
+
+    const TS_Loader = {
+      test : /\.ts(x?)$/,
+      loader: 'ts-loader',
+      exclude: /node_modules/
     }
 
     // const URL_Loaer  = {
@@ -56,11 +62,12 @@ module.exports = function() {
     // }
 
     return [
-        TS_Loader
-        // URL_Loaer,
-        // cssLoader,
-        // sassLoader,
-        // jsonLoader,
-        // fileLoader
+      JS_Loader,
+      TS_Loader
+      // URL_Loaer,
+      // cssLoader,
+      // sassLoader,
+      // jsonLoader,
+      // fileLoader
     ]
 }

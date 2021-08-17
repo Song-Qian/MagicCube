@@ -36,7 +36,7 @@
         }),
         new TerserPlugin({
             test: /\.(ts|tsx)$/i,
-            exclude : /[\\/]node_modules[\\/]/, //要排除的文件。
+            exclude : [/[\\/]node_modules[\\/]/, /(\.d)\.(tsx?)/], //要排除的文件。
             // cache : false,  //启用文件缓存
             parallel : true,  //使用多进程并行运行可提高构建速度
             extractComments : false, //启用/禁用提取注释。提取all或some（使用/^\**!|@preserve|@license|@cc_on/iRegExp）注释。

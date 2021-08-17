@@ -30,7 +30,7 @@
     "outDir": "./lib",
     "noEmitOnError": true,
     "removeComments": true,
-    "allowJs": true,
+    "allowJs": false,
     "emitDecoratorMetadata": true,
     "paths": {
       "~/*": [
@@ -44,6 +44,7 @@
     "src/**/*.d.ts",
   ],
   "exclude": [
-    "./lib"
+    "./lib",
+    "./typings"
   ]
 }
