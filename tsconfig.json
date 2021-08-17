@@ -42,9 +42,9 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.d.ts",
+    "typings"
   ],
   "exclude": [
-    "./lib",
-    "./typings"
+    "./lib"
   ]
 }

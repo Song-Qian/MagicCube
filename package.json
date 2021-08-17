@@ -1,6 +1,6 @@
 {
   "name": "@skysong/magic-cube",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "main": "./lib/index.js",
   "scripts": {
     "dev:node": "cross-env NODE_ENV=development nodemon --watch lib --inspect-brk=3030 ./lib",
@@ -15,6 +15,7 @@
   ],
   "author": "SongQian",
   "license": "MIT",
+  "types": "./typings/src/index.d.ts",
   "devDependencies": {
     "@babel/core": "^7.14.8",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
