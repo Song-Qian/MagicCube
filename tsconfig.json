@@ -14,7 +14,7 @@
     "noImplicitAny": false,
     "noImplicitThis": false,
     "baseUrl": ".",
-    "sourceMap": true,
+    "sourceMap": false,
     "lib": [
       "esnext",
       "dom",
@@ -41,10 +41,10 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.d.ts",
-    "typings"
+    "src/**/*.d.ts"
   ],
   "exclude": [
-    "./lib"
+    "./lib",
+    "typings"
   ]
 }

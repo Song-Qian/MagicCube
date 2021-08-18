@@ -16,25 +16,14 @@ eMail   :   onlylove1172559463@vip.qq.com
 Description :  基于NodeJS服务端即时通信的SSR技术方案，并且支持ORM业务框架解决方案`,
         raw : false,
         entryOnly : false,
-        test : /(\.tsx|js)/,
+        test : /\.(js|tsx?)$/,
         exclude : /node_modules/
-    });
-        
-    var definePlugin = new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: '"development"'
-        }
     });
 
     var extensionPlugin = [];
 
     if(process.env.NODE_ENV === 'production') {
 
-        definePlugin = new webpack.DefinePlugin({
-            'process.env': {
-              NODE_ENV: '"production"'
-            }
-        });
         // var uglifyJsPlugin = new webpack.optimize.UglifyJsPlugin({
         //     sourceMap: false,
         //     test : /\.(vue|js|ts)$/,
@@ -52,7 +41,7 @@ Description :  基于NodeJS服务端即时通信的SSR技术方案，并且支�
         //     }
         // });
 
-        extensionPlugin.push(definePlugin);
+        // extensionPlugin.push(uglifyJsPlugin);
     }
 
     return [
