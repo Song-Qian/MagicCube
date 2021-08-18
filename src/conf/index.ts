@@ -27,7 +27,7 @@ const readSysConfig = function(target: { [key: string]: any }, filepath : string
 const initialize = function() : any {
     let rootDir = process.cwd();
     let setting = {};
-    let usePath = ifExists(path.join(rootDir, "conf.ini")) ? path.join(rootDir, "conf.ini") : path.join(__dirname, "../default.ini");
+    let usePath = ifExists(path.join(rootDir, "default.ini")) ? path.join(rootDir, "default.ini") : path.join(rootDir, "./node_modules/@skysong/magic-cube", "default.ini");
     return readSysConfig(setting, usePath);
 }
 
