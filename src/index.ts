@@ -6,5 +6,6 @@
  */
 import Config from './conf'
 import { Cube } from './cube'
+import { HttpService } from './services/http_service'
 
-export default { Config, Cube }
+export default { Config, Cube, HttpService }

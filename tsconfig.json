@@ -21,7 +21,8 @@
       "ES2015"
     ],
     "types": [
-      "node"
+      "node",
+      "reflect-metadata"
     ],
     "stripInternal": true,
     "declaration": true,
@@ -35,6 +36,9 @@
     "paths": {
       "~/*": [
         "src/*"
+      ],
+      "tslib": [
+        "node_modules/tslib/tslib.d.ts"
       ]
     }
   },

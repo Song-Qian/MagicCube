@@ -8,11 +8,7 @@
 import * as fs from 'fs'
 import ini from 'ini'
 import path from 'path'
-
-//判断配置文件是否存在
-const ifExists = function(filename : string) : boolean {
-    return fs.existsSync(filename);
-}
+import { ifExists } from '../utils/common'
 
 //加载配置文件
 const readSysConfig = function(target: { [key: string]: any }, filepath : string) : any {

@@ -11,7 +11,7 @@ module.exports = function() {
 
     const JS_Loader = {
         test: /\.(js)$/,
-        // exclude: /node_modules/,
+        exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -22,8 +22,8 @@ module.exports = function() {
 
     const TS_Loader = {
       test : /\.ts(x?)$/,
-      loader: 'ts-loader'
-      // exclude: /node_modules/
+      loader: 'ts-loader',
+      exclude: /node_modules/
     }
 
     // const URL_Loaer  = {
