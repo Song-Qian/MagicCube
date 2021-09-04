@@ -5,7 +5,7 @@
  * Description  :   Magic Cube Main
  */
 
-import express from 'express'
+import express from '@feathersjs/express'
 import Feathers from '@feathersjs/feathers'
 import helmet from './helmet'
 import cors from './cors'
@@ -18,12 +18,10 @@ import HttpMultiplexer from './services/http-multiplexer'
 export class Cube {
 
     constructor() {
-        this.server = express();
-        this.feathers = Feathers();
+        this.server = express(Feathers());
     }
 
-    private server !: express.Express;
-    private feathers !: Feathers.Application;
+    private server !: express.Application;
     private configure !: any;
     private cubeId : string = UUID();
     private name !: string;
@@ -51,7 +49,7 @@ export class Cube {
 
     public useHttpMultiplexer(multiplexer : typeof HttpMultiplexer) {
         const me = this;
-        multiplexer.Setup(me.server, me.feathers);
+        multiplexer.Setup(me.server);
     }
 
 }

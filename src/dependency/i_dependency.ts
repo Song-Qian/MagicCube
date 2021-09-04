@@ -19,7 +19,7 @@ export default abstract class IDependencyResolver {
 
     public abstract AddSynchronousNinjectModels (..._modules: ServiceSynchResolverModule[]): void;
 
-    public abstract AddAsynchronousModules (..._modules: ServiceAsyncResolverModule[]): void;
+    public abstract AddAsynchronousNinjectModules (..._modules: ServiceAsyncResolverModule[]): void;
 
     public abstract clearAllNinjectModules (): void;
 

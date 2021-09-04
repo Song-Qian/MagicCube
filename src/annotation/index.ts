@@ -8,14 +8,14 @@ import 'reflect-metadata'
 import { Hook } from '@feathersjs/feathers'
 import { HttpService } from '../services/http_service'
 
-const defineClassMetadata = (key: Symbol, value: any) => {
-    return (target: ClassDecorator) => {
+const defineClassMetadata = (key: Symbol, value: any) : ClassDecorator => {
+    return (target: Function) => {
         Reflect.defineMetadata(key, value, target);
     }
 }
 
 const definePropertyMetadata = (key: Symbol, value: any) => {
-    return (target: ClassDecorator, name: string) => {
+    return (target: any, name: string) => {
         Reflect.defineMetadata(key, value, target, name);
     }
 }
@@ -25,8 +25,11 @@ export const ApiController = (value: any) => {
     return defineClassMetadata(Symbol.for('design:request_path'), value);
 }
 
-export const beforeHook = (fn : Hook) => {
-    return <T extends ClassDecorator | MethodDecorator>(target: T, name: string, descriptors: TypedPropertyDescriptor<T>) => {
+export const beforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+    return (...args) => {
+        const target : any = args[0];
+        const name : string = args[1];
+        const descriptors : any = args[2];
         if (target.prototype && target.prototype.constructor instanceof HttpService) {
             const beforeHooks = target.prototype.beforeHooks || { all: [] };
             beforeHooks.all = [...beforeHooks.all, fn]; 
@@ -106,8 +109,11 @@ export const beforeHook = (fn : Hook) => {
     }
 }
 
-export const afterHook = (fn : Hook) => {
-    return <T extends ClassDecorator | MethodDecorator>(target: T, name: string, descriptors: TypedPropertyDescriptor<T>) => {
+export const afterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+    return (...args) => {
+        const target : any = args[0];
+        const name : string = args[1];
+        const descriptors : any = args[2];
         if (target.prototype && target.prototype.constructor instanceof HttpService) {
             const afterHooks = target.prototype.afterHooks || { all: [] };
             afterHooks.all = [...afterHooks.all, fn]; 
@@ -187,8 +193,11 @@ export const afterHook = (fn : Hook) => {
     }
 }
 
-export const errorHook = (fn : Hook) => {
-    return <T extends ClassDecorator | MethodDecorator>(target: T, name: string, descriptors: TypedPropertyDescriptor<T>) => {
+export const errorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+    return (...args) => {
+        const target : any = args[0];
+        const name : string = args[1];
+        const descriptors : any = args[2];
         if (target.prototype && target.prototype.constructor instanceof HttpService) {
             const errorHooks = target.prototype.errorHooks || { all: [] };
             errorHooks.all = [...errorHooks.all, fn]; 

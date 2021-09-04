@@ -10,7 +10,6 @@ import ServiceAsyncResolverModule from './i_service_async_resolver_module'
 import ServiceSynchResolverModule from './i_service_synch_resolver_module'
 
 import { EventEmitter } from 'events'
-import { HttpService } from '~/services/http_service'
 
 export default class DependencyResolver extends IDependencyResolver {
 
@@ -27,10 +26,14 @@ export default class DependencyResolver extends IDependencyResolver {
         this.emitter.emit("onLoadedModules", ..._modules);
     }
 
-    public AddAsynchronousModules (..._modules: ServiceAsyncResolverModule[]): void {
+    public AddAsynchronousNinjectModules (..._modules: ServiceAsyncResolverModule[]): void {
         this.Ikernel.loadAsync(..._modules).then(() => {
             this.emitter.emit("onLoadedModules", ..._modules);
         })
+    }
+
+    public dispatchNinjectModules(isAsync : boolean, ..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]) : void {
+        isAsync ? this.AddAsynchronousNinjectModules(...(<ServiceAsyncResolverModule[]>_modules)) : this.AddSynchronousNinjectModels(...(<ServiceSynchResolverModule[]>_modules));
     }
 
     public clearAllNinjectModules (): void {

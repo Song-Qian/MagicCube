@@ -6,6 +6,11 @@
  */
 import Config from './conf'
 import { Cube } from './cube'
-import { HttpService } from './services/http_service'
+import HttpMultiplexer from './services/http-multiplexer'
 
-export default { Config, Cube, HttpService }
+export { ApiController, beforeHook, afterHook, errorHook } from './annotation'
+export { HttpService } from './services/http_service'
+export { default as IServiceSynchResolverModule } from './dependency/i_service_synch_resolver_module'
+export { default as IServiceAsyncResolverModule } from './dependency/i_service_async_resolver_module'
+
+export default { Config, Cube, HttpMultiplexer }

@@ -1,6 +1,6 @@
 {
   "name": "@skysong/magic-cube",
-  "version": "0.0.10",
+  "version": "0.0.21",
   "main": "./lib/index.js",
   "scripts": {
     "dev:node": "cross-env NODE_ENV=development nodemon --watch lib --inspect-brk=3030 ./lib",
@@ -41,6 +41,7 @@
     "lib": "lib"
   },
   "dependencies": {
+    "@feathersjs/express": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
     "@types/express": "^4.17.13",
     "compression": "^1.7.4",

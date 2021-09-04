@@ -10,15 +10,51 @@ import { injectable } from 'inversify';
 @injectable()
 export abstract class HttpService<T extends { [key : string] : any }> implements ServiceMethods<T> {
 
-  protected abstract get afterHooks() : HookMap<unknown>;
-  protected abstract get beforeHooks() : HookMap<unknown>;
-  protected abstract get errorHooks() : HookMap<unknown>;
+  protected get afterHooks() : HookMap<unknown> {
+    return {
+        all: [],
+        find: [],
+        get: [],
+        create: [],
+        update: [],
+        patch: [],
+        remove: []
+    }
+  }
 
-  protected _raw : any;
+  protected get beforeHooks() : HookMap<unknown> {
+    return {
+        all: [],
+        find: [],
+        get: [],
+        create: [],
+        update: [],
+        patch: [],
+        remove: []
+    }
+  }
 
-  public abstract get raw();
+  protected get errorHooks() : HookMap<unknown> {
+    return {
+        all: [],
+        find: [],
+        get: [],
+        create: [],
+        update: [],
+        patch: [],
+        remove: []
+    }
+  }
 
-  public abstract set raw(val : any);
+  private _raw : any;
+
+  public get raw() {
+    return this._raw;
+  }
+
+  public set raw(val : any) {
+    this._raw = val;
+  }
 
   public abstract find(params?: Params) : Promise<T | T[] | Paginated<T>>;
 
