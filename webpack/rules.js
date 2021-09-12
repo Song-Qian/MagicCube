@@ -5,7 +5,7 @@
  * Description  :   生产编译处理配置
  */
 
-let path = require("path");
+ const tsTransformPaths = require('@zerollup/ts-transform-paths');
 
 module.exports = function() {
 
@@ -23,7 +23,16 @@ module.exports = function() {
     const TS_Loader = {
       test : /\.ts(x?)$/,
       loader: 'ts-loader',
-      exclude: /node_modules/
+      exclude: /node_modules/,
+      options: {
+        getCustomTransformers: (program) => {
+          const transformer = tsTransformPaths(program);
+          return {
+            before: [transformer.before],
+            afterDeclarations: [transformer.afterDeclarations]
+          };
+        }
+      }
     }
 
     // const URL_Loaer  = {

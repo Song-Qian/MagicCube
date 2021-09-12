@@ -8,7 +8,7 @@
 import * as fs from 'fs'
 import ini from 'ini'
 import path from 'path'
-import { ifExists } from '../utils/common'
+import { ifExists } from '~/utils/common'
 
 //加载配置文件
 const readSysConfig = function(target: { [key: string]: any }, filepath : string) : any {

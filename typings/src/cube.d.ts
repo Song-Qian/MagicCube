@@ -1,4 +1,4 @@
-import HttpMultiplexer from './services/http-multiplexer';
+import HttpMultiplexer from "./services/http-multiplexer";
 export declare class Cube {
     constructor();
     private server;

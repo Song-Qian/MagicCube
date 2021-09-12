@@ -7,12 +7,12 @@
 
 import express from '@feathersjs/express'
 import Feathers from '@feathersjs/feathers'
-import helmet from './helmet'
-import cors from './cors'
+import helmet from '~/helmet'
+import cors from '~/cors'
 import compress from 'compression'
-import logger from './utils/logger'
-import { UUID } from './utils/common'
-import HttpMultiplexer from './services/http-multiplexer'
+import logger from '~/utils/logger'
+import { UUID } from '~/utils/common'
+import HttpMultiplexer from '~/services/http-multiplexer'
 
 
 export class Cube {

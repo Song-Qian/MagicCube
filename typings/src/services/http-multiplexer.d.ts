@@ -1,6 +1,6 @@
 import express from '@feathersjs/express';
-import IServiceAsyncResolverModule from '~/dependency/i_service_async_resolver_module';
-import IServiceSynchResolverModule from '~/dependency/i_service_synch_resolver_module';
+import IServiceAsyncResolverModule from "../dependency/i_service_async_resolver_module";
+import IServiceSynchResolverModule from "../dependency/i_service_synch_resolver_module";
 import { HttpService } from './http_service';
 export declare type Multiplexer = {
     DependencyResolver(..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]): void;

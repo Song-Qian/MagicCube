@@ -8,7 +8,6 @@
 import path from 'path'
 import { Router } from 'express'
 import express from '@feathersjs/express'
-import Feathers from '@feathersjs/feathers'
 import IDependencyResolver from '~/dependency/i_dependency'
 import DependencyResolver from '~/dependency/dependency_resolver'
 import IServiceAsyncResolverModule from '~/dependency/i_service_async_resolver_module'
@@ -44,7 +43,7 @@ export default {
                 }
                 me._service_mapping.set(fullPath, it);
 
-                me._server.use(fullPath, it)
+                me._server.use(fullPath, it);
                 let service = me._server.service(fullPath);
                 let afterHooks = [HttpRestFormatHook, ...(<any>it).afterHooks];
                 let beforeHooks = [...(<any>it).beforeHooks];

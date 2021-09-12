@@ -1,6 +1,6 @@
 {
   "name": "@skysong/magic-cube",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "main": "./lib/index.js",
   "scripts": {
     "dev:node": "cross-env NODE_ENV=development nodemon --watch lib --inspect-brk=3030 ./lib",
@@ -23,6 +23,7 @@
     "@babel/plugin-transform-typescript": "^7.15.0",
     "@babel/preset-env": "^7.14.8",
     "@types/node": "^16.3.0",
+    "@zerollup/ts-transform-paths": "^1.7.18",
     "babel-loader": "^8.2.2",
     "babel-preset-env": "^1.7.0",
     "cross-env": "^7.0.3",

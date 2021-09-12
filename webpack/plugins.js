@@ -5,7 +5,6 @@
  * Description  :   生产依赖插件配置
  */
 const webpack = require('webpack')
-const path = require('path')
 
 module.exports = function() {
 

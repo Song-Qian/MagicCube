@@ -6,7 +6,7 @@
  */
 
  import { Hook, HookContext } from '@feathersjs/feathers'
- import RestfulFormat from '../utils/sys_rest_format'
+ import RestfulFormat from '~/utils/sys_rest_format'
  
   export default () : Hook => {
       return (context : HookContext) => {
