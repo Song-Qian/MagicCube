@@ -6,7 +6,6 @@
  */
 
 import path from 'path'
-import { Router } from 'express'
 import express from '@feathersjs/express'
 import IDependencyResolver from '~/dependency/i_dependency'
 import DependencyResolver from '~/dependency/dependency_resolver'
@@ -20,7 +19,7 @@ import HttpRestFormatHook from './rest_format_hook'
 
 
 export type Multiplexer = {
-    DependencyResolver(..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]) : void,
+    DependencyResolvers(..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]) : void,
     AppendDependencyResolver(..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]) : void
 }
 
@@ -54,7 +53,7 @@ export default {
 
         return {
             //<T extends { [key:string] : interfaces.ServiceIdentifier<unknown> }>
-            DependencyResolver(..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]) {
+            DependencyResolvers<M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules: M) {
                 dependencyContainer = dependency ? new AsynchronousResolverNinject() : new SynchronousResolverNinject();
                 dependencyContainer.on("onLoadedModules", resolveLoadedModule);
                 (<DependencyResolver>dependencyContainer).dispatchNinjectModules(dependency, ..._modules);
@@ -74,7 +73,7 @@ export default {
     Setup: function(server : express.Application) {
         const me = this;
         me._server = server;
-        let route = Router({ caseSensitive: false, mergeParams: false, strict: true });
-        me._server.use(route);
+        // let route = me._server.Route({ caseSensitive: false, mergeParams: false, strict: true });
+        // me._server.use(route);
     }
 }
