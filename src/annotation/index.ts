@@ -20,9 +20,8 @@ const definePropertyMetadata = (key: Symbol, value: any) => {
     }
 }
 
-
 export const ApiController = (value: any) => {
-    return defineClassMetadata(Symbol.for('design:request_path'), value);
+    return defineClassMetadata(Symbol.for('magic:api'), value);
 }
 
 export const beforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {

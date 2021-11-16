@@ -6,7 +6,7 @@
  */
 import Config from './conf'
 import { Cube } from './cube'
-import HttpMultiplexer from './services/http-multiplexer'
+import HttpMultiplexer from './services/rest_multiplexer'
 
 export { ApiController, beforeHook, afterHook, errorHook } from './annotation'
 export { HttpService } from './services/http_service'

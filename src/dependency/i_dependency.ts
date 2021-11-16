@@ -25,17 +25,13 @@ export default abstract class IDependencyResolver {
 
     public abstract clearNinjectModules (..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]): void;
 
-    public abstract GetService<HttpService> (serviceIdentifier: string | number | symbol) : HttpService;
+    public abstract GetService<T> (serviceIdentifier: interfaces.ServiceIdentifier<any>, named: string | number | symbol) : T;
 
-    public abstract GetServices<HttpService> (serviceIdentifiers : Array<string | number | symbol>): HttpService[];
+    public abstract GetServices<T> (serviceIdentifier: interfaces.ServiceIdentifier<any>, names : Array<string | number | symbol>): T[];
 
     public abstract GetAnyModel<T> (identifier : interfaces.ServiceIdentifier<any>) : T;
 
     public abstract GetAnyModels<T> (identifiers : interfaces.ServiceIdentifier<any>) : T[];
-
-    // public abstract GetService<T> (serviceIdentifier: interfaces.ServiceIdentifier<any>): T;
-
-    // public abstract GetServices<T> (identifiers : interfaces.ServiceIdentifier<any>[]): T[];
 
     public abstract useMiddleware (...middleware : interfaces.Middleware[]) : void;
 

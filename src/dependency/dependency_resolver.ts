@@ -5,6 +5,7 @@
  * Description  :   Magic Cube 依赖注入容器实现
  */
 import { Container, interfaces } from 'inversify'
+import { inTypes } from '~/common'
 import IDependencyResolver from './i_dependency'
 import ServiceAsyncResolverModule from './i_service_async_resolver_module'
 import ServiceSynchResolverModule from './i_service_synch_resolver_module'
@@ -32,8 +33,10 @@ export default class DependencyResolver extends IDependencyResolver {
         })
     }
 
-    public dispatchNinjectModules(isAsync : boolean, ..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]) : void {
-        isAsync ? this.AddAsynchronousNinjectModules(...(<ServiceAsyncResolverModule[]>_modules)) : this.AddSynchronousNinjectModels(...(<ServiceSynchResolverModule[]>_modules));
+    public dispatchNinjectModules(..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]) : void {
+        inTypes<Array<ServiceSynchResolverModule | ServiceAsyncResolverModule>, ServiceSynchResolverModule>(_modules) ? 
+            this.AddSynchronousNinjectModels(...(<ServiceSynchResolverModule[]>_modules)) : 
+                this.AddAsynchronousNinjectModules(...(<ServiceAsyncResolverModule[]>_modules));
     }
 
     public clearAllNinjectModules (): void {
@@ -44,12 +47,12 @@ export default class DependencyResolver extends IDependencyResolver {
         this.Ikernel.unload(..._modules)
     }
     
-    public GetService<HttpService>(named: string | number | symbol): HttpService {
-        return this.Ikernel.getNamed<HttpService>(Symbol.for('design:service'), named)
+    public GetService<T>(serviceIdentifier: interfaces.ServiceIdentifier<any>, named: string | number | symbol): T {
+        return this.Ikernel.getNamed<T>(serviceIdentifier, named);
     }
 
-    public GetServices<HttpService>(names: Array<string | number | symbol>): HttpService[] {
-        return names.map(it => this.Ikernel.getNamed<HttpService>(Symbol.for('design:service'), it));
+    public GetServices<T>(serviceIdentifier: interfaces.ServiceIdentifier<any>, names : Array<string | number | symbol>): T[] {
+        return names.map(it => this.Ikernel.getNamed<T>(serviceIdentifier, it));
     }
 
     public GetAnyModel<T>(identifier: interfaces.ServiceIdentifier<any>): T {

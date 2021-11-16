@@ -10,11 +10,11 @@ export default class DependencyResolver extends IDependencyResolver {
     protected emitter: EventEmitter;
     AddSynchronousNinjectModels(..._modules: ServiceSynchResolverModule[]): void;
     AddAsynchronousNinjectModules(..._modules: ServiceAsyncResolverModule[]): void;
-    dispatchNinjectModules(isAsync: boolean, ..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]): void;
+    dispatchNinjectModules(..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]): void;
     clearAllNinjectModules(): void;
     clearNinjectModules(..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]): void;
-    GetService<HttpService>(named: string | number | symbol): HttpService;
-    GetServices<HttpService>(names: Array<string | number | symbol>): HttpService[];
+    GetService<T>(serviceIdentifier: interfaces.ServiceIdentifier<any>, named: string | number | symbol): T;
+    GetServices<T>(serviceIdentifier: interfaces.ServiceIdentifier<any>, names: Array<string | number | symbol>): T[];
     GetAnyModel<T>(identifier: interfaces.ServiceIdentifier<any>): T;
     GetAnyModels<T>(identifiers: interfaces.ServiceIdentifier<any>): T[];
     useMiddleware(...middleware: interfaces.Middleware[]): void;

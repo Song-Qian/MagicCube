@@ -10,8 +10,8 @@ export default abstract class IDependencyResolver {
     abstract AddAsynchronousNinjectModules(..._modules: ServiceAsyncResolverModule[]): void;
     abstract clearAllNinjectModules(): void;
     abstract clearNinjectModules(..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]): void;
-    abstract GetService<HttpService>(serviceIdentifier: string | number | symbol): HttpService;
-    abstract GetServices<HttpService>(serviceIdentifiers: Array<string | number | symbol>): HttpService[];
+    abstract GetService<T>(serviceIdentifier: interfaces.ServiceIdentifier<any>, named: string | number | symbol): T;
+    abstract GetServices<T>(serviceIdentifier: interfaces.ServiceIdentifier<any>, names: Array<string | number | symbol>): T[];
     abstract GetAnyModel<T>(identifier: interfaces.ServiceIdentifier<any>): T;
     abstract GetAnyModels<T>(identifiers: interfaces.ServiceIdentifier<any>): T[];
     abstract useMiddleware(...middleware: interfaces.Middleware[]): void;

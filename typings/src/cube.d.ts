@@ -1,4 +1,6 @@
-import HttpMultiplexer from "./services/http-multiplexer";
+import IMultiplexer from "./services/i_multiplexer";
+import IServiceSynchResolverModule from './dependency/i_service_synch_resolver_module';
+import IServiceAsyncResolverModule from './dependency/i_service_async_resolver_module';
 export declare class Cube {
     constructor({ config }: {
         config: any;
@@ -7,6 +9,9 @@ export declare class Cube {
     private configure;
     private cubeId;
     private name;
+    private multiplexer;
+    private subServe;
     Run(): void;
-    useHttpMultiplexer(multiplexer: typeof HttpMultiplexer): void;
+    useMultiplexer(multiplexerName: string, multiplexer: IMultiplexer): void;
+    dependencyResolvers<M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules: M): void;
 }

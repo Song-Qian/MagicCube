@@ -13,15 +13,32 @@ import compress from 'compression'
 import logger from '~/utils/logger'
 import configure from '~/conf'
 import { UUID } from '~/utils/common'
-import HttpMultiplexer from '~/services/http-multiplexer'
+import IMultiplexer from '~/services/i_multiplexer'
+import MultiplexerFactory from './services/multiplexer_factroy'
+import IServiceSynchResolverModule from './dependency/i_service_synch_resolver_module'
+import IServiceAsyncResolverModule from './dependency/i_service_async_resolver_module'
 
 
 export class Cube {
 
     constructor({ config }) {
-        this.server = express(Feathers());
         const me = this;
-        this.configure = config || configure();
+        me.server = express(Feathers());
+        me.configure = config || configure();
+        me.subServe = new Map<Symbol, express.Application>();
+    }
+
+    private server !: express.Application;
+    private configure !: any;
+    private cubeId : string = UUID();
+    private name !: string;
+    private multiplexer !: IMultiplexer;
+    private subServe !: Map<Symbol, express.Application>;
+
+    public Run(): void {
+        const me = this;
+        let host = String(me.configure.get("http.listener")) || "localhost";
+        let port = ~~me.configure.get("http.port") || 8080;
         me.name = me.configure.get("http.name");
         helmet(me.configure.get("http.helmet"), me.server);
         cors(me.configure.get("http.cors"), me.server);
@@ -29,24 +46,17 @@ export class Cube {
         me.server.use(compress());
         me.server.use(express.json({ limit : me.configure.get("http.maxSize") }));
         me.server.use(express.urlencoded({ extended : true, limit : me.configure.get("get.maxSize") }));
-    }
 
-    private server !: express.Application;
-    private configure !: any;
-    private cubeId : string = UUID();
-    private name !: string;
+        me.server.use(
+            me.configure.get("http.server.staticPrefix"), 
+            express.static(
+                me.configure.get("http.server.staticDir"), 
+                { dotfiles: "ignore", extensions : me.configure.get("http.server.extension") || ['js'] }
+            )
+        );
 
-    public Run(): void {
-        const me = this;
-        let host = String(me.configure.get("http.listener")) || "localhost";
-        let port = ~~me.configure.get("http.port") || 8080;
+        me.server.use(...me.subServe.values());
 
-        me.server.use("/", express.static(me.configure.get("http.server.staticDir"), { dotfiles: "ignore", extensions : ['js', 'css', 'jpeg', 'png', 'jpg'] }));
-        me.server.configure(express.rest(function(req, rsp, next) {
-            debugger
-            express.rest.formatter(req, rsp, next);
-        }));
-        
         me.server.use(express.notFound())
         me.server.use(express.errorHandler({
             logger : (logger as any),
@@ -60,10 +70,19 @@ export class Cube {
             logger.info('magic cube application started on http://%s:%d', host, port)
         })
     }
-
-    public useHttpMultiplexer(multiplexer : typeof HttpMultiplexer) {
+    
+    public useMultiplexer(multiplexerName: string, multiplexer : IMultiplexer) {
         const me = this;
-        multiplexer.Setup(me.server);
+        let multiplexerFactory = MultiplexerFactory.Create(multiplexer);
+        let Serve = multiplexerFactory.CreateServeMultiplexer(me.configure);
+        me.subServe.set(Symbol.for(multiplexerName), Serve);
+    }
+
+    public dependencyResolvers<M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules : M) {
+        const me = this;
+        for (let [_, serve] of me.subServe) {
+            serve.emit("DependencyResolvers", me.server, _modules);
+        }
     }
 
 }
