@@ -32,7 +32,6 @@ export class Cube {
     private configure !: any;
     private cubeId : string = UUID();
     private name !: string;
-    private multiplexer !: IMultiplexer;
     private subServe !: Map<Symbol, express.Application>;
 
     public Run(): void {
@@ -74,14 +73,16 @@ export class Cube {
     public useMultiplexer(multiplexerName: string, multiplexer : IMultiplexer) {
         const me = this;
         let multiplexerFactory = MultiplexerFactory.Create(multiplexer);
-        let Serve = multiplexerFactory.CreateServeMultiplexer(me.configure);
-        me.subServe.set(Symbol.for(multiplexerName), Serve);
+        let Serve = multiplexerFactory?.CreateServeMultiplexer(me.configure);
+        if (Serve) {
+            me.subServe.set(Symbol.for(multiplexerName), Serve);
+        }
     }
 
     public dependencyResolvers<M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules : M) {
         const me = this;
         for (let [_, serve] of me.subServe) {
-            serve.emit("DependencyResolvers", me.server, _modules);
+            serve.emit("dependencyResolvers", me.server, ..._modules);
         }
     }
 

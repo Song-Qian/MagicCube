@@ -24,6 +24,18 @@ export const ApiController = (value: any) => {
     return defineClassMetadata(Symbol.for('magic:api'), value);
 }
 
+export const FileMultiplexer = () => {
+    return defineClassMetadata(Symbol.for("Kind"), "FILE");
+}
+
+export const RestMultiplexer = () => {
+    return defineClassMetadata(Symbol.for("Kind"), "REST");
+}
+
+export const ViewMultiplexer = () => {
+    return defineClassMetadata(Symbol.for("Kind"), "VIEW");
+}
+
 export const beforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
     return (...args) => {
         const target : any = args[0];

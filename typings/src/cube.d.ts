@@ -9,7 +9,6 @@ export declare class Cube {
     private configure;
     private cubeId;
     private name;
-    private multiplexer;
     private subServe;
     Run(): void;
     useMultiplexer(multiplexerName: string, multiplexer: IMultiplexer): void;

@@ -21,29 +21,23 @@ import express from '@feathersjs/express'
 import Feathers from '@feathersjs/feathers'
 import IRestMultiplexer from './i_rest_multiplexer'
 
-export type Multiplexer = {
-    DependencyResolvers(..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]) : void,
-    AppendDependencyResolver(..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]) : void
-}
-
 export default class RestMultiplexer extends IRestMultiplexer {
 
     constructor() {
         super()
         const me = this;
-        me._service_mapping = new Map<string, HttpService<(...args: any[]) => { [key: string] : any }>>(); 
+        me._service_mapping = new Map<string, HttpService<(...args: any[]) => { [key: string] : any }>>();
     }
 
     public CreateServeMultiplexer(configure): express.Application {
         const Serve = express(Feathers());
         const me = this;
-        let dependencyContainer : IDependencyResolver;
         Serve.configure(express.rest(function(req, rsp, next) {
             express.rest.formatter(req, rsp, next);
         }));
 
-        const resolveLoadedModule = function(..._modules) {
-            const services = dependencyContainer.GetAnyModels<HttpService<(...args: any[]) => { [key: string] : any }>>(Symbol.for('magic:rest'));
+        const resolveLoadedModule = function() {
+            const services = me.dependencyContainer.GetAnyModels<HttpService<(...args: any[]) => { [key: string] : any }>>(Symbol.for('magic:rest'));
             const root : string = configure.get('http.server.base') || "/";
             services.forEach((it: HttpService<(...args: any[]) => { [key: string] : any }>, _) => {
                 let http_net_path = Reflect.getMetadata(Symbol.for('magic:api'), it.constructor) || "";
@@ -61,21 +55,11 @@ export default class RestMultiplexer extends IRestMultiplexer {
             })
         }
 
-        Serve.on("DependencyResolvers", (app) => {
+        Serve.on("dependencyResolvers", (app) => {
             return <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules: M) => {
-                dependencyContainer = inTypes<Array<IServiceSynchResolverModule | IServiceAsyncResolverModule>, IServiceSynchResolverModule>(_modules) ? new SynchronousResolverNinject() : new AsynchronousResolverNinject();
-                dependencyContainer.on("onLoadedModules", resolveLoadedModule);
-                (<DependencyResolver>dependencyContainer).dispatchNinjectModules(..._modules);
-            }
-        })
-        
-        Serve.on("AppendDependencyResolver", (app) => {
-            return <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules: M) => {
-                if(dependencyContainer) {
-                    inTypes<Array<IServiceAsyncResolverModule | IServiceSynchResolverModule>, IServiceAsyncResolverModule>(_modules) ? 
-                        dependencyContainer.AddAsynchronousNinjectModules(...(<IServiceAsyncResolverModule[]>_modules)) :
-                            dependencyContainer.AddSynchronousNinjectModels(...(<IServiceSynchResolverModule[]>_modules));
-                }
+                me.dependencyContainer = inTypes<Array<IServiceSynchResolverModule | IServiceAsyncResolverModule>, IServiceSynchResolverModule>(_modules) ? new SynchronousResolverNinject() : new AsynchronousResolverNinject();
+                me.dependencyContainer.on("onLoadedModules", resolveLoadedModule);
+                (<DependencyResolver>me.dependencyContainer).dispatchNinjectModules(..._modules);
             }
         })
         return Serve;

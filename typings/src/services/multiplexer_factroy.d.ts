@@ -1,5 +1,5 @@
 import IMultiplexer from './i_multiplexer';
 declare const _default: {
-    Create: (multiplexer: IMultiplexer) => IMultiplexer;
+    Create: (identifier: IMultiplexer, ...args: any[]) => IMultiplexer | null;
 };
 export default _default;

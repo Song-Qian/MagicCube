@@ -13,29 +13,27 @@ import RestMultiplexer from './rest_multiplexer'
 import FileMultiplexer from './file_multiplexer'
 import ViewMultiplexer from './view_multiplexer'
 
-const RestMultiplexerFactory = function() : IRestMultiplexer {
-    return new RestMultiplexer()
-}
-
-const FileMultiplexerFactory = function() : IFileMultiplexer {
-    return new FileMultiplexer();
-}
-
-const ViewMultiplexerFactory = function() : IViewMultiplexer {
-    return new ViewMultiplexer();
-}
-
-const MultiplexerFactory = function (multiplexer: IMultiplexer) : IMultiplexer {
-
-    if (multiplexer instanceof IFileMultiplexer) {
-        return FileMultiplexerFactory();
+const MultiplexerFactory = function (identifier : IMultiplexer, ...args: any[]) : IMultiplexer | null {
+    
+    const RestMultiplexerFactory = function() : IRestMultiplexer {
+        return Reflect.construct(RestMultiplexer, args);
     }
 
-    if (multiplexer instanceof IViewMultiplexer) {
-        return ViewMultiplexerFactory();
+    const FileMultiplexerFactory = function() : IFileMultiplexer {
+        return Reflect.construct(FileMultiplexer, args);
     }
 
-    return RestMultiplexerFactory();
+    const ViewMultiplexerFactory = function() : IViewMultiplexer {
+        return Reflect.construct(ViewMultiplexer, args);
+    }
+
+    const factory = {
+        "REST" : RestMultiplexerFactory,
+        "FILE" : FileMultiplexerFactory,
+        "VIEW" : ViewMultiplexerFactory
+    }
+
+    return factory[Reflect.getMetadata(Symbol.for("Kind"), identifier)] && factory[Reflect.getMetadata(Symbol.for("Kind"), identifier)]() || null;
 }
 
 export default {
