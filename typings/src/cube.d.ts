@@ -11,6 +11,6 @@ export declare class Cube {
     private name;
     private subServe;
     Run(): void;
-    useMultiplexer(multiplexerName: string, multiplexer: IMultiplexer): void;
+    useMultiplexer<T extends IMultiplexer>(multiplexerName: string, multiplexer: abstract new () => T, ...args: any[]): void;
     dependencyResolvers<M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules: M): void;
 }

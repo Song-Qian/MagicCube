@@ -6,8 +6,7 @@
  */
 
 import path from 'path'
-import { inTypes } from '~/common/'
-import IDependencyResolver from '~/dependency/i_dependency'
+import { inTypes } from '~/utils/common'
 import DependencyResolver from '~/dependency/dependency_resolver'
 import IServiceAsyncResolverModule from '~/dependency/i_service_async_resolver_module'
 import AsynchronousResolverNinject from '~/dependency/asynchronous_resolver_ninject'
@@ -18,7 +17,7 @@ import HttpRestFormatHook from './rest_format_hook'
 import IServiceSynchResolverModule from '~/dependency/i_service_synch_resolver_module'
 
 import express from '@feathersjs/express'
-import Feathers from '@feathersjs/feathers'
+import Feathers, { Hook } from '@feathersjs/feathers'
 import IRestMultiplexer from './i_rest_multiplexer'
 
 export default class RestMultiplexer extends IRestMultiplexer {
@@ -48,19 +47,19 @@ export default class RestMultiplexer extends IRestMultiplexer {
                 me._service_mapping.set(fullPath, it);
                 Serve.use(fullPath, it);
                 let service = Serve.service(fullPath);
-                let afterHooks = [HttpRestFormatHook, ...(<any>it).afterHooks];
-                let beforeHooks = [...(<any>it).beforeHooks];
-                let errorHooks = [...(<any>it).errorHooks];
+                
+                let mergeHooks = Array.isArray.apply(Array, [it.afterHooks.all]) ? [...(it.afterHooks.all as Array<Hook>), HttpRestFormatHook] : [it.afterHooks.all, HttpRestFormatHook];
+                let afterHooks = { ...it.afterHooks, all: mergeHooks };
+                let beforeHooks = it.beforeHooks;
+                let errorHooks = it.errorHooks;
                 service.hooks({ after : afterHooks, before : beforeHooks, error : errorHooks });
             })
         }
 
-        Serve.on("dependencyResolvers", (app) => {
-            return <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules: M) => {
-                me.dependencyContainer = inTypes<Array<IServiceSynchResolverModule | IServiceAsyncResolverModule>, IServiceSynchResolverModule>(_modules) ? new SynchronousResolverNinject() : new AsynchronousResolverNinject();
-                me.dependencyContainer.on("onLoadedModules", resolveLoadedModule);
-                (<DependencyResolver>me.dependencyContainer).dispatchNinjectModules(..._modules);
-            }
+        Serve.on("dependencyResolvers", <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>> (app, ..._modules: M) => {
+            me.dependencyContainer = inTypes<Array<IServiceSynchResolverModule | IServiceAsyncResolverModule>, IServiceSynchResolverModule>(_modules) ? new SynchronousResolverNinject() : new AsynchronousResolverNinject();
+            me.dependencyContainer.on("onLoadedModules", resolveLoadedModule);
+            (<DependencyResolver>me.dependencyContainer).dispatchNinjectModules(..._modules);
         })
         return Serve;
     }

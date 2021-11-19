@@ -5,7 +5,7 @@
  * Description  :   Magic Cube 依赖注入容器实现
  */
 import { Container, interfaces } from 'inversify'
-import { inTypes } from '~/common'
+import { inTypes } from '~/utils/common'
 import IDependencyResolver from './i_dependency'
 import ServiceAsyncResolverModule from './i_service_async_resolver_module'
 import ServiceSynchResolverModule from './i_service_synch_resolver_module'

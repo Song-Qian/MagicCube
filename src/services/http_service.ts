@@ -10,7 +10,7 @@ import { injectable } from 'inversify';
 @injectable()
 export abstract class HttpService<T extends { [key : string] : any }> implements ServiceMethods<T> {
 
-  protected get afterHooks() : HookMap<unknown> {
+  public get afterHooks() : HookMap<unknown> {
     return {
         all: [],
         find: [],
@@ -22,7 +22,7 @@ export abstract class HttpService<T extends { [key : string] : any }> implements
     }
   }
 
-  protected get beforeHooks() : HookMap<unknown> {
+  public get beforeHooks() : HookMap<unknown> {
     return {
         all: [],
         find: [],
@@ -34,7 +34,7 @@ export abstract class HttpService<T extends { [key : string] : any }> implements
     }
   }
 
-  protected get errorHooks() : HookMap<unknown> {
+  public get errorHooks() : HookMap<unknown> {
     return {
         all: [],
         find: [],

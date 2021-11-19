@@ -2,9 +2,9 @@ import { Params, Paginated, Id, ServiceMethods, HookMap } from '@feathersjs/feat
 export declare abstract class HttpService<T extends {
     [key: string]: any;
 }> implements ServiceMethods<T> {
-    protected get afterHooks(): HookMap<unknown>;
-    protected get beforeHooks(): HookMap<unknown>;
-    protected get errorHooks(): HookMap<unknown>;
+    get afterHooks(): HookMap<unknown>;
+    get beforeHooks(): HookMap<unknown>;
+    get errorHooks(): HookMap<unknown>;
     private _raw;
     get raw(): any;
     set raw(val: any);

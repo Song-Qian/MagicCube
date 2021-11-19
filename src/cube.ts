@@ -70,9 +70,9 @@ export class Cube {
         })
     }
     
-    public useMultiplexer(multiplexerName: string, multiplexer : IMultiplexer) {
+    public useMultiplexer<T extends IMultiplexer>(multiplexerName: string, multiplexer : abstract new() => T, ...args: any[]) {
         const me = this;
-        let multiplexerFactory = MultiplexerFactory.Create(multiplexer);
+        let multiplexerFactory = MultiplexerFactory.Create<T>(multiplexer, ...args);
         let Serve = multiplexerFactory?.CreateServeMultiplexer(me.configure);
         if (Serve) {
             me.subServe.set(Symbol.for(multiplexerName), Serve);

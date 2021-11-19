@@ -13,7 +13,7 @@ import RestMultiplexer from './rest_multiplexer'
 import FileMultiplexer from './file_multiplexer'
 import ViewMultiplexer from './view_multiplexer'
 
-const MultiplexerFactory = function (identifier : IMultiplexer, ...args: any[]) : IMultiplexer | null {
+const MultiplexerFactory = function <T extends IMultiplexer>(identifier : abstract new() => T, ...args: any[]) : IMultiplexer {
     
     const RestMultiplexerFactory = function() : IRestMultiplexer {
         return Reflect.construct(RestMultiplexer, args);
@@ -33,7 +33,7 @@ const MultiplexerFactory = function (identifier : IMultiplexer, ...args: any[]) 
         "VIEW" : ViewMultiplexerFactory
     }
 
-    return factory[Reflect.getMetadata(Symbol.for("Kind"), identifier)] && factory[Reflect.getMetadata(Symbol.for("Kind"), identifier)]() || null;
+    return factory[Reflect.getMetadata(Symbol.for("Kind"), identifier)]();
 }
 
 export default {
