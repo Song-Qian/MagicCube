@@ -46,14 +46,18 @@ export abstract class HttpService<T extends { [key : string] : any }> implements
     }
   }
 
-  private _raw : any;
+  private _raw : { code : number, map : Map<number, any> } = { code : 200, map : new Map<number, any>() };
 
   public get raw() {
     return this._raw;
   }
 
-  public set raw(val : any) {
+  public set raw(val : { code : number, map : Map<number, any> }) {
     this._raw = val;
+  }
+
+  public set state(code : number) {
+    this._raw.code = code;
   }
 
   public abstract find(params?: Params) : Promise<T | T[] | Paginated<T>>;

@@ -4,18 +4,17 @@
  * eMail        :   onlylove1172559463@vip.qq.com
  * Description  :   Rest Api 接口分发器
  */
- import express from '@feathersjs/express'
- import IMultiplexer from './i_multiplexer'
- import { HttpService } from './http_service'
- import { ViewMultiplexer } from '../annotation'
+import express from '@feathersjs/express'
+import IMultiplexer from './i_multiplexer'
+import { ViewMultiplexer } from '../annotation'
 import IDependencyResolver from '~/dependency/i_dependency';
- 
- @ViewMultiplexer()
- export default abstract class IViewMultiplexer implements IMultiplexer {
 
-    dependencyContainer !: IDependencyResolver;
- 
-    protected _service_mapping !: Map<string, HttpService<(...args: any[]) => { [key: string] : any }>>;
+@ViewMultiplexer()
+export default abstract class IViewMultiplexer implements IMultiplexer {
 
-    public abstract CreateServeMultiplexer(configure): express.Application;
- }
+   dependencyContainer !: IDependencyResolver;
+
+   protected _service_mapping !: Map<string, Function>;
+
+   public abstract CreateServeMultiplexer(configure): express.Application;
+}

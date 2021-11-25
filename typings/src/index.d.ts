@@ -7,6 +7,8 @@ export { default as IServiceAsyncResolverModule } from './dependency/i_service_a
 export { default as IRestMultiplexer } from './services/i_rest_multiplexer';
 export { default as IViewMultiplexer } from './services/i_view_multiplexer';
 export { default as IFileMultiplexer } from './services/i_file_multiplexer';
+export { default as CreateVueRoot } from './render/vue_entry_render';
+export { default as CreateReactRoot } from './render/react_entry_render';
 declare const _default: {
     Config: typeof Config;
     Cube: typeof Cube;

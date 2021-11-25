@@ -6,8 +6,15 @@ export declare abstract class HttpService<T extends {
     get beforeHooks(): HookMap<unknown>;
     get errorHooks(): HookMap<unknown>;
     private _raw;
-    get raw(): any;
-    set raw(val: any);
+    get raw(): {
+        code: number;
+        map: Map<number, any>;
+    };
+    set raw(val: {
+        code: number;
+        map: Map<number, any>;
+    });
+    set state(code: number);
     abstract find(params?: Params): Promise<T | T[] | Paginated<T>>;
     abstract get(id: Id, params?: Params): Promise<T>;
     abstract create(data: Partial<T> | Array<Partial<T>>, params?: Params): Promise<T | T[]>;

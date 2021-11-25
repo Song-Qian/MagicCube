@@ -48,7 +48,7 @@ export default class RestMultiplexer extends IRestMultiplexer {
                 Serve.use(fullPath, it);
                 let service = Serve.service(fullPath);
                 
-                let mergeHooks = Array.isArray.apply(Array, [it.afterHooks.all]) ? [...(it.afterHooks.all as Array<Hook>), HttpRestFormatHook] : [it.afterHooks.all, HttpRestFormatHook];
+                let mergeHooks = Array.isArray.apply(Array, [it.afterHooks.all]) ? [...(it.afterHooks.all as Array<Hook>), HttpRestFormatHook()] : [it.afterHooks.all, HttpRestFormatHook()];
                 let afterHooks = { ...it.afterHooks, all: mergeHooks };
                 let beforeHooks = it.beforeHooks;
                 let errorHooks = it.errorHooks;
@@ -56,7 +56,7 @@ export default class RestMultiplexer extends IRestMultiplexer {
             })
         }
 
-        Serve.on("dependencyResolvers", <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>> (app, ..._modules: M) => {
+        Serve.once("dependencyResolvers", <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>> (app, ..._modules: M) => {
             me.dependencyContainer = inTypes<Array<IServiceSynchResolverModule | IServiceAsyncResolverModule>, IServiceSynchResolverModule>(_modules) ? new SynchronousResolverNinject() : new AsynchronousResolverNinject();
             me.dependencyContainer.on("onLoadedModules", resolveLoadedModule);
             (<DependencyResolver>me.dependencyContainer).dispatchNinjectModules(..._modules);

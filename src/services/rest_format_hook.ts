@@ -8,12 +8,12 @@
  import { Hook, HookContext } from '@feathersjs/feathers'
  import RestfulFormat from '~/utils/sys_rest_format'
  
-  export default () : Hook => {
-      return (context : HookContext) => {
-        const { statusCode, result, service } = context;
-        const messageMap = service.raw;
-        const newData = RestfulFormat.restFromat(statusCode || 500, messageMap.get(statusCode), result);
-        context.result = newData;
-        return context;
-      }
-  }
+export default () : Hook => {
+    return (context : HookContext) : HookContext => {
+      const { result, service } = context;
+      const { code, map }= service.raw;
+      const newData = RestfulFormat.restFromat(code || 200, map.get(code), result);
+      context.result = newData;
+      return context;
+    }
+}
