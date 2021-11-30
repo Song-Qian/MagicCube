@@ -14,7 +14,7 @@ export default abstract class IViewMultiplexer implements IMultiplexer {
 
    dependencyContainer !: IDependencyResolver;
 
-   protected _service_mapping !: Map<string, Function>;
+   protected _service_mapping !: Map<string, { kind: string, render: (ssr: boolean) => void }>;
 
    public abstract CreateServeMultiplexer(configure): express.Application;
 }

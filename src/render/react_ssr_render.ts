@@ -7,7 +7,7 @@
 
 import { Request, Response, NextFunction } from "express";
 
-export default function (root, router, store) {
+export default function (path, render) {
 
     return function (req: Request, res: Response, next: NextFunction) {
         const context = { url: req.path }

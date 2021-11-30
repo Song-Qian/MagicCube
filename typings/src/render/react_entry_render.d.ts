@@ -1,5 +1,8 @@
-export default function CreateReactRoot(fn: () => ({
+export default function CreateReactRoot(fn: (ssr: boolean) => ({
     react: any;
     router: any;
     store: any;
-})): () => void;
+})): {
+    kind: string;
+    render: () => void;
+};

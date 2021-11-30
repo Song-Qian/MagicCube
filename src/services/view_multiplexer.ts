@@ -12,13 +12,16 @@ import ReactSSR from '../render/react_ssr_render'
 
 export default class RestMultiplexer extends IViewMultiplexer {
  
-    constructor(render : Function) {
+    constructor(template: string, render : { kind: string, render: () => void }) {
         super()
         const me = this;
-        me._service_mapping = new Map<string, Function>([
+        me.path = template;
+        me._service_mapping = new Map<string, { kind: string, render: () => void }>([
             ["/", render]
         ]);
     }
+
+    private path !: string;
 
     public CreateServeMultiplexer(configure): express.Application {
         const me = this;
@@ -26,13 +29,12 @@ export default class RestMultiplexer extends IViewMultiplexer {
         const render = me._service_mapping.get("/");
 
         if (render) {
-            const { root, router, store, kind } = render();
-            switch (kind) {
+            switch (render.kind) {
                 case "vue" :
-                    Serve.use("/", VueSSR(root, router, store));
+                    Serve.use("/", VueSSR(me.path, render.render));
                     break;
                 case "react":
-                    Serve.use("/", ReactSSR(root, router, store));
+                    Serve.use("/", ReactSSR(me.path, render.render));
                     break;
             }
         }

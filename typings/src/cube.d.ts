@@ -1,6 +1,6 @@
 import IMultiplexer from "./services/i_multiplexer";
-import IServiceSynchResolverModule from './dependency/i_service_synch_resolver_module';
-import IServiceAsyncResolverModule from './dependency/i_service_async_resolver_module';
+import IServiceSynchResolverModule from "./dependency/i_service_synch_resolver_module";
+import IServiceAsyncResolverModule from "./dependency/i_service_async_resolver_module";
 export declare class Cube {
     constructor({ config }: {
         config: any;

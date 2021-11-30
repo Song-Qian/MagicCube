@@ -14,9 +14,9 @@ import logger from '~/utils/logger'
 import configure from '~/conf'
 import { UUID } from '~/utils/common'
 import IMultiplexer from '~/services/i_multiplexer'
-import MultiplexerFactory from './services/multiplexer_factroy'
-import IServiceSynchResolverModule from './dependency/i_service_synch_resolver_module'
-import IServiceAsyncResolverModule from './dependency/i_service_async_resolver_module'
+import MultiplexerFactory from '~/services/multiplexer_factroy'
+import IServiceSynchResolverModule from '~/dependency/i_service_synch_resolver_module'
+import IServiceAsyncResolverModule from '~/dependency/i_service_async_resolver_module'
 
 
 export class Cube {
@@ -61,7 +61,7 @@ export class Cube {
             logger : (logger as any),
             html : {
                 404 : '404',
-                500 : '505'
+                500 : '500'
             }
         }))
 
