@@ -25,7 +25,7 @@ const entryService = (context: any, root, router, store) => {
     })
 }
 
-export default function(path, render) {
+export default function(templatePath, render) {
 
     return function(req : Request, res : Response, next: NextFunction) {
         const context = { url : req.path }
@@ -34,7 +34,7 @@ export default function(path, render) {
 
         entryService(context, root, router, store).then((root : any) => {
                 let promises = [
-                    Promise.resolve(fs.promises.readFile(join(rootDir, path), { encoding: 'utf8' })),
+                    Promise.resolve(fs.promises.readFile(join(rootDir, templatePath), { encoding: 'utf8' })),
                     Promise.resolve(renderToString(root))
                 ]
                 Promise.all(promises).then((values) => {
@@ -49,7 +49,7 @@ export default function(path, render) {
             res.set('Content-Type', 'text/html')
             const code_500 = `<!DOCTYPE html><html lang="en"><body><p>${err.message}</p></body></html>`;
             res.send(Buffer.alloc(code_500.length, code_500, 'utf8'));
-            res.status(200).end()
+            res.status(200).end();
         })
     }
 }

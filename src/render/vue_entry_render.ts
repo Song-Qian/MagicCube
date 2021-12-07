@@ -5,11 +5,11 @@
  * Desctiption  :   Vue 根实例工厂函数
  */
 
-export default function CreateVueRoot(fn : (ssr: boolean) => ({ vue, router, store })) : { kind : string, render : () => void } {
+export default function CreateVueRoot(fn : (...args : any[]) => ({ vue, router, store })) : { kind : string, render : (...args : any[]) => void } {
     const render_instance = {
         kind : 'vue',
-        render : function() {
-            const { vue : root, router, store } = fn(true);
+        render : function(iniConfig) {
+            const { vue : root, router, store } = fn(iniConfig);
     
             return { root, router, store};
         }

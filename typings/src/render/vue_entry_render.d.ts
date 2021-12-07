@@ -1,8 +1,8 @@
-export default function CreateVueRoot(fn: (ssr: boolean) => ({
+export default function CreateVueRoot(fn: (...args: any[]) => ({
     vue: any;
     router: any;
     store: any;
 })): {
     kind: string;
-    render: () => void;
+    render: (...args: any[]) => void;
 };

@@ -5,11 +5,11 @@
  * Desctiption  :   React 根实例工厂函数
  */
 
-export default function CreateReactRoot(fn: (ssr: boolean) => ({ react, router, store })): { kind : string, render : () => void } {
+export default function CreateReactRoot(fn: (...args : any[]) => ({ react, router, store })): { kind : string, render : (...args : any[]) => void } {
     const render_instance = {
         kind : 'react',
-        render : function() {
-            const { react : root, router, store } = fn(true);
+        render : function(iniConfig) {
+            const { react : root, router, store } = fn(iniConfig);
     
             return { root, router, store};
         }

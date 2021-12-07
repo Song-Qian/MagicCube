@@ -50,7 +50,7 @@ export class Cube {
             me.configure.get("http.server.staticPrefix"), 
             express.static(
                 me.configure.get("http.server.staticDir"), 
-                { dotfiles: "ignore", extensions : me.configure.get("http.server.extension") || ['js'] }
+                { dotfiles: "ignore", index: false, extensions : me.configure.get("http.server.extension") || ['js'] }
             )
         );
 
@@ -60,8 +60,8 @@ export class Cube {
         me.server.use(express.errorHandler({
             logger : (logger as any),
             html : {
-                404 : '404',
-                500 : '500'
+                404 : '<h1>magic cube server</h1> \n <h2>no page</h2>',
+                500 : '<h1>magic cube server</h1> \n <h3>server error</h3>'
             }
         }))
 
