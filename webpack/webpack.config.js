@@ -9,6 +9,7 @@ const entry = require("./entry")
 const output = require("./output")
 const rules = require("./rules")
 const resolve = require("./resolve")
+const externals = require("./externals")
 const plugins = require("./plugins")
 const optimization = require('./optimization')
 
@@ -25,6 +26,7 @@ module.exports = merge({}, {
       ...rules()
     ]
   },
+  externals,
   performance: {
     hints: process.env.NODE_ENV === 'production' ? false : 'warning'
   }

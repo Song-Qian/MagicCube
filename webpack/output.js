@@ -9,5 +9,6 @@ var path = require("path");
 module.exports = {
   path : path.resolve(__dirname, '../', 'lib'),
   publicPath: '/',
-  filename: '[name].js'
+  filename:  process.env.NODE_ENV === 'production' ? './cjs/[name].prod.js' : './cjs/[name].js',
+  libraryTarget: 'umd'
 }

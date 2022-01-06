@@ -12,30 +12,27 @@ import ReactSSR from '../render/react_ssr_render'
 
 export default class ViewMultiplexer extends IViewMultiplexer {
  
-    constructor(template: string, render : { kind: string, render: (...args : any[]) => void }) {
+    constructor(template: string, render : { kind: string, callback: (...args : any[]) => void }) {
         super()
         const me = this;
         me.templatePath = template;
-        me._service_mapping = new Map<string, { kind: string, render: (...args : any[]) => void }>([
-            ["default render", render]
-        ]);
+        me.render = render;
     }
 
     private templatePath !: string;
-
+    private render  !: { kind: string, callback: (...args : any[]) => void };
     public CreateServeMultiplexer(configure): express.Application {
         const me = this;
         const Serve = express(Feathers());
-        const render = me._service_mapping.get("default render");
         const root : string = configure.get('http.server.base') || "/";
 
-        if (render) {
-            switch (render.kind) {
+        if (me.render) {
+            switch (me.render.kind) {
                 case "vue" :
-                    Serve.use(root, VueSSR(me.templatePath, render.render.bind(render, configure)));
+                    Serve.use(root, VueSSR(me.templatePath, me.render.callback.bind(me.render, configure)));
                     break;
                 case "react":
-                    Serve.use(root, ReactSSR(me.templatePath, render.render.bind(render, configure)));
+                    Serve.use(root, ReactSSR(me.templatePath, me.render.callback.bind(me.render, configure)));
                     break;
             }
         }

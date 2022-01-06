@@ -12,7 +12,7 @@
     minimize : process.env.NODE_ENV === 'production',
     minimizer : process.env.NODE_ENV === 'production' ? [
         new UglifyJsPlugin({
-            test: /\.(ts|tsx)$/i,
+            test: /\.(js|jsx|ts|tsx)$/i,
             exclude: /[\\/]node_modules[\\/]/, //要排除的文件。
             cache: true, //启用文件缓存
             parallel: true, //使用多进程并行运行以提高构建速度
@@ -35,7 +35,7 @@
             }
         }),
         new TerserPlugin({
-            test: /\.(ts|tsx)$/i,
+            test: /\.(js|jsx|ts|tsx)$/i,
             exclude : [/[\\/]node_modules[\\/]/, /(\.d)\.(tsx?)/], //要排除的文件。
             // cache : false,  //启用文件缓存
             parallel : true,  //使用多进程并行运行可提高构建速度
