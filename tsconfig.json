@@ -40,12 +40,7 @@
       "tslib": [
         "node_modules/tslib/tslib.d.ts"
       ]
-    },
-    "plugins": [{
-        "transform": "@zerollup/ts-transform-paths",
-        "exclude": ["*"]
-      }
-    ]
+    }
   },
   "include": [
     "src/**/*.ts",

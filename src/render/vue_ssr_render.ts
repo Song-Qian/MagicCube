@@ -31,11 +31,11 @@ export default function(templatePath, cb) {
         const rootDir = process.cwd();
         const { root, router, store, transform } = cb();
         
-        return Promise.resolve(entryService(context, root, router, store)).then((root) => {
+        return Promise.resolve(entryService(context, root, router, store)).then((SSRApp) => {
 
             let promises = [
                 Promise.resolve(fs.promises.readFile(join(rootDir, templatePath), { encoding: 'utf8' })),
-                transform()
+                transform(SSRApp)
             ]
             Promise.all(promises).then((values) => {
                 const body = values[1];
