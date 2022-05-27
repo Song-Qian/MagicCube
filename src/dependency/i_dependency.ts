@@ -9,7 +9,6 @@ import { EventEmitter } from 'events';
 import { Container, interfaces } from 'inversify'
 import ServiceAsyncResolverModule from './i_service_async_resolver_module'
 import ServiceSynchResolverModule from './i_service_synch_resolver_module'
-import { HttpService } from '../services/http_service'
 
 export default abstract class IDependencyResolver {
 

@@ -1,12 +1,15 @@
-/**
- * Developer    :   SongQian
- * Time         :   2021-08-10
- * eMail        :   onlylove1172559463@vip.qq.com
- * Description  :   Magic Cube 扩展注解
+/*
+ * @Author: SongQian
+ * @LastEditors: SongQian
+ * @Date: 2022/05/25 16:32
+ * @eMail: onlylove1172559463@vip.qq.com
+ * @Description: Magic Cube 扩展注解
  */
 import 'reflect-metadata'
+import { Knex } from 'knex'
 import { Hook } from '@feathersjs/feathers'
 import { HttpService } from '../services/http_service'
+import { TableColumnEnum, TableIndex, UniqueIndex, PrimaryKey } from '../repository/schema_type'
 
 const defineClassMetadata = (key: Symbol, value: any) : ClassDecorator => {
     return (target: Function) => {
@@ -20,23 +23,225 @@ const definePropertyMetadata = (key: Symbol, value: any) => {
     }
 }
 
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 11:27
+ * @description: RESTFUL Api 接口控制器修饰器
+ * @param {any} api 地址路由
+ * @return {*} \@ApiController("/api/a/path")
+ */
 export const ApiController = (value: any) => {
     return defineClassMetadata(Symbol.for('magic:api'), value);
 }
 
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 11:28
+ * @description: 内置File Stream 文件上传上载复用器,不对外公开
+ * @return {*} \@FileMultiplexer()
+ */
 export const FileMultiplexer = () => {
     return defineClassMetadata(Symbol.for("Kind"), "FILE");
 }
 
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 11:30
+ * @description:  内置RESTFUL 接口复用器,不对外公开
+ * @return {*} \@RestMultiplexer()
+ */
 export const RestMultiplexer = () => {
     return defineClassMetadata(Symbol.for("Kind"), "REST");
 }
 
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 11:43
+ * @description: 内置View UI接口复用器, 不对外公开
+ * @return {*} \@ViewMultiplexer()
+ */
 export const ViewMultiplexer = () => {
     return defineClassMetadata(Symbol.for("Kind"), "VIEW");
 }
 
-export const beforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 14:50
+ * @description: 内置MySQL架构修饰器
+ * @return {*} \@MySqlSchema()
+ */
+export const MySqlSchema = () => {
+    return defineClassMetadata(Symbol.for("Kind"), "MYSQL");
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 14:53
+ * @description: 内置Oracle 架构修饰器
+ * @return {*} \@OracleSchema()
+ */
+export const OracleSchema = () => {
+    return defineClassMetadata(Symbol.for("Kind"), "ORACLE");
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 14:54
+ * @description: 内置PG架构修饰器
+ * @return {*} \@PGSchema()
+ */
+export const PGSchema = () => {
+    return defineClassMetadata(Symbol.for("Kind"), "PG");
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 14:54
+ * @description: 内置SQLITE3架构修饰器
+ * @return {*} \@Sqlite3Schema()
+ */
+export const Sqlite3Schema = () => {
+    return defineClassMetadata(Symbol.for("Kind"), "SQLITE3");
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/25 17:17
+ * @description: ORM模式中表信息修饰器
+ * @param {string} 表名
+ * @param {string} 数据库表引擎
+ * @param {string} 数据库表字符集
+ * @param {string} 数据库表排序规则
+ * @return {*} \@DataTable("user")
+ */
+export const DataTable = (name : string, engine ?: string, charset ?: string, collate ?: string)  => {
+    return (target : Function) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableName"), name, target);
+        engine && Reflect.defineMetadata(Symbol.for("magic:tableEngine"), engine, target);
+        charset && Reflect.defineMetadata(Symbol.for("magic:tableCharset"), charset, target);
+        collate && Reflect.defineMetadata(Symbol.for("magic:tableCollate"), collate, target);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 11:05
+ * @description: ORM模式中表视图修饰器
+ * @param {string} 视图名
+ * @param {Knex} 视图表达式
+ * @return {*} \@DataView("user_view", kenx.raw("select user.name, user.email, role.name from user, role where user.id = role.userid"))
+ */
+export const DataView = (viewName: string, table: Knex.QueryBuilder) => {
+    return (target: Function) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableName"), viewName, target);
+        Reflect.defineMetadata(Symbol.for("magic:tableViewExpression"), table, target);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/25 17:04
+ * @description: ORM模式中与表字段中对应关系映射和字段类型描述修饰器
+ * @param {string} 表字段名称
+ * @param {TableColumnEnum} 表字段数据类型
+ * @param {string} 表字段描述文本
+ * @param {any} 表字段数据描述选项
+ * @return {*} \@TableColumn('field', TableColumnEnum.Integer, '这是一个字段', 10)
+ */
+export const TableColumn = (columnName: string, dataType : TableColumnEnum, description ?: string, options ?: any) => {
+    return (target: any, name: string) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableColumnName"), columnName, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableColumnType"), dataType, target, name);
+        description && Reflect.defineMetadata(Symbol.for("magic:tableColumnComment"), description, target, name);
+        options && Reflect.defineMetadata(Symbol.for("magic:tableColumnOptions"), options, target, name);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/25 17:33
+ * @description: ORM模式中表字段是否允许为NULL修饰器
+ * @return {*} \@NullableColumn()
+ */
+export const NullableColumn = () => {
+    return (target: any, name: string) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableColumnNullable"), true, target, name);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/25 17:57
+ * @description:  ORM模式中表字段的索引修饰器
+ * @param {string} 索引名称
+ * @param {TableIndex} 索引配置
+ * @return {*} \@IndexColumn("idx_name", { indexType: "FULLTEXT", storageEngineIndexType: "hash", predicate: knex.whereNotNull('email') })
+ */
+export const IndexColumn = (indexName: string, options: TableIndex) => {
+    return (target: any, name: string) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableIndexName"), indexName, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableIndexOptions"), options, target, name);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 10:35
+ * @description: ORM模式中表字段唯一索引修饰器
+ * @param {string} 索引名称
+ * @param {UniqueIndex} 索引配置
+ * @return {*} \@UniqueColumn({ indexName: "idx_name", deferrable: "notdeferrable", storageEngineIndexType: "hash", useConstraint: true })
+ */
+export const UniqueColumn = (options: UniqueIndex) => {
+    return (target: any, name: string) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableUniqueName"), options.indexName, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableUniqueOptions"), options, target, name);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 10:40
+ * @description: ORM模式中表字段主键修饰器
+ * @param {string} 主键列名
+ * @param {PrimaryKey} 主键配置
+ * @return {*} \@PrimaryColumn("pk_name", { constraintName: "",  deferrable: "notdeferrable" })
+ */
+export const PrimaryColumn = (columnName: string, options: PrimaryKey) => {
+    return (target: any, name: string) => {
+        let keys = Object.keys(target).filter(key => Reflect.getMetadata(Symbol.for("magic:tablePrimaryKey"), target, key));
+        if (keys.length > 0) {
+            throw new Error(`${target.constructor.name} contains more than one primary key (@PrimaryColumn) field configuration`);
+        }
+        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKey"), columnName, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryOptions"), options, target, name);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 11:45
+ * @description: Api HTTP 请求管道钩子, 在请求到达处理器之前持行
+ * @param {Hook} Function 钩子函数
+ * @return {*} \@BeforeHook(() => Hook)
+ */
+export const BeforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
     return (...args) => {
         const target : any = args[0];
         const name : string = args[1];
@@ -120,7 +325,15 @@ export const beforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
     }
 }
 
-export const afterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 11:53
+ * @description: Api HTTP 请求管道钩子, 在请求在处理器持行完成之后持行
+ * @param {Hook} Function 钩子函数
+ * @return {*} \@AfterHook(() => Hook)
+ */
+export const AfterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
     return (...args) => {
         const target : any = args[0];
         const name : string = args[1];
@@ -204,7 +417,15 @@ export const afterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
     }
 }
 
-export const errorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 11:53
+ * @description: Api HTTP 请求管道钩子, 钩子函数只有在处理器中发生异常时持行
+ * @param {Hook} Function 钩子函数
+ * @return {*} \@ErrorHook(() => Hook)
+ */
+export const ErrorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
     return (...args) => {
         const target : any = args[0];
         const name : string = args[1];
@@ -283,6 +504,98 @@ export const errorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 writable: true,
                 enumerable: false,
                 value: () => ({ ...errorHooks })
+            })
+        }
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 11:53
+ * @description: Api HTTP 请求管道钩子, 钩子函数总是会在处理器之后持行
+ * @param {Hook} Function 钩子函数
+ * @return {*} \@FinallyHook(() => Hook)
+ */
+export const FinallyHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+    return (...args) => {
+        const target : any = args[0];
+        const name : string = args[1];
+        const descriptors : any = args[2];
+        if (target.prototype && target.prototype.constructor instanceof HttpService) {
+            const finallyHooks = target.prototype.finallyHooks || { all: [] };
+            finallyHooks.all = [...finallyHooks.all, fn]; 
+            Reflect.defineProperty(target.prototype, "finallyHooks", {
+                configurable: false,
+                writable: true,
+                enumerable: false,
+                value: () => ({ ...finallyHooks })
+            })
+        }
+
+        if(target && target.constructor instanceof HttpService && name === "find") {
+            const finallyHooks = Reflect.get(target, "finallyHooks", target) || { find: [] };
+            finallyHooks.find = [...finallyHooks.find, fn];
+            Reflect.defineProperty(target, "finallyHooks", {
+                configurable: false,
+                writable: true,
+                enumerable: false,
+                value: () => ({ ...finallyHooks })
+            })
+        }
+        
+        if(target && target.constructor instanceof HttpService && name === "get") {
+            const finallyHooks = Reflect.get(target, "finallyHooks", target) || { get: [] };
+            finallyHooks.get = [...finallyHooks.get, fn]; 
+            Reflect.defineProperty(target, "finallyHooks", {
+                configurable: false,
+                writable: true,
+                enumerable: false,
+                value: () => ({ ...finallyHooks })
+            })
+        }
+        
+        if(target && target.constructor instanceof HttpService && name === "create") {
+            const finallyHooks = Reflect.get(target, "finallyHooks", target) || { create: [] };
+            finallyHooks.create = [...finallyHooks.create, fn]; 
+            Reflect.defineProperty(target, "finallyHooks", {
+                configurable: false,
+                writable: true,
+                enumerable: false,
+                value: () => ({ ...finallyHooks })
+            })
+        }
+        
+        if(target && target.constructor instanceof HttpService && name === "update") {
+            const finallyHooks = Reflect.get(target, "finallyHooks", target) || { update: [] };
+            finallyHooks.update = [...finallyHooks.update, fn]; 
+            Reflect.defineProperty(target, "finallyHooks", {
+                configurable: false,
+                writable: true,
+                enumerable: false,
+                value: () => ({ ...finallyHooks })
+            })
+        }
+        
+        if(target && target.constructor instanceof HttpService && name === "patch") {
+            const finallyHooks = Reflect.get(target, "finallyHooks", target) || { patch: [] };
+            finallyHooks.patch = [...finallyHooks.patch, fn]; 
+            Reflect.defineProperty(target, "finallyHooks", {
+                configurable: false,
+                writable: true,
+                enumerable: false,
+                value: () => ({ ...finallyHooks })
+            })
+        }
+        
+        if(target && target.constructor instanceof HttpService && name === "remove") {
+            const finallyHooks = Reflect.get(target, "finallyHooks", target) || { remove: [] };
+            finallyHooks.remove = [...finallyHooks.remove, fn]; 
+            Reflect.defineProperty(target, "finallyHooks", {
+                configurable: false,
+                writable: true,
+                enumerable: false,
+                value: () => ({ ...finallyHooks })
             })
         }
     }

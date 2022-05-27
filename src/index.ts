@@ -7,7 +7,7 @@
 import Config from './conf'
 import { Cube } from './cube'
 
-export { ApiController, beforeHook, afterHook, errorHook } from './annotation'
+export { ApiController, BeforeHook, AfterHook, ErrorHook, FinallyHook } from './annotation'
 export { HttpService } from './services/http_service'
 export { default as IServiceSynchResolverModule } from './dependency/i_service_synch_resolver_module'
 export { default as IServiceAsyncResolverModule } from './dependency/i_service_async_resolver_module'

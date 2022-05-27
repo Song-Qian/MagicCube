@@ -9,10 +9,10 @@ import express from '@feathersjs/express'
 import Feathers from '@feathersjs/feathers'
 import helmet from '~/helmet'
 import cors from '~/cors'
+// import { CubeContact } from '~/socket'
 import compress from 'compression'
 import logger from '~/utils/logger'
 import configure from '~/conf'
-import { UUID } from '~/utils/common'
 import IMultiplexer from '~/services/i_multiplexer'
 import MultiplexerFactory from '~/services/multiplexer_factroy'
 import IServiceSynchResolverModule from '~/dependency/i_service_synch_resolver_module'
@@ -26,12 +26,13 @@ export class Cube {
         me.server = express(Feathers());
         me.configure = config || configure();
         me.subServe = new Map<Symbol, express.Application>();
+        // me.contact = new CubeContact(me.configure);
     }
 
     private server !: express.Application;
-    private configure !: any;
-    private cubeId : string = UUID();
+    // private contact !: CubeContact;
     private name !: string;
+    private configure !: any;
     private subServe !: Map<Symbol, express.Application>;
 
     public Run(): void {
@@ -55,6 +56,7 @@ export class Cube {
         );
 
         me.server.use(...me.subServe.values());
+        // me.contact.run(me.server);
 
         me.server.use(express.notFound())
         me.server.use(express.errorHandler({
@@ -66,6 +68,15 @@ export class Cube {
         }))
 
         me.server.listen({ port, host, path: me.configure.get("http.server.base") }, () => {
+            logger.info([
+                '\t\t\t江城子 . 程序员之歌', 
+                '\n\t\t十年生死两茫茫，写程序，到天亮。', 
+                '\n\t\t\t\t千行代码，Bug何处藏。', 
+                '\n\t\t纵使上线又怎样，朝令改，夕断肠。', 
+                '\n\t\t领导每天新想法，天天改，日日忙。', 
+                '\n\t\t\t\t相顾无言，惟有泪千行。',
+                '\n\t\t每晚灯火阑珊处，夜难寐，加班狂。'].join("")
+            );
             logger.info('magic cube application started on http://%s:%d', host, port)
         })
     }
@@ -78,7 +89,6 @@ export class Cube {
             me.subServe.set(Symbol.for(multiplexerName), Serve);
         }
     }
-
     public dependencyResolvers<M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules : M) {
         const me = this;
         for (let [_, serve] of me.subServe) {

@@ -46,6 +46,18 @@ export abstract class HttpService<T extends { [key : string] : any }> implements
     }
   }
 
+  public get finallyHooks() : HookMap<unknown> {
+    return {
+      all: [],
+      find: [],
+      get: [],
+      create: [],
+      update: [],
+      patch: [],
+      remove: []
+    }
+  }
+
   private _raw : { code : number, map : Map<number, any> } = { code : 200, map : new Map<number, any>() };
 
   public get raw() {

@@ -4,7 +4,6 @@
  * eMail        :   onlylove1172559463@vip.qq.com
  * Description  :   rest api 请求加载和分发器
  */
-
 import path from 'path'
 import { inTypes } from '~/utils/common'
 import DependencyResolver from '~/dependency/dependency_resolver'
@@ -52,7 +51,8 @@ export default class RestMultiplexer extends IRestMultiplexer {
                 let afterHooks = { ...it.afterHooks, all: mergeHooks };
                 let beforeHooks = it.beforeHooks;
                 let errorHooks = it.errorHooks;
-                service.hooks({ after : afterHooks, before : beforeHooks, error : errorHooks });
+                let finallyHooks = it.finallyHooks;
+                service.hooks({ after : afterHooks, before : beforeHooks, error : errorHooks, finally : finallyHooks });
             })
         }
 
