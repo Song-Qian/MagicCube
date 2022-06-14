@@ -72,44 +72,87 @@ export const ViewMultiplexer = () => {
  * @LastEditors: SongQian
  * @Author: SongQian
  * @Date: 2022/05/26 14:50
- * @description: 内置MySQL架构修饰器
+ * @description: 内置MySQL架构修饰器,不对外公开
  * @return {*} \@MySqlSchema()
  */
-export const MySqlSchema = () => {
-    return defineClassMetadata(Symbol.for("Kind"), "MYSQL");
+export const MySqlSchema = (fn : (configure: any) => void) => {
+    return (target: Function) => { 
+        Reflect.defineMetadata(Symbol.for("Kind"), "MYSQL", target);
+        Reflect.defineProperty(target, "Initialize", {
+            configurable: true,
+            enumerable: true,
+            writable: false,
+            value: fn
+        })
+    }
 }
 
 /**
  * @LastEditors: SongQian
  * @Author: SongQian
  * @Date: 2022/05/26 14:53
- * @description: 内置Oracle 架构修饰器
+ * @description: 内置Oracle 架构修饰器,不对外公开
  * @return {*} \@OracleSchema()
  */
-export const OracleSchema = () => {
-    return defineClassMetadata(Symbol.for("Kind"), "ORACLE");
+export const OracleSchema = (fn : (configure: any) => void) => {
+    return (target: Function) => { 
+        Reflect.defineMetadata(Symbol.for("Kind"), "ORACLE", target);
+        Reflect.defineProperty(target, "Initialize", {
+            configurable: true,
+            enumerable: true,
+            writable: false,
+            value: fn
+        })
+    }
 }
 
 /**
  * @LastEditors: SongQian
  * @Author: SongQian
  * @Date: 2022/05/26 14:54
- * @description: 内置PG架构修饰器
+ * @description: 内置PG架构修饰器,不对外公开
  * @return {*} \@PGSchema()
  */
-export const PGSchema = () => {
-    return defineClassMetadata(Symbol.for("Kind"), "PG");
+export const PGSchema = (fn : (configure: any) => void) => {
+    return (target: Function) => { 
+        Reflect.defineMetadata(Symbol.for("Kind"), "PG", target);
+        Reflect.defineProperty(target, "Initialize", {
+            configurable: true,
+            enumerable: true,
+            writable: false,
+            value: fn
+        })
+    }
 }
 
 /**
  * @LastEditors: SongQian
  * @Author: SongQian
  * @Date: 2022/05/26 14:54
- * @description: 内置SQLITE3架构修饰器
+ * @description: 内置SQLITE3架构修饰器,不对外公开
  * @return {*} \@Sqlite3Schema()
  */
-export const Sqlite3Schema = () => {
-    return defineClassMetadata(Symbol.for("Kind"), "SQLITE3");
+export const Sqlite3Schema = (fn : (configure: any) => void) => {
+    return (target: Function) => { 
+        Reflect.defineMetadata(Symbol.for("Kind"), "SQLITE3", target);
+        Reflect.defineProperty(target, "Initialize", {
+            configurable: true,
+            enumerable: true,
+            writable: false,
+            value: fn
+        })
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/29 23:19
+ * @description: ORM模式启动时自动检测是否删除已存在的表
+ * @return {*} \@DropTableIfExists()
+ */
+export const DropTableIfExists = () => {
+    return defineClassMetadata(Symbol.for("magic:dropTableIfExists"), true);
 }
 
 /**
@@ -123,9 +166,9 @@ export const Sqlite3Schema = () => {
  * @param {string} 数据库表排序规则
  * @return {*} \@DataTable("user")
  */
-export const DataTable = (name : string, engine ?: string, charset ?: string, collate ?: string)  => {
+export const DataTable = (name : string, engine : string = "innodb", charset : string = "utf8", collate : string = "utf8mb4")  => {
     return (target : Function) => {
-        Reflect.defineMetadata(Symbol.for("magic:tableName"), name, target);
+        Reflect.defineMetadata(Symbol.for("magic:table"), name, target);
         engine && Reflect.defineMetadata(Symbol.for("magic:tableEngine"), engine, target);
         charset && Reflect.defineMetadata(Symbol.for("magic:tableCharset"), charset, target);
         collate && Reflect.defineMetadata(Symbol.for("magic:tableCollate"), collate, target);
@@ -143,7 +186,7 @@ export const DataTable = (name : string, engine ?: string, charset ?: string, co
  */
 export const DataView = (viewName: string, table: Knex.QueryBuilder) => {
     return (target: Function) => {
-        Reflect.defineMetadata(Symbol.for("magic:tableName"), viewName, target);
+        Reflect.defineMetadata(Symbol.for("magic:table"), viewName, target);
         Reflect.defineMetadata(Symbol.for("magic:tableViewExpression"), table, target);
     }
 }
@@ -159,12 +202,30 @@ export const DataView = (viewName: string, table: Knex.QueryBuilder) => {
  * @param {any} 表字段数据描述选项
  * @return {*} \@TableColumn('field', TableColumnEnum.Integer, '这是一个字段', 10)
  */
-export const TableColumn = (columnName: string, dataType : TableColumnEnum, description ?: string, options ?: any) => {
+export const TableColumn = (columnName: string, dataType : TableColumnEnum, description ?: string, options ?: Readonly<any[]>) => {
     return (target: any, name: string) => {
         Reflect.defineMetadata(Symbol.for("magic:tableColumnName"), columnName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableColumnType"), dataType, target, name);
         description && Reflect.defineMetadata(Symbol.for("magic:tableColumnComment"), description, target, name);
         options && Reflect.defineMetadata(Symbol.for("magic:tableColumnOptions"), options, target, name);
+    }
+}
+
+type DefaultValue =  string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer | Knex.Raw;
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/31 17:41
+ * @description: ORM模式中表字段默认值,只支持数据库.
+ * @param {DefaultValue} value
+ * @param {string} constraintName
+ * @return {*}
+ */
+export const DefaultValueColumn = (value: DefaultValue, constraintName: string = "") => {
+    return (target: any, name: string) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableColumnDefaultValue"), value, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableColumnDefaultOptions"), { constraintName }, target, name);
     }
 }
 
@@ -178,6 +239,19 @@ export const TableColumn = (columnName: string, dataType : TableColumnEnum, desc
 export const NullableColumn = () => {
     return (target: any, name: string) => {
         Reflect.defineMetadata(Symbol.for("magic:tableColumnNullable"), true, target, name);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/31 17:29
+ * @description: ORM模式中表字段是否不为NULL修饰器
+ * @return {*} \@NotNullableColumn()
+ */
+export const NotNullableColumn = () => {
+    return (target: any, name: string) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableColumnNotNullable"), true, target, name);
     }
 }
 
@@ -204,9 +278,9 @@ export const IndexColumn = (indexName: string, options: TableIndex) => {
  * @description: ORM模式中表字段唯一索引修饰器
  * @param {string} 索引名称
  * @param {UniqueIndex} 索引配置
- * @return {*} \@UniqueColumn({ indexName: "idx_name", deferrable: "notdeferrable", storageEngineIndexType: "hash", useConstraint: true })
+ * @return {*} \@UniqueColumn({ indexName: "idx_name", deferrable: "deferred", storageEngineIndexType: "hash", useConstraint: true })
  */
-export const UniqueColumn = (options: UniqueIndex) => {
+export const UniqueColumn = (options: UniqueIndex = { indexName: "idx_name", deferrable: "deferred", storageEngineIndexType: "hash", useConstraint: true}) => {
     return (target: any, name: string) => {
         Reflect.defineMetadata(Symbol.for("magic:tableUniqueName"), options.indexName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableUniqueOptions"), options, target, name);
@@ -230,6 +304,22 @@ export const PrimaryColumn = (columnName: string, options: PrimaryKey) => {
         }
         Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKey"), columnName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tablePrimaryOptions"), options, target, name);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/30 22:43
+ * @description: ORM模式中表字段自增修饰器
+ * @param {string} 列名
+ * @param {object} 自培选项
+ * @return {*} \@IncrementsColumn("columnName", { primaryKey : true })
+ */
+export const IncrementsColumn = (columnName: string, options: { primaryKey: boolean }) => {
+    return (target : any, name : string) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableIncrementsColumn"), columnName, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableIncrementsOptions"), options, target, name);
     }
 }
 

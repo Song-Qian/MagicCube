@@ -12,8 +12,6 @@ import IDependencyResolver from '~/dependency/i_dependency';
 @ViewMultiplexer()
 export default abstract class IViewMultiplexer implements IMultiplexer {
 
-   dependencyContainer !: IDependencyResolver;
-
    protected _service_mapping !: Map<string, any>;
 
    public abstract CreateServeMultiplexer(configure): express.Application;

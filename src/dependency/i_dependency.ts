@@ -7,8 +7,8 @@
 
 import { EventEmitter } from 'events';
 import { Container, interfaces } from 'inversify'
-import ServiceAsyncResolverModule from './i_service_async_resolver_module'
-import ServiceSynchResolverModule from './i_service_synch_resolver_module'
+import IServiceAsyncResolverModule from './i_service_async_resolver_module'
+import IServiceSynchResolverModule from './i_service_synch_resolver_module'
 
 export default abstract class IDependencyResolver {
 
@@ -16,13 +16,15 @@ export default abstract class IDependencyResolver {
 
     protected readonly abstract emitter : EventEmitter;
 
-    public abstract AddSynchronousNinjectModels (..._modules: ServiceSynchResolverModule[]): void;
+    public abstract AddSynchronousNinjectModels (..._modules: IServiceSynchResolverModule[]): void;
 
-    public abstract AddAsynchronousNinjectModules (..._modules: ServiceAsyncResolverModule[]): void;
+    public abstract AddAsynchronousNinjectModules (..._modules: IServiceAsyncResolverModule[]): void;
+
+    public abstract dispatchNinjectModules(..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]) : void;
 
     public abstract clearAllNinjectModules (): void;
 
-    public abstract clearNinjectModules (..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]): void;
+    public abstract clearNinjectModules (..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]): void;
 
     public abstract GetService<T> (serviceIdentifier: interfaces.ServiceIdentifier<any>, named: string | number | symbol) : T;
 

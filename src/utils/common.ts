@@ -79,3 +79,15 @@ export function inType<T, M extends T>(_module : T) : _module is T {
 export function inTypes<T extends Array<unknown>, M extends (T extends Array<infer K> ? K : T)>(_modules: T) : _modules is T {
     return _modules.every(it => (it as M) !== null);
 }
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/30 11:00
+ * @description: 判断对象是否是异步函数
+ * @param {T} 判断目标
+ * @return {*} 
+ */
+export function isPromise(target: any) : boolean {
+    return target && ("then" in target && "catch" in target && target instanceof Promise);
+}

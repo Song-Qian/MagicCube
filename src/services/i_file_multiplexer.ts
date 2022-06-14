@@ -12,8 +12,6 @@ import IDependencyResolver from '~/dependency/i_dependency';
 
 @FileMultiplexer()
 export default abstract class IFileMultiplexer implements IMultiplexer {
-   
-   dependencyContainer !: IDependencyResolver;
 
    protected _service_mapping !: Map<string, HttpService<(...args: any[]) => { [key: string] : any }>>;
 

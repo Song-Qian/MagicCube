@@ -5,14 +5,17 @@
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: Orache 数据库架构
  */
+
 import { OracleSchema } from '~/annotation'
 import ISchema from '~/repository/i_schema'
 import { IRepository } from '../i_repository'
+import EventEmitter from 'events'
+import Initialize from '../initialize'
 
-@OracleSchema()
-export default abstract class IOracleSchema implements ISchema {
+@OracleSchema(Initialize)
+export default abstract class IOracleSchema extends EventEmitter implements ISchema {
 
-    Repository !: IRepository
+    Repositorys !: IRepository[]
 
     abstract Initialize(configure: any) 
 

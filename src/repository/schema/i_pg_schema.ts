@@ -5,15 +5,17 @@
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: PG 数据库架构
  */
+
 import { PGSchema } from '~/annotation'
 import ISchema from '~/repository/i_schema'
 import { IRepository } from '../i_repository'
+import EventEmitter from 'events'
+import Initialize from '../initialize'
 
-@PGSchema()
-export default abstract class IPGSchema implements ISchema {
-
-    Repository !: IRepository
+@PGSchema(Initialize)
+export default abstract class IPGSchema extends EventEmitter implements ISchema {
+    
+    Repositorys!: IRepository[]
 
     abstract Initialize(configure: any) 
-    
 }

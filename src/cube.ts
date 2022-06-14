@@ -14,9 +14,12 @@ import compress from 'compression'
 import logger from '~/utils/logger'
 import configure from '~/conf'
 import IMultiplexer from '~/services/i_multiplexer'
+import { CreateDbSchema } from '~/repository'
+import ISchema from '~/repository/i_schema'
 import MultiplexerFactory from '~/services/multiplexer_factroy'
 import IServiceSynchResolverModule from '~/dependency/i_service_synch_resolver_module'
 import IServiceAsyncResolverModule from '~/dependency/i_service_async_resolver_module'
+import ResolverModuleFactory from './dependency/resolver_module_factory'
 
 
 export class Cube {
@@ -26,10 +29,13 @@ export class Cube {
         me.server = express(Feathers());
         me.configure = config || configure();
         me.subServe = new Map<Symbol, express.Application>();
+        me.schema = CreateDbSchema(me.configure);
+        me.schema?.Initialize(me.configure);
         // me.contact = new CubeContact(me.configure);
     }
 
     private server !: express.Application;
+    private schema !: ISchema | null;
     // private contact !: CubeContact;
     private name !: string;
     private configure !: any;
@@ -57,6 +63,10 @@ export class Cube {
 
         me.server.use(...me.subServe.values());
         // me.contact.run(me.server);
+        if (me.configure.get("database")) { 
+            // let schema = CreateDbSchema(me.configure);
+            // schema.Initialize(me.configure);
+        }
 
         me.server.use(express.notFound())
         me.server.use(express.errorHandler({
@@ -89,11 +99,13 @@ export class Cube {
             me.subServe.set(Symbol.for(multiplexerName), Serve);
         }
     }
+
     public dependencyResolvers<M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules : M) {
         const me = this;
         for (let [_, serve] of me.subServe) {
             serve.emit("dependencyResolvers", me.server, ..._modules);
         }
+        me.schema?.emit("dependencyResolvers", me.server, ..._modules);
+        ResolverModuleFactory.getInstance(..._modules).dispatchNinjectModules(..._modules);
     }
-
 }

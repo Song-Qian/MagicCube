@@ -60,7 +60,7 @@ export type TableIndex = {
  */
 export type UniqueIndex = {
     indexName: string
-    deferrable: "notdeferrable" | "immediate" | "deferred",
+    deferrable: 'not deferrable' | 'immediate' | 'deferred',
     storageEngineIndexType: "btree" | "hash",
     useConstraint: boolean
 }
@@ -74,5 +74,23 @@ export type UniqueIndex = {
  */
 export type PrimaryKey = {
     constraintName : string
-    deferrable: "notdeferrable" | "immediate" | "deferred"
+    deferrable: 'not deferrable' | 'immediate' | 'deferred'
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/06/01 14:05
+ * @description: 表字段发生修改时的状态
+ * @return {*}
+ */
+export type ColumnPropertiesState = {
+    type : TableColumnEnum
+    comment: boolean
+    default: boolean
+    nullable: boolean
+    index: boolean
+    unique: boolean
+    primary: boolean
+    increments: boolean
 }

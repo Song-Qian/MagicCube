@@ -12,8 +12,6 @@ import IDependencyResolver from '~/dependency/i_dependency';
 
 @RestMultiplexer()
 export default abstract class IRestMultiplexer implements IMultiplexer {
-    
-    dependencyContainer !: IDependencyResolver;
 
     protected _service_mapping !: Map<string, HttpService<(...args: any[]) => { [key: string] : any }>>;
 

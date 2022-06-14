@@ -5,19 +5,14 @@
  * Description  :   rest api 请求加载和分发器
  */
 import path from 'path'
-import { inTypes } from '~/utils/common'
-import DependencyResolver from '~/dependency/dependency_resolver'
-import IServiceAsyncResolverModule from '~/dependency/i_service_async_resolver_module'
-import AsynchronousResolverNinject from '~/dependency/asynchronous_resolver_ninject'
-import SynchronousResolverNinject from '~/dependency/synchronous_resolver_ninject'
-
 import { HttpService } from './http_service'
 import HttpRestFormatHook from './rest_format_hook'
-import IServiceSynchResolverModule from '~/dependency/i_service_synch_resolver_module'
-
 import express from '@feathersjs/express'
 import Feathers, { Hook } from '@feathersjs/feathers'
 import IRestMultiplexer from './i_rest_multiplexer'
+import ResolverModuleFactory from '~/dependency/resolver_module_factory'
+import IServiceAsyncResolverModule from '~/dependency/i_service_async_resolver_module'
+import IServiceSynchResolverModule from '~/dependency/i_service_synch_resolver_module'
 
 export default class RestMultiplexer extends IRestMultiplexer {
 
@@ -35,7 +30,7 @@ export default class RestMultiplexer extends IRestMultiplexer {
         }));
 
         const resolveLoadedModule = function() {
-            const services = me.dependencyContainer.GetAnyModels<HttpService<(...args: any[]) => { [key: string] : any }>>(Symbol.for('magic:rest'));
+            const services = ResolverModuleFactory.getInstance().GetAnyModels<HttpService<(...args: any[]) => { [key: string] : any }>>(Symbol.for('magic:rest'));
             const root : string = configure.get('http.server.base') || "/";
             services.forEach((it: HttpService<(...args: any[]) => { [key: string] : any }>, _) => {
                 let http_net_path = Reflect.getMetadata(Symbol.for('magic:api'), it.constructor) || "";
@@ -57,9 +52,7 @@ export default class RestMultiplexer extends IRestMultiplexer {
         }
 
         Serve.once("dependencyResolvers", <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>> (app, ..._modules: M) => {
-            me.dependencyContainer = inTypes<Array<IServiceSynchResolverModule | IServiceAsyncResolverModule>, IServiceSynchResolverModule>(_modules) ? new SynchronousResolverNinject() : new AsynchronousResolverNinject();
-            me.dependencyContainer.on("onLoadedModules", resolveLoadedModule);
-            (<DependencyResolver>me.dependencyContainer).dispatchNinjectModules(..._modules);
+            ResolverModuleFactory.getInstance(..._modules).on("onLoadedModules", resolveLoadedModule);
         })
         return Serve;
     }
