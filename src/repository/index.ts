@@ -16,24 +16,16 @@ export const CreateDbSchema = (configure: any): ISchema | null => {
 
     if (client) {
         const CreateMySQLSchema = () : IMySQLSchema => {
-            const it = Reflect.construct(function() {}, [], IMySQLSchema);
-            it.Initialize(configure);
-            return it;
+            return Reflect.construct(function() {}, [], IMySQLSchema);
         }
         const CreateOracleSchema = () : IOracleSchema => {
-            const it = Reflect.construct(function() {}, [], IOracleSchema);
-            it.Initialize(configure);
-            return it;
+            return Reflect.construct(function() {}, [], IOracleSchema);
         }
         const CreatePGSchema = () : IPGSchema => {
-            const it = Reflect.construct(function() {}, [], IPGSchema);
-            it.Initialize(configure);
-            return it;
+            return Reflect.construct(function() {}, [], IPGSchema);
         }
         const CreateSqlite3Schema = () : ISqlite3Schema => {
-            const it = Reflect.construct(function() {}, [], ISqlite3Schema);
-            it.Initialize(configure);
-            return it;
+            return Reflect.construct(function() {}, [], ISqlite3Schema);
         }
         const factory = {
             "mysql": CreateMySQLSchema,

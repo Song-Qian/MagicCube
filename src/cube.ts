@@ -64,8 +64,8 @@ export class Cube {
         me.server.use(...me.subServe.values());
         // me.contact.run(me.server);
         if (me.configure.get("database")) { 
-            // let schema = CreateDbSchema(me.configure);
-            // schema.Initialize(me.configure);
+            let schema = CreateDbSchema(me.configure);
+            schema?.Initialize(me.configure);
         }
 
         me.server.use(express.notFound())

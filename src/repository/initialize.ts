@@ -18,7 +18,7 @@ import ISchema from "./i_schema"
 
 export default function(configure: any) {
     const me : ISchema = this;
-    const clientName = { "mysql": "mysql2", "oracle": "oracledb", "postgresql": "pg", "sqlite3": "sqlite3" }[configure.get("database.client") || "mysql"];
+    const clientName = { "MYSQL": "mysql2", "ORACLE": "oracledb", "PG": "pg", "SQLITE3": "sqlite3" }[Reflect.getMetadata(Symbol.for("Kind"), me.constructor) || "MYSQL"];
     const dbContext = knex({
         client: clientName,
         acquireConnectionTimeout: configure.get("database.connection.timeout"),
