@@ -23,9 +23,12 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
-            let result = trx.select().from(tableName);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.select().from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit()
-            return result
+            return result;
         } catch (e) {
             await trx.rollback()
         }
@@ -42,7 +45,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
-            let result = await trx.select().from(tableName).where("id", id).first();
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.select().from(tableName).where("id", id).first().on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit()
             return result
         } catch (e) {
@@ -61,9 +67,12 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
-            let result = await trx.select().from(tableName).andWhere(t);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.select().from(tableName).andWhere(t).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit()
-            return result as T[];
+            return result;
         } catch (e) {
             await trx.rollback();
         }
@@ -114,7 +123,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
                     }
             }
 
-            let result = await queryBuilder.from(tableName).limit(limit).offset((page - 1) * limit);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await queryBuilder.from(tableName).limit(limit).offset((page - 1) * limit).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             return result as T[];
         } catch (e) {
             await trx.rollback();
@@ -132,7 +144,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
-            let result = await trx.select().from(tableName).where(t).first();
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.select().from(tableName).where(t).first().on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;
         } catch (e) {
@@ -151,7 +166,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
-            let result = await trx.count(columnName, { as : "count" }).from(tableName);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.count(columnName, { as : "count" }).from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return Number(result["count"]);
         } catch (e) {
@@ -192,7 +210,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
                 queryBuilder = queryBuilder.orWhereNot(orWhereNot);
             }
 
-            let result = await queryBuilder.count(columnName, { as : "count" }).from(tableName);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await queryBuilder.count(columnName, { as : "count" }).from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);;
             await trx.commit();
             return Number(result["count"]);
         } catch (e) {
@@ -211,7 +232,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
-            let result = await trx.insert(model, ["id"], { includeTriggerModifications: true }).from(tableName);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.insert(model, ["id"], { includeTriggerModifications: true }).from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return { ...model, id : result[0]};
         } catch (e) {
@@ -230,7 +254,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
-            let result = await trx.insert(models, ["id"], { includeTriggerModifications: true }).from(tableName);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.insert(models, ["id"], { includeTriggerModifications: true }).from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result.length;
         } catch (e) {
@@ -249,7 +276,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
-            let result = await trx.update(model).from(tableName).where("id", model.id);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.update(model).from(tableName).where("id", model.id).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             if (result > 0 ) {
                 return model;
@@ -291,7 +321,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
             if (orWhereNot) {
                 queryBuilder = queryBuilder.orWhereNot(orWhereNot);
             }
-            let result = await queryBuilder;
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await queryBuilder.on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;
         } catch (e) {
@@ -310,7 +343,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
-            let result = await trx.delete().from(tableName).where("id", id);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.delete().from(tableName).where("id", id).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;
         } catch (e) {
@@ -349,7 +385,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
             if (orWhereNot) {
                 queryBuilder = queryBuilder.orWhereNot(orWhereNot);
             }
-            let result = await queryBuilder.from(tableName);
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await queryBuilder.from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;
         } catch (e) {
@@ -368,7 +407,10 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
     public async exec(sql: Knex.QueryBuilder): Promise<any> {
         let trx = await this.dbContext.transaction();
         try {
-            let result = await trx.with("table", sql).select("*").from("table");
+            let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
+            let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
+            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let result = await trx.with("table", sql).select("*").from("table").on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;
         } catch (e) {

@@ -27,4 +27,10 @@ export interface IRepository {
 
     $errorHandler ?:  (error : any) => Promise<void> | void;
 
+    $beforeExecute ?: (data : any) =>  void;
+
+    $executeError ?: (err: Error, obj: any) => void;
+
+    $afterExecute ?: (response: any, obj: any, builder) => void;
+
 }
