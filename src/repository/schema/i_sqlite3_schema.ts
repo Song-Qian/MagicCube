@@ -14,9 +14,5 @@ import Initialize from '../initialize'
 
 @Sqlite3Schema(Initialize)
 export default abstract class ISqlite3Schema extends EventEmitter implements ISchema {
-    
-    Repositorys!: IRepository[];
-
     abstract Initialize(configure: any) 
-    
 }

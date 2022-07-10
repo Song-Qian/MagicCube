@@ -14,8 +14,5 @@ import Initialize from '../initialize'
 
 @PGSchema(Initialize)
 export default abstract class IPGSchema extends EventEmitter implements ISchema {
-    
-    Repositorys!: IRepository[]
-
     abstract Initialize(configure: any) 
 }

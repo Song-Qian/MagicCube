@@ -29,8 +29,10 @@ export class Cube {
         me.server = express(Feathers());
         me.configure = config || configure();
         me.subServe = new Map<Symbol, express.Application>();
-        me.schema = CreateDbSchema(me.configure);
-        me.schema?.Initialize(me.configure);
+        if (me.configure.get("database.client")) { 
+            me.schema = CreateDbSchema(me.configure);
+            me.schema?.Initialize(me.configure);
+        }
         // me.contact = new CubeContact(me.configure);
     }
 
@@ -63,10 +65,6 @@ export class Cube {
 
         me.server.use(...me.subServe.values());
         // me.contact.run(me.server);
-        if (me.configure.get("database")) { 
-            let schema = CreateDbSchema(me.configure);
-            schema?.Initialize(me.configure);
-        }
 
         me.server.use(express.notFound())
         me.server.use(express.errorHandler({

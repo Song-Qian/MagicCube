@@ -8,14 +8,10 @@
 
 import { MySqlSchema } from '~/annotation'
 import ISchema from '~/repository/i_schema'
-import { IRepository } from '../i_repository'
 import Initialize from '../initialize'
 import EventEmitter from "events"
 
 @MySqlSchema(Initialize)
 export default abstract class IMySQLSchema extends EventEmitter implements ISchema {
-
-    Repositorys !: Array<IRepository>
-
     abstract Initialize(configure: any)
 }

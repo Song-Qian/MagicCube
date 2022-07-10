@@ -9,47 +9,22 @@
 import IServiceSynchResolverModule from "~/dependency/i_service_synch_resolver_module"
 import IServiceAsyncResolverModule from "~/dependency/i_service_async_resolver_module"
 import ResolverModuleFactory from "~/dependency/resolver_module_factory"
+import ConnectionFactory from "./connection/connection_factory"
 import { isPromise } from "~/utils/common"
 import { ColumnPropertiesState, PrimaryKey, TableIndex, UniqueIndex } from "./schema_type"
-import knex, { Knex as KnexSchema } from "knex"
-import logger from '~/utils/logger'
+import { Knex as KnexSchema } from "knex"
 import { IRepository } from "./i_repository"
 import ISchema from "./i_schema"
 
 export default function(configure: any) {
     const me : ISchema = this;
-    const clientName = { "MYSQL": "mysql2", "ORACLE": "oracledb", "PG": "pg", "SQLITE3": "sqlite3" }[Reflect.getMetadata(Symbol.for("Kind"), me.constructor) || "MYSQL"];
-    const dbContext = knex({
-        client: clientName,
-        acquireConnectionTimeout: configure.get("database.connection.timeout"),
-        connection: {
-            host: configure.get("database.connection.host"),
-            port: ~~(configure.get("database.connection.port") || 3306),
-            socketPath : configure.get("database.connection.socketPath"),
-            user: configure.get("database.connection.user"),
-            password: configure.get("database.connection.password"),
-            database: configure.get("database.connection.database")
-        },
-        pool: {
-            min: configure.get("database.pool.min"),
-            max: configure.get("database.pool.max"),
-            afterCreate: (conn, done) => { 
-                try { 
-                    me.emit("$onPoolCreated", conn, configure.get("database"))
-                    done(null, conn);
-                } catch (e) {
-                    done(e, conn)
-                }
-            }
-        },
-        postProcessResponse: (result: any) => result,
-        wrapIdentifier: (value, origImpl, queryContext) => origImpl(value),
-        log: configure.get("database.logger") ? logger : undefined
-    })
+    const clientName = Reflect.getMetadata(Symbol.for("Kind"), me.constructor);
+    const $onPoolCreated = (conn) => me.emit("$onPoolCreated", conn, configure.get("database"));
+    const dbContext = ConnectionFactory(clientName, configure, $onPoolCreated);
 
     const resolveLoadedModule = function() {
-        ResolverModuleFactory.getInstance().GetAnyModels<IRepository>(Symbol.for("magic:table"));
-        me.Repositorys.forEach((repository : IRepository) => {
+        let repositorys = ResolverModuleFactory.getInstance().GetAnyModels<IRepository>(Symbol.for("magic:table"));
+        repositorys.map((repository : IRepository) => {
             repository.dbContext = dbContext;
             const tableName = Reflect.getMetadata(Symbol.for("magic:table"), repository);
             const tableViewExpression = Reflect.getMetadata(Symbol.for("magic:tableViewExpression"), repository);
@@ -98,9 +73,11 @@ export default function(configure: any) {
                                         const columnPrimaryOptions : PrimaryKey = <PrimaryKey>Reflect.getMetadata(Symbol.for("magic:tablePrimaryOptions"), repository, field);
                                         const columnIncrements = Reflect.getMetadata(Symbol.for("magic:tableIncrementsColumn"), repository, field);
                                         const columnIncrementsOptions = Reflect.getMetadata(Symbol.for("magic:tableIncrementsOptions"), repository, field);
+                                        const columnForeignKey = Reflect.getMetadata(Symbol.for("magic:tableForeignKey"), repository, field);
+                                        const columnForeignOptions = Reflect.getMetadata(Symbol.for("magic:tableForeignOptions"), repository, field);
                                         const columnFactory = [ table.integer, table.bigInteger, table.text, table.string, table.float, table.double, table.decimal, table.boolean, table.date, table.dateTime, table.time, table.timestamp, table.timestamps, table.binary, table.enum, table.json, table.jsonb, table.uuid, table.geometry, table.geography, table.point ];
                                         let columnBuilder = <KnexSchema.ColumnBuilder>(<any>columnFactory[columnType]).apply(table, [columnName, ...columnOptions]);
-                                        if (clientName === "mysql") {
+                                        if (clientName === "MYSQL") {
                                             columnBuilder = columnDefaultValue && columnBuilder.defaultTo(columnDefaultValue, columnDefaultOptions) || columnBuilder;
                                         }
                                         columnBuilder = columnComment && columnBuilder.comment(columnComment) || columnBuilder;
@@ -109,7 +86,8 @@ export default function(configure: any) {
                                         columnUnique && table.unique(columnName, columnUniqueOptions);
                                         columnPrimary && table.primary(columnName, columnPrimaryOptions);
                                         columnIncrements && table.increments(columnName, columnIncrementsOptions);
-                                        const properitesState : ColumnPropertiesState = { type: columnType, comment: Boolean(columnComment), default: Boolean(columnDefaultValue), nullable: !columnNotNullable && columnNullable, index: Boolean(columnIndex), unique: Boolean(columnUnique), primary: Boolean(columnPrimary), increments : Boolean(columnIncrements) };
+                                        columnForeignKey && table.foreign(field, columnForeignKey).references(columnForeignOptions.foreignColumn).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
+                                        const properitesState : ColumnPropertiesState = { type: columnType, comment: Boolean(columnComment), default: Boolean(columnDefaultValue), nullable: !columnNotNullable && columnNullable, index: Boolean(columnIndex), unique: Boolean(columnUnique), primary: Boolean(columnPrimary), increments : Boolean(columnIncrements), foreign: Boolean(columnForeignKey) };
                                         const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(table, columnName, properitesState);
                                         return isPromise(updateColumnPropsPromise) ? (<Promise<void>>updateColumnPropsPromise).then(() => true) : Promise.resolve(true);
                                     }
@@ -151,7 +129,8 @@ export default function(configure: any) {
                 errorDone.then(() => process.exit());
             };
             synchronousPipe.then(() => void 0, Quit);
-        })
+            return synchronousPipe;
+        });
     }
 
     me.once("dependencyResolvers", <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>> (app, ..._modules: M) => { 

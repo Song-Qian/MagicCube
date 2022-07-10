@@ -8,6 +8,7 @@ import { Knex as KnexSchema } from "knex"
 import { ColumnPropertiesState } from "./schema_type";
 
 export interface IRepository {
+    
     dbContext: KnexSchema;
 
     $beforeDropTable ?: () => Promise<boolean> | boolean;
@@ -25,4 +26,5 @@ export interface IRepository {
     $afterCreateTable ?: () => Promise<void> | void;
 
     $errorHandler ?:  (error : any) => Promise<void> | void;
+
 }

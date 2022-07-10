@@ -7,5 +7,5 @@
 import { Knex } from 'knex'
 
 export default interface IConnectionFactory {
-    createConnection() : Knex;
+    createConnection(dbconfig: any) : Knex;
 }

@@ -5,11 +5,8 @@
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: 数据库ORM架构入口
  */
-import { IRepository } from "./i_repository"
 
 export default interface ISchema {
-    
-    Repositorys : Array<IRepository>
 
     Initialize(configure);
     

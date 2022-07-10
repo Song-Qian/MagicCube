@@ -8,15 +8,10 @@
 
 import { OracleSchema } from '~/annotation'
 import ISchema from '~/repository/i_schema'
-import { IRepository } from '../i_repository'
 import EventEmitter from 'events'
 import Initialize from '../initialize'
 
 @OracleSchema(Initialize)
 export default abstract class IOracleSchema extends EventEmitter implements ISchema {
-
-    Repositorys !: IRepository[]
-
     abstract Initialize(configure: any) 
-
 }

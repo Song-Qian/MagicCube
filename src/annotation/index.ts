@@ -11,15 +11,9 @@ import { Hook } from '@feathersjs/feathers'
 import { HttpService } from '../services/http_service'
 import { TableColumnEnum, TableIndex, UniqueIndex, PrimaryKey } from '../repository/schema_type'
 
-const defineClassMetadata = (key: Symbol, value: any) : ClassDecorator => {
+const defineClassMetadata = (key: Symbol, value: any): ClassDecorator => {
     return (target: Function) => {
         Reflect.defineMetadata(key, value, target);
-    }
-}
-
-const definePropertyMetadata = (key: Symbol, value: any) => {
-    return (target: any, name: string) => {
-        Reflect.defineMetadata(key, value, target, name);
     }
 }
 
@@ -75,8 +69,8 @@ export const ViewMultiplexer = () => {
  * @description: 内置MySQL架构修饰器,不对外公开
  * @return {*} \@MySqlSchema()
  */
-export const MySqlSchema = (fn : (configure: any) => void) => {
-    return (target: Function) => { 
+export const MySqlSchema = (fn: (configure: any) => void) => {
+    return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("Kind"), "MYSQL", target);
         Reflect.defineProperty(target, "Initialize", {
             configurable: true,
@@ -94,8 +88,8 @@ export const MySqlSchema = (fn : (configure: any) => void) => {
  * @description: 内置Oracle 架构修饰器,不对外公开
  * @return {*} \@OracleSchema()
  */
-export const OracleSchema = (fn : (configure: any) => void) => {
-    return (target: Function) => { 
+export const OracleSchema = (fn: (configure: any) => void) => {
+    return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("Kind"), "ORACLE", target);
         Reflect.defineProperty(target, "Initialize", {
             configurable: true,
@@ -113,8 +107,8 @@ export const OracleSchema = (fn : (configure: any) => void) => {
  * @description: 内置PG架构修饰器,不对外公开
  * @return {*} \@PGSchema()
  */
-export const PGSchema = (fn : (configure: any) => void) => {
-    return (target: Function) => { 
+export const PGSchema = (fn: (configure: any) => void) => {
+    return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("Kind"), "PG", target);
         Reflect.defineProperty(target, "Initialize", {
             configurable: true,
@@ -132,8 +126,8 @@ export const PGSchema = (fn : (configure: any) => void) => {
  * @description: 内置SQLITE3架构修饰器,不对外公开
  * @return {*} \@Sqlite3Schema()
  */
-export const Sqlite3Schema = (fn : (configure: any) => void) => {
-    return (target: Function) => { 
+export const Sqlite3Schema = (fn: (configure: any) => void) => {
+    return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("Kind"), "SQLITE3", target);
         Reflect.defineProperty(target, "Initialize", {
             configurable: true,
@@ -166,8 +160,8 @@ export const DropTableIfExists = () => {
  * @param {string} 数据库表排序规则
  * @return {*} \@DataTable("user")
  */
-export const DataTable = (name : string, engine : string = "innodb", charset : string = "utf8", collate : string = "utf8mb4")  => {
-    return (target : Function) => {
+export const DataTable = (name: string, engine: string = "innodb", charset: string = "utf8", collate: string = "utf8mb4") => {
+    return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("magic:table"), name, target);
         engine && Reflect.defineMetadata(Symbol.for("magic:tableEngine"), engine, target);
         charset && Reflect.defineMetadata(Symbol.for("magic:tableCharset"), charset, target);
@@ -202,7 +196,7 @@ export const DataView = (viewName: string, table: Knex.QueryBuilder) => {
  * @param {any} 表字段数据描述选项
  * @return {*} \@TableColumn('field', TableColumnEnum.Integer, '这是一个字段', 10)
  */
-export const TableColumn = (columnName: string, dataType : TableColumnEnum, description ?: string, options ?: Readonly<any[]>) => {
+export const TableColumn = (columnName: string, dataType: TableColumnEnum, description?: string, options?: Readonly<any[]>) => {
     return (target: any, name: string) => {
         Reflect.defineMetadata(Symbol.for("magic:tableColumnName"), columnName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableColumnType"), dataType, target, name);
@@ -211,7 +205,7 @@ export const TableColumn = (columnName: string, dataType : TableColumnEnum, desc
     }
 }
 
-type DefaultValue =  string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer | Knex.Raw;
+type DefaultValue = string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer | Knex.Raw;
 
 /**
  * @LastEditors: SongQian
@@ -280,7 +274,7 @@ export const IndexColumn = (indexName: string, options: TableIndex) => {
  * @param {UniqueIndex} 索引配置
  * @return {*} \@UniqueColumn({ indexName: "idx_name", deferrable: "deferred", storageEngineIndexType: "hash", useConstraint: true })
  */
-export const UniqueColumn = (options: UniqueIndex = { indexName: "idx_name", deferrable: "deferred", storageEngineIndexType: "hash", useConstraint: true}) => {
+export const UniqueColumn = (options: UniqueIndex = { indexName: "idx_name", deferrable: "deferred", storageEngineIndexType: "hash", useConstraint: true }) => {
     return (target: any, name: string) => {
         Reflect.defineMetadata(Symbol.for("magic:tableUniqueName"), options.indexName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableUniqueOptions"), options, target, name);
@@ -310,6 +304,27 @@ export const PrimaryColumn = (columnName: string, options: PrimaryKey) => {
 /**
  * @LastEditors: SongQian
  * @Author: SongQian
+ * @Date: 2022/07/10 16:02
+ * @description: Magic props with incredible abilities~~~
+ * @param {string} 外键字段
+ * @param {string} 外表
+ * @param {object} 外键检查约束规则
+ * @return {*} \@ForeignColumn("column", "table", { onDelete: "CASCADE", onUpdate: "CASCADE" })
+ */
+export const ForeignColumn = (columnName: string, inTable?: string, opts?: { onDelete: "RESTRICT" | "CASCADE" | "SET NULL" | "NO ACTION", onUpdate: "RESTRICT" | "CASCADE" | "SET NULL" | "NO ACTION" }) => {
+    return (target: any, name: string) => {
+        let table = inTable ? inTable : false;
+        let onDelete = opts && opts.onDelete ? opts.onDelete : false;
+        let onUpdate = opts && opts.onUpdate ? opts.onUpdate : false;
+        let foreignKey = table ? `fk_${name}_${table}_${columnName}` : `fk_${name}_${columnName}`;
+        Reflect.defineMetadata(Symbol.for("magic:tableForeignKey"), foreignKey, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableForeignOptions"), { foreignColumn: columnName, table, onDelete, onUpdate }, target, name);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
  * @Date: 2022/05/30 22:43
  * @description: ORM模式中表字段自增修饰器
  * @param {string} 列名
@@ -317,7 +332,7 @@ export const PrimaryColumn = (columnName: string, options: PrimaryKey) => {
  * @return {*} \@IncrementsColumn("columnName", { primaryKey : true })
  */
 export const IncrementsColumn = (columnName: string, options: { primaryKey: boolean }) => {
-    return (target : any, name : string) => {
+    return (target: any, name: string) => {
         Reflect.defineMetadata(Symbol.for("magic:tableIncrementsColumn"), columnName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableIncrementsOptions"), options, target, name);
     }
@@ -331,14 +346,14 @@ export const IncrementsColumn = (columnName: string, options: { primaryKey: bool
  * @param {Hook} Function 钩子函数
  * @return {*} \@BeforeHook(() => Hook)
  */
-export const BeforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+export const BeforeHook = (fn: Hook): ClassDecorator | MethodDecorator => {
     return (...args) => {
-        const target : any = args[0];
-        const name : string = args[1];
-        const descriptors : any = args[2];
+        const target: any = args[0];
+        const name: string = args[1];
+        const descriptors: any = args[2];
         if (target.prototype && target.prototype.constructor instanceof HttpService) {
             const beforeHooks = target.prototype.beforeHooks || { all: [] };
-            beforeHooks.all = [...beforeHooks.all, fn]; 
+            beforeHooks.all = [...beforeHooks.all, fn];
             Reflect.defineProperty(target.prototype, "beforeHooks", {
                 configurable: false,
                 writable: true,
@@ -347,7 +362,7 @@ export const BeforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
             })
         }
 
-        if(target && target.constructor instanceof HttpService && name === "find") {
+        if (target && target.constructor instanceof HttpService && name === "find") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { find: [] };
             beforeHooks.find = [...beforeHooks.find, fn];
             Reflect.defineProperty(target, "beforeHooks", {
@@ -357,10 +372,10 @@ export const BeforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...beforeHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "get") {
+
+        if (target && target.constructor instanceof HttpService && name === "get") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { get: [] };
-            beforeHooks.get = [...beforeHooks.get, fn]; 
+            beforeHooks.get = [...beforeHooks.get, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
@@ -368,10 +383,10 @@ export const BeforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...beforeHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "create") {
+
+        if (target && target.constructor instanceof HttpService && name === "create") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { create: [] };
-            beforeHooks.create = [...beforeHooks.create, fn]; 
+            beforeHooks.create = [...beforeHooks.create, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
@@ -379,10 +394,10 @@ export const BeforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...beforeHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "update") {
+
+        if (target && target.constructor instanceof HttpService && name === "update") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { update: [] };
-            beforeHooks.update = [...beforeHooks.update, fn]; 
+            beforeHooks.update = [...beforeHooks.update, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
@@ -390,10 +405,10 @@ export const BeforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...beforeHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "patch") {
+
+        if (target && target.constructor instanceof HttpService && name === "patch") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { patch: [] };
-            beforeHooks.patch = [...beforeHooks.patch, fn]; 
+            beforeHooks.patch = [...beforeHooks.patch, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
@@ -401,10 +416,10 @@ export const BeforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...beforeHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "remove") {
+
+        if (target && target.constructor instanceof HttpService && name === "remove") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { remove: [] };
-            beforeHooks.remove = [...beforeHooks.remove, fn]; 
+            beforeHooks.remove = [...beforeHooks.remove, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
@@ -423,14 +438,14 @@ export const BeforeHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
  * @param {Hook} Function 钩子函数
  * @return {*} \@AfterHook(() => Hook)
  */
-export const AfterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+export const AfterHook = (fn: Hook): ClassDecorator | MethodDecorator => {
     return (...args) => {
-        const target : any = args[0];
-        const name : string = args[1];
-        const descriptors : any = args[2];
+        const target: any = args[0];
+        const name: string = args[1];
+        const descriptors: any = args[2];
         if (target.prototype && target.prototype.constructor instanceof HttpService) {
             const afterHooks = target.prototype.afterHooks || { all: [] };
-            afterHooks.all = [...afterHooks.all, fn]; 
+            afterHooks.all = [...afterHooks.all, fn];
             Reflect.defineProperty(target.prototype, "afterHooks", {
                 configurable: false,
                 writable: true,
@@ -439,7 +454,7 @@ export const AfterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
             })
         }
 
-        if(target && target.constructor instanceof HttpService && name === "find") {
+        if (target && target.constructor instanceof HttpService && name === "find") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { find: [] };
             afterHooks.find = [...afterHooks.find, fn];
             Reflect.defineProperty(target, "afterHooks", {
@@ -449,10 +464,10 @@ export const AfterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...afterHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "get") {
+
+        if (target && target.constructor instanceof HttpService && name === "get") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { get: [] };
-            afterHooks.get = [...afterHooks.get, fn]; 
+            afterHooks.get = [...afterHooks.get, fn];
             Reflect.defineProperty(target, "afterHooks", {
                 configurable: false,
                 writable: true,
@@ -460,10 +475,10 @@ export const AfterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...afterHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "create") {
+
+        if (target && target.constructor instanceof HttpService && name === "create") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { create: [] };
-            afterHooks.create = [...afterHooks.create, fn]; 
+            afterHooks.create = [...afterHooks.create, fn];
             Reflect.defineProperty(target, "afterHooks", {
                 configurable: false,
                 writable: true,
@@ -471,10 +486,10 @@ export const AfterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...afterHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "update") {
+
+        if (target && target.constructor instanceof HttpService && name === "update") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { update: [] };
-            afterHooks.update = [...afterHooks.update, fn]; 
+            afterHooks.update = [...afterHooks.update, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
@@ -482,10 +497,10 @@ export const AfterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...afterHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "patch") {
+
+        if (target && target.constructor instanceof HttpService && name === "patch") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { patch: [] };
-            afterHooks.patch = [...afterHooks.patch, fn]; 
+            afterHooks.patch = [...afterHooks.patch, fn];
             Reflect.defineProperty(target, "afterHooks", {
                 configurable: false,
                 writable: true,
@@ -493,10 +508,10 @@ export const AfterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...afterHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "remove") {
+
+        if (target && target.constructor instanceof HttpService && name === "remove") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { remove: [] };
-            afterHooks.remove = [...afterHooks.remove, fn]; 
+            afterHooks.remove = [...afterHooks.remove, fn];
             Reflect.defineProperty(target, "afterHooks", {
                 configurable: false,
                 writable: true,
@@ -515,14 +530,14 @@ export const AfterHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
  * @param {Hook} Function 钩子函数
  * @return {*} \@ErrorHook(() => Hook)
  */
-export const ErrorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+export const ErrorHook = (fn: Hook): ClassDecorator | MethodDecorator => {
     return (...args) => {
-        const target : any = args[0];
-        const name : string = args[1];
-        const descriptors : any = args[2];
+        const target: any = args[0];
+        const name: string = args[1];
+        const descriptors: any = args[2];
         if (target.prototype && target.prototype.constructor instanceof HttpService) {
             const errorHooks = target.prototype.errorHooks || { all: [] };
-            errorHooks.all = [...errorHooks.all, fn]; 
+            errorHooks.all = [...errorHooks.all, fn];
             Reflect.defineProperty(target.prototype, "errorHooks", {
                 configurable: false,
                 writable: true,
@@ -531,7 +546,7 @@ export const ErrorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
             })
         }
 
-        if(target && target.constructor instanceof HttpService && name === "find") {
+        if (target && target.constructor instanceof HttpService && name === "find") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { find: [] };
             errorHooks.find = [...errorHooks.find, fn];
             Reflect.defineProperty(target, "errorHooks", {
@@ -541,10 +556,10 @@ export const ErrorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...errorHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "get") {
+
+        if (target && target.constructor instanceof HttpService && name === "get") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { get: [] };
-            errorHooks.get = [...errorHooks.get, fn]; 
+            errorHooks.get = [...errorHooks.get, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
@@ -552,10 +567,10 @@ export const ErrorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...errorHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "create") {
+
+        if (target && target.constructor instanceof HttpService && name === "create") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { create: [] };
-            errorHooks.create = [...errorHooks.create, fn]; 
+            errorHooks.create = [...errorHooks.create, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
@@ -563,10 +578,10 @@ export const ErrorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...errorHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "update") {
+
+        if (target && target.constructor instanceof HttpService && name === "update") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { update: [] };
-            errorHooks.update = [...errorHooks.update, fn]; 
+            errorHooks.update = [...errorHooks.update, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
@@ -574,10 +589,10 @@ export const ErrorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...errorHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "patch") {
+
+        if (target && target.constructor instanceof HttpService && name === "patch") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { patch: [] };
-            errorHooks.patch = [...errorHooks.patch, fn]; 
+            errorHooks.patch = [...errorHooks.patch, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
@@ -585,10 +600,10 @@ export const ErrorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...errorHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "remove") {
+
+        if (target && target.constructor instanceof HttpService && name === "remove") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { remove: [] };
-            errorHooks.remove = [...errorHooks.remove, fn]; 
+            errorHooks.remove = [...errorHooks.remove, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
@@ -607,14 +622,14 @@ export const ErrorHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
  * @param {Hook} Function 钩子函数
  * @return {*} \@FinallyHook(() => Hook)
  */
-export const FinallyHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
+export const FinallyHook = (fn: Hook): ClassDecorator | MethodDecorator => {
     return (...args) => {
-        const target : any = args[0];
-        const name : string = args[1];
-        const descriptors : any = args[2];
+        const target: any = args[0];
+        const name: string = args[1];
+        const descriptors: any = args[2];
         if (target.prototype && target.prototype.constructor instanceof HttpService) {
             const finallyHooks = target.prototype.finallyHooks || { all: [] };
-            finallyHooks.all = [...finallyHooks.all, fn]; 
+            finallyHooks.all = [...finallyHooks.all, fn];
             Reflect.defineProperty(target.prototype, "finallyHooks", {
                 configurable: false,
                 writable: true,
@@ -623,7 +638,7 @@ export const FinallyHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
             })
         }
 
-        if(target && target.constructor instanceof HttpService && name === "find") {
+        if (target && target.constructor instanceof HttpService && name === "find") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { find: [] };
             finallyHooks.find = [...finallyHooks.find, fn];
             Reflect.defineProperty(target, "finallyHooks", {
@@ -633,10 +648,10 @@ export const FinallyHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...finallyHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "get") {
+
+        if (target && target.constructor instanceof HttpService && name === "get") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { get: [] };
-            finallyHooks.get = [...finallyHooks.get, fn]; 
+            finallyHooks.get = [...finallyHooks.get, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
@@ -644,10 +659,10 @@ export const FinallyHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...finallyHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "create") {
+
+        if (target && target.constructor instanceof HttpService && name === "create") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { create: [] };
-            finallyHooks.create = [...finallyHooks.create, fn]; 
+            finallyHooks.create = [...finallyHooks.create, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
@@ -655,10 +670,10 @@ export const FinallyHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...finallyHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "update") {
+
+        if (target && target.constructor instanceof HttpService && name === "update") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { update: [] };
-            finallyHooks.update = [...finallyHooks.update, fn]; 
+            finallyHooks.update = [...finallyHooks.update, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
@@ -666,10 +681,10 @@ export const FinallyHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...finallyHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "patch") {
+
+        if (target && target.constructor instanceof HttpService && name === "patch") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { patch: [] };
-            finallyHooks.patch = [...finallyHooks.patch, fn]; 
+            finallyHooks.patch = [...finallyHooks.patch, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
@@ -677,10 +692,10 @@ export const FinallyHook = (fn : Hook) : ClassDecorator | MethodDecorator => {
                 value: () => ({ ...finallyHooks })
             })
         }
-        
-        if(target && target.constructor instanceof HttpService && name === "remove") {
+
+        if (target && target.constructor instanceof HttpService && name === "remove") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { remove: [] };
-            finallyHooks.remove = [...finallyHooks.remove, fn]; 
+            finallyHooks.remove = [...finallyHooks.remove, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,

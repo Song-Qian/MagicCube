@@ -93,4 +93,5 @@ export type ColumnPropertiesState = {
     unique: boolean
     primary: boolean
     increments: boolean
+    foreign: boolean
 }
