@@ -51,7 +51,7 @@ export default class RestMultiplexer extends IRestMultiplexer {
             })
         }
 
-        Serve.once("dependencyResolvers", <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>> (app, ..._modules: M) => {
+        Serve.once("dependencyResolvers", <M extends IServiceSynchResolverModule | IServiceAsyncResolverModule> (app, ..._modules: Array<M>) => {
             ResolverModuleFactory.getInstance(..._modules).on("onLoadedModules", resolveLoadedModule);
         })
         return Serve;

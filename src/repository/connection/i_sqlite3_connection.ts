@@ -6,7 +6,7 @@
  */
 
 import { EventEmitter } from 'events'
-import knex, { Knex as KnexSchema } from 'knex';
+import knex, { Knex as KnexSchema } from 'knex'
 import IConnectionFactory from './i_connection'
 import logger from '~/utils/logger'
 
@@ -30,7 +30,7 @@ export class Sqlite3Connection extends ISqlite3Connection {
             acquireConnectionTimeout: dbconfig.connection.timeout,
             connection: {
                 host: dbconfig.connection.host,
-                port: dbconfig.connection.port || 3306,
+                port: dbconfig.connection.port || 0,
                 socketPath : dbconfig.connection.socketPath,
                 user: dbconfig.database.connection.user,
                 password: dbconfig.connection.password,

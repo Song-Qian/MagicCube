@@ -98,7 +98,7 @@ export class Cube {
         }
     }
 
-    public dependencyResolvers<M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>>(..._modules : M) {
+    public dependencyResolvers<M extends IServiceSynchResolverModule | IServiceAsyncResolverModule>(..._modules : Array<M>) {
         const me = this;
         for (let [_, serve] of me.subServe) {
             serve.emit("dependencyResolvers", me.server, ..._modules);

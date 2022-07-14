@@ -133,7 +133,7 @@ export default function(configure: any) {
         });
     }
 
-    me.once("dependencyResolvers", <M extends Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>> (app, ..._modules: M) => { 
+    me.once("dependencyResolvers", <M extends IServiceSynchResolverModule | IServiceAsyncResolverModule> (app, ..._modules: Array<M>) => { 
         ResolverModuleFactory.getInstance(..._modules).on("onLoadedModules", resolveLoadedModule)
     });
 } 

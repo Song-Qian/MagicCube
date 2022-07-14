@@ -16,15 +16,15 @@ export default abstract class IDependencyResolver {
 
     protected readonly abstract emitter : EventEmitter;
 
-    public abstract AddSynchronousNinjectModels (..._modules: IServiceSynchResolverModule[]): void;
+    public abstract AddSynchronousNinjectModels (..._modules: Array<IServiceSynchResolverModule>): void;
 
-    public abstract AddAsynchronousNinjectModules (..._modules: IServiceAsyncResolverModule[]): void;
+    public abstract AddAsynchronousNinjectModules (..._modules: Array<IServiceAsyncResolverModule>): void;
 
-    public abstract dispatchNinjectModules(..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]) : void;
+    public abstract dispatchNinjectModules(..._modules: Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>) : void;
 
     public abstract clearAllNinjectModules (): void;
 
-    public abstract clearNinjectModules (..._modules: IServiceSynchResolverModule[] | IServiceAsyncResolverModule[]): void;
+    public abstract clearNinjectModules (..._modules: Array<IServiceSynchResolverModule> | Array<IServiceAsyncResolverModule>): void;
 
     public abstract GetService<T> (serviceIdentifier: interfaces.ServiceIdentifier<any>, named: string | number | symbol) : T;
 

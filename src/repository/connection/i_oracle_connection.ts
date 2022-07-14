@@ -29,7 +29,7 @@ export class OracleConnection extends IOracleConnection {
             acquireConnectionTimeout: dbconfig.connection.timeout,
             connection: {
                 host: dbconfig.connection.host,
-                port: dbconfig.connection.port || 3306,
+                port: dbconfig.connection.port || 1521,
                 socketPath : dbconfig.connection.socketPath,
                 user: dbconfig.database.connection.user,
                 password: dbconfig.connection.password,

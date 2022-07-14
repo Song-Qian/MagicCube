@@ -22,28 +22,28 @@ export default class DependencyResolver extends IDependencyResolver {
     protected Ikernel: Container;
     protected emitter : EventEmitter = new EventEmitter();
 
-    public AddSynchronousNinjectModels (..._modules: ServiceSynchResolverModule[]): void {
+    public AddSynchronousNinjectModels (..._modules: Array<ServiceSynchResolverModule>): void {
         this.Ikernel.load(..._modules)
         this.emitter.emit("onLoadedModules", ..._modules);
     }
 
-    public AddAsynchronousNinjectModules (..._modules: ServiceAsyncResolverModule[]): void {
+    public AddAsynchronousNinjectModules (..._modules: Array<ServiceAsyncResolverModule>): void {
         this.Ikernel.loadAsync(..._modules).then(() => {
             this.emitter.emit("onLoadedModules", ..._modules);
         })
     }
 
-    public dispatchNinjectModules(..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]) : void {
+    public dispatchNinjectModules(..._modules: Array<ServiceSynchResolverModule> | Array<ServiceAsyncResolverModule>) : void {
         inTypes<Array<ServiceSynchResolverModule | ServiceAsyncResolverModule>, ServiceSynchResolverModule>(_modules) ? 
-            this.AddSynchronousNinjectModels(...(<ServiceSynchResolverModule[]>_modules)) : 
-                this.AddAsynchronousNinjectModules(...(<ServiceAsyncResolverModule[]>_modules));
+            this.AddSynchronousNinjectModels(...(<Array<ServiceSynchResolverModule>>_modules)) : 
+                this.AddAsynchronousNinjectModules(...(<Array<ServiceAsyncResolverModule>>_modules));
     }
 
     public clearAllNinjectModules (): void {
         this.Ikernel.unbindAll()
     }
 
-    public clearNinjectModules (..._modules: ServiceSynchResolverModule[] | ServiceAsyncResolverModule[]): void {
+    public clearNinjectModules (..._modules: Array<ServiceSynchResolverModule> | Array<ServiceAsyncResolverModule>): void {
         this.Ikernel.unload(..._modules)
     }
     
@@ -63,19 +63,19 @@ export default class DependencyResolver extends IDependencyResolver {
         return this.Ikernel.getAll<T>(identifiers);
     }
 
-    public useMiddleware (...middleware : interfaces.Middleware[]) {
+    public useMiddleware (...middleware : Array<interfaces.Middleware>) {
         this.Ikernel.applyMiddleware(...middleware);
     }
 
-    public on(eventName: string, fn: (...args: any[]) => void) {
+    public on(eventName: string, fn: (...args: Array<any>) => void) {
         this.emitter.on(eventName, fn);
     }
 
-    public off(eventName: string, fn: (...args: any[]) => void) {
+    public off(eventName: string, fn: (...args: Array<any>) => void) {
         this.emitter.off(eventName, fn);
     }
 
-    public once(eventName: string, fn: (...args: any[]) => void) {
+    public once(eventName: string, fn: (...args: Array<any>) => void) {
         this.emitter.once(eventName, fn);
     }
 
