@@ -6,34 +6,34 @@
  */
 
  const TerserPlugin = require('terser-webpack-plugin');
- const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+//  const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
  module.exports = {
     minimize : process.env.NODE_ENV === 'production',
     minimizer : process.env.NODE_ENV === 'production' ? [
-        new UglifyJsPlugin({
-            test: /\.(js|jsx|ts|tsx)$/i,
-            exclude: /[\\/]node_modules[\\/]/, //要排除的文件。
-            cache: true, //启用文件缓存
-            parallel: true, //使用多进程并行运行以提高构建速度
-            sourceMap: false, //使用源映射将错误信息位置映射到模块
-            extractComments: false, //是否提取注释到单独的文件中
-            // warningsFilter: true, //允许过滤uglify警告
-            uglifyOptions: {
-                ie8: false,
-                ecma: 5,
-                warnings: false,
-                compress: {
-                    conditionals: true, 
-                    dead_code: true,
-                    drop_console: true,
-                    drop_debugger: true
-                },
-                output: {
-                    comments: true,
-                }
-            }
-        }),
+        // new UglifyJsPlugin({
+        //     test: /\.(js|jsx|ts|tsx)$/i,
+        //     exclude: /[\\/]node_modules[\\/]/, //要排除的文件。
+        //     cache: true, //启用文件缓存
+        //     parallel: true, //使用多进程并行运行以提高构建速度
+        //     sourceMap: false, //使用源映射将错误信息位置映射到模块
+        //     extractComments: false, //是否提取注释到单独的文件中
+        //     // warningsFilter: true, //允许过滤uglify警告
+        //     uglifyOptions: {
+        //         ie8: false,
+        //         ecma: 5,
+        //         warnings: false,
+        //         compress: {
+        //             conditionals: true, 
+        //             dead_code: true,
+        //             drop_console: true,
+        //             drop_debugger: true
+        //         },
+        //         output: {
+        //             comments: true,
+        //         }
+        //     }
+        // }),
         new TerserPlugin({
             test: /\.(js|jsx|ts|tsx)$/i,
             exclude : [/[\\/]node_modules[\\/]/, /(\.d)\.(tsx?)/], //要排除的文件。
