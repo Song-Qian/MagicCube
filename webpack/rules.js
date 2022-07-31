@@ -35,8 +35,14 @@ module.exports = function() {
       }
     }
 
+    const HTML_Loader = {
+      test: /\.html$/,
+      loader: "html-loader",
+    }
+
     return [
       JS_Loader,
-      TS_Loader
+      TS_Loader,
+      HTML_Loader
     ]
 }
