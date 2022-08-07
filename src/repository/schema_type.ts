@@ -5,7 +5,7 @@
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: 数据库类型推断
  */
-import { Knex } from "knex"
+import { Knex as KnexSchema } from "knex"
 
 /**
  * @LastEditors: SongQian
@@ -48,7 +48,7 @@ export enum TableColumnEnum {
 export type TableIndex = {
     indexType :  "FULLTEXT" | "SPATIAL"
     storageEngineIndexType: "btree" | "hash"
-    predicate?: Knex.QueryBuilder
+    predicate?: KnexSchema.QueryBuilder
 }
 
 /**

@@ -4,12 +4,12 @@
  * @Description: 数据库粒度单位业务表
  * @eMail: onlylove1172559463@vip.qq.com
  */
-import { Knex } from 'knex'
+import { Knex as KnexSchema } from 'knex'
 import { IRepository } from './i_repository'
 
 export interface IUnitOfWorkRepositroy<T> extends IRepository {
 
-    dbContext : Knex;
+    dbContext : KnexSchema;
     /**
      * @Author: SongQian
      * @description: 全表检索
@@ -31,7 +31,7 @@ export interface IUnitOfWorkRepositroy<T> extends IRepository {
      * @param {Readonly} 检索条件 { [SearchField] : String Value }
      * @return {*} 返回检索的结果
      */    
-    getCondition (t : Readonly<any> | Knex.Raw): Promise<T[]>
+    getCondition (t : Readonly<any> | KnexSchema.Raw): Promise<T[]>
 
     
     /**
@@ -42,7 +42,7 @@ export interface IUnitOfWorkRepositroy<T> extends IRepository {
      * @param {number} 页大小 
      * @return {*} 返回分页检索的结果
      */ 
-    getConditionForPage (expression: () => { [key: string]: any | Knex.Raw }, page: number, limit: number): Promise<T[]>
+    getConditionForPage (expression: () => { [key: string]: any | KnexSchema.Raw }, page: number, limit: number): Promise<T[]>
 
     /**
      * @Author: SongQian
@@ -50,7 +50,7 @@ export interface IUnitOfWorkRepositroy<T> extends IRepository {
      * @param {Readonly} 检索条件 { [SearchField] : String Value }
      * @return {*} 返回检索的结果
      */    
-    getSingleModelForCondition (t : Readonly<any> | Knex.Raw): Promise<T | null>
+    getSingleModelForCondition (t : Readonly<any> | KnexSchema.Raw): Promise<T | null>
 
     /**
      * @Author: SongQian
@@ -67,7 +67,7 @@ export interface IUnitOfWorkRepositroy<T> extends IRepository {
      * @param {string} 列名
      * @return {*} 返回列计数值
      */    
-    getCountForCondinate (expression: () => { [key: string]: any | Knex.Raw }, columnName : string): Promise<number>
+    getCountForCondinate (expression: () => { [key: string]: any | KnexSchema.Raw }, columnName : string): Promise<number>
 
     /**
      * @Author: SongQian
@@ -100,7 +100,7 @@ export interface IUnitOfWorkRepositroy<T> extends IRepository {
      * @param {Readonly} 更新字段
      * @return {*} 返回被修改的行数
      */    
-    modifyCondition (expression: () => { [key: string]: any | Knex.Raw }, model : Readonly<any>): Promise<number>
+    modifyCondition (expression: () => { [key: string]: any | KnexSchema.Raw }, model : Readonly<any>): Promise<number>
 
     /**
      * @Author: SongQian
@@ -116,7 +116,7 @@ export interface IUnitOfWorkRepositroy<T> extends IRepository {
      * @param {function} 自定义条件
      * @return {*} 返回影响行数
      */   
-    deleteCondintion (expression: () => { [key: string]: any | Knex.Raw }): Promise<number>
+    deleteCondintion (expression: () => { [key: string]: any | KnexSchema.Raw }): Promise<number>
 
     /**
      * @LastEditors: SongQian
@@ -125,6 +125,6 @@ export interface IUnitOfWorkRepositroy<T> extends IRepository {
      * @description: 持行自定义Sql脚本
      * @return {*} 返回Sql持行后对应的数据
      */    
-    exec (sql: Knex.QueryBuilder) : Promise<any>
+    exec (sql: KnexSchema.QueryBuilder) : Promise<any>
 
 }

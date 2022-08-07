@@ -5,14 +5,14 @@
  * Description  :   封装数据库共公代码
  */
 
-import { Knex } from 'knex'
+import { Knex as KnexSchema } from 'knex'
 import { IUnitOfWorkRepositroy } from '../i_business_unit_repositroy'
 import { inject, injectable } from 'inversify'
 
 @injectable()
 export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> implements IUnitOfWorkRepositroy<T> {
 
-    @inject(Symbol.for("magic:repositroy")) dbContext !: Knex;
+    @inject(Symbol.for("magic:repositroy")) dbContext !: KnexSchema;
 
     /**
      * @Author: SongQian
@@ -63,7 +63,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      * @param {Readonly} 检索条件 { [SearchField] : String Value }
      * @return {*} 返回检索的结果
      */    
-    public async getCondition(t: Readonly<any> | Knex.Raw): Promise<T[]> {
+    public async getCondition(t: Readonly<any> | KnexSchema.Raw): Promise<T[]> {
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
@@ -87,7 +87,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      * @param {number} 页大小 
      * @return {*} 返回分页检索的结果
      */ 
-    public async getConditionForPage(expression: () => { [key: string]: any | Knex.Raw }, page: number, limit: number): Promise<T[]> {
+    public async getConditionForPage(expression: () => { [key: string]: any | KnexSchema.Raw }, page: number, limit: number): Promise<T[]> {
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
@@ -140,7 +140,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      * @param {Readonly} 检索条件 { [SearchField] : String Value }
      * @return {*} 返回检索的结果
      */    
-    public async getSingleModelForCondition(t : Readonly<any> | Knex.Raw): Promise<T | null> {
+    public async getSingleModelForCondition(t : Readonly<any> | KnexSchema.Raw): Promise<T | null> {
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
@@ -185,7 +185,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      * @param {string} 列名
      * @return {*} 返回列计数值
      */    
-    public async getCountForCondinate(expression: () => { [key: string]: any | Knex.Raw }, columnName : string): Promise<number> {
+    public async getCountForCondinate(expression: () => { [key: string]: any | KnexSchema.Raw }, columnName : string): Promise<number> {
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
@@ -297,7 +297,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      * @param {Readonly} 更新字段
      * @return {*} 返回被修改的行数
      */
-    public async modifyCondition(expression: () => { [key: string]: any | Knex.Raw }, model : Readonly<any>): Promise<number> {
+    public async modifyCondition(expression: () => { [key: string]: any | KnexSchema.Raw }, model : Readonly<any>): Promise<number> {
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
@@ -361,7 +361,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      * @param {function} 自定义条件
      * @return {*} 返回影响行数
      */    
-    public async deleteCondintion(expression: () => { [key: string]: any | Knex.Raw }): Promise<number> {
+    public async deleteCondintion(expression: () => { [key: string]: any | KnexSchema.Raw }): Promise<number> {
         let trx = await this.dbContext.transaction();
         let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
         try {
@@ -404,7 +404,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      * @description: 持行自定义Sql脚本
      * @return {*} 返回Sql持行后对应的数据
      */ 
-    public async exec(sql: Knex.QueryBuilder): Promise<any> {
+    public async exec(sql: KnexSchema.QueryBuilder): Promise<any> {
         let trx = await this.dbContext.transaction();
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;

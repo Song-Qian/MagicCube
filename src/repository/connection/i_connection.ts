@@ -4,8 +4,8 @@
  * @Description: 数据库隔离设计模块
  * @eMail: onlylove1172559463@vip.qq.com
  */
-import { Knex } from 'knex'
+import { Knex as KnexSchema } from 'knex'
 
 export default interface IConnectionFactory {
-    createConnection(dbconfig: any) : Knex;
+    createConnection(dbconfig: any) : KnexSchema;
 }

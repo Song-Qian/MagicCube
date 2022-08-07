@@ -6,7 +6,7 @@
  * @Description: Magic Cube 扩展注解
  */
 import 'reflect-metadata'
-import { Knex } from 'knex'
+import { Knex as KnexSchema } from 'knex'
 import { Hook } from '@feathersjs/feathers'
 import { HttpService } from '../services/http_service'
 import { TableColumnEnum, TableIndex, UniqueIndex, PrimaryKey } from '../repository/schema_type'
@@ -178,7 +178,7 @@ export const DataTable = (name: string, engine: string = "innodb", charset: stri
  * @param {Knex} 视图表达式
  * @return {*} \@DataView("user_view", kenx.raw("select user.name, user.email, role.name from user, role where user.id = role.userid"))
  */
-export const DataView = (viewName: string, table: Knex.QueryBuilder) => {
+export const DataView = (viewName: string, table: KnexSchema.QueryBuilder) => {
     return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("magic:table"), viewName, target);
         Reflect.defineMetadata(Symbol.for("magic:tableViewExpression"), table, target);
@@ -205,7 +205,7 @@ export const TableColumn = (columnName: string, dataType: TableColumnEnum, descr
     }
 }
 
-type DefaultValue = string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer | Knex.Raw;
+type DefaultValue = string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer | KnexSchema.Raw;
 
 /**
  * @LastEditors: SongQian
