@@ -5,7 +5,7 @@
   "scripts": {
     "webpack:dev": "cross-env NODE_ENV=development webpack --mode development -w --config ./webpack/webpack.node.js --progress",
     "webpack:build": "cross-env NODE_ENV=production webpack --mode production -w --config ./webpack/webpack.node.js --progress",
-    "webpack:debug": "cross-env NODE_ENV=development  node --inspect-brk=3030 /usr/local/nodejs/bin/webpack --mode development -w --config ./webpack/webpack.node.js --progress",
+    "webpack:debug": "cross-env NODE_ENV=development  node --inspect-brk=3030 ./node_modules/.bin/webpack --mode development -w --config ./webpack/webpack.node.js --progress",
     "start": "concurrently 'npm:webpack:dev' 'npm:webpack:build'"
   },
   "keywords": [
