@@ -35,4 +35,6 @@ export { default as IFileMultiplexer } from './services/i_file_multiplexer'
 export { default as CreateVueRoot } from './render/vue_entry_render'
 export { default as CreateReactRoot } from './render/react_entry_render'
 
+export { TableColumnEnum } from './repository/schema_type'
+
 export default { Config, Cube }

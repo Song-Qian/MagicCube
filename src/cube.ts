@@ -77,12 +77,12 @@ export class Cube {
 
         me.server.listen({ port, host, path: me.configure.get("http.server.base") }, () => {
             logger.info([
-                '\t\t\t江城子 . 程序员之歌', 
+                '\n\t\t\t江城子 . 程序员之歌', 
                 '\n\t\t十年生死两茫茫，写程序，到天亮。', 
-                '\n\t\t\t\t千行代码，Bug何处藏。', 
+                '\n\t\t\t千行代码，Bug何处藏。', 
                 '\n\t\t纵使上线又怎样，朝令改，夕断肠。', 
                 '\n\t\t领导每天新想法，天天改，日日忙。', 
-                '\n\t\t\t\t相顾无言，惟有泪千行。',
+                '\n\t\t\t相顾无言，惟有泪千行。',
                 '\n\t\t每晚灯火阑珊处，夜难寐，加班狂。'].join("")
             );
             logger.info('magic cube application started on http://%s:%d', host, port)

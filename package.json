@@ -1,6 +1,6 @@
 {
   "name": "@skysong/magic-cube",
-  "version": "0.0.81",
+  "version": "0.0.85",
   "main": "index.js",
   "scripts": {
     "webpack:dev": "cross-env NODE_ENV=development webpack --mode development -w --config ./webpack/webpack.node.js --progress",
@@ -26,7 +26,7 @@
     "@babel/preset-env": "^7.14.8",
     "@types/node": "^16.3.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
-    "aws-sdk": "^2.1189.0",
+    "aws-sdk": "^2.1199.0",
     "babel-loader": "^8.2.2",
     "babel-preset-env": "^1.7.0",
     "better-sqlite3": "^7.6.2",
@@ -40,9 +40,8 @@
     "nock": "^13.2.9",
     "oracledb": "^5.4.0",
     "pg": "^8.7.3",
-    "pg-native": "^3.0.0",
+    "pg-native": "^3.0.1",
     "pg-query-stream": "^4.2.3",
-    "sqlite3": "^5.0.4",
     "tedious": "^15.0.1",
     "ts-loader": "^9.3.1",
     "ts-node-dev": "^1.1.8",

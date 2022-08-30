@@ -6,7 +6,7 @@
  * @Description: Magic Cube 扩展注解
  */
 import 'reflect-metadata'
-import { Knex as KnexSchema } from 'knex'
+import knex, { Knex as KnexSchema } from 'knex'
 import { Hook } from '@feathersjs/feathers'
 import { HttpService } from '../services/http_service'
 import { TableColumnEnum, TableIndex, UniqueIndex, PrimaryKey } from '../repository/schema_type'
@@ -205,7 +205,7 @@ export const TableColumn = (columnName: string, dataType: TableColumnEnum, descr
     }
 }
 
-type DefaultValue = string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer | KnexSchema.Raw;
+type DefaultValue = string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer;
 
 /**
  * @LastEditors: SongQian

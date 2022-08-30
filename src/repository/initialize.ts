@@ -86,7 +86,7 @@ export default function(configure: any) {
                                         columnUnique && table.unique(columnName, columnUniqueOptions);
                                         columnPrimary && table.primary(columnName, columnPrimaryOptions);
                                         columnIncrements && table.increments(columnName, columnIncrementsOptions);
-                                        columnForeignKey && table.foreign(field, columnForeignKey).references(columnForeignOptions.foreignColumn).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
+                                        columnForeignKey && table.foreign(field, columnForeignKey).references(`${columnForeignOptions.table}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
                                         const properitesState : ColumnPropertiesState = { type: columnType, comment: Boolean(columnComment), default: Boolean(columnDefaultValue), nullable: !columnNotNullable && columnNullable, index: Boolean(columnIndex), unique: Boolean(columnUnique), primary: Boolean(columnPrimary), increments : Boolean(columnIncrements), foreign: Boolean(columnForeignKey) };
                                         const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(table, columnName, properitesState);
                                         return isPromise(updateColumnPropsPromise) ? (<Promise<void>>updateColumnPropsPromise).then(() => true) : Promise.resolve(true);

@@ -26,7 +26,7 @@ export class Sqlite3Connection extends ISqlite3Connection {
 
     public createConnection(dbconfig: any): KnexSchema<any, Record<string, any>[]> {
         return knex({
-            client: "sqlite3",
+            client: "better-sqlite3",
             acquireConnectionTimeout: dbconfig.connection.timeout,
             connection: {
                 host: dbconfig.connection.host,
