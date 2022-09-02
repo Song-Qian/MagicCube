@@ -19,6 +19,10 @@ Description :  基于NodeJS服务端即时通信的SSR技术方案，并且支�
         exclude : /node_modules/
     });
 
+    var ignorePlugin = new webpack.IgnorePlugin({
+        resourceRegExp: /^(sqlite3)$/
+    })
+
     var extensionPlugin = [];
 
     if(process.env.NODE_ENV === 'production') {
@@ -45,6 +49,7 @@ Description :  基于NodeJS服务端即时通信的SSR技术方案，并且支�
 
     return [
         bannerPlugin,
+        ignorePlugin,
         ...extensionPlugin
     ]
 }

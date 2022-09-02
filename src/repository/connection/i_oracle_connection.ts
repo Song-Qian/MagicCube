@@ -31,7 +31,7 @@ export class OracleConnection extends IOracleConnection {
                 host: dbconfig.connection.host,
                 port: dbconfig.connection.port || 1521,
                 socketPath : dbconfig.connection.socketPath,
-                user: dbconfig.database.connection.user,
+                user: dbconfig.connection.user,
                 password: dbconfig.connection.password,
                 database: dbconfig.connection.database
             },

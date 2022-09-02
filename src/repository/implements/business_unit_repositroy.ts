@@ -7,12 +7,12 @@
 
 import { Knex as KnexSchema } from 'knex'
 import { IUnitOfWorkRepositroy } from '../i_business_unit_repositroy'
-import { inject, injectable } from 'inversify'
+import { injectable } from 'inversify'
 
 @injectable()
 export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> implements IUnitOfWorkRepositroy<T> {
 
-    @inject(Symbol.for("magic:repositroy")) dbContext !: KnexSchema;
+    dbContext !: KnexSchema;
 
     /**
      * @Author: SongQian
@@ -25,7 +25,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.select().from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit()
             return result;
@@ -47,7 +47,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.select().from(tableName).where("id", id).first().on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit()
             return result
@@ -69,7 +69,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.select().from(tableName).andWhere(t).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit()
             return result;
@@ -125,7 +125,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
 
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await queryBuilder.from(tableName).limit(limit).offset((page - 1) * limit).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             return result as T[];
         } catch (e) {
@@ -146,7 +146,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.select().from(tableName).where(t).first().on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;
@@ -168,7 +168,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.count(columnName, { as : "count" }).from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return Number(result["count"]);
@@ -212,7 +212,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
 
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await queryBuilder.count(columnName, { as : "count" }).from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);;
             await trx.commit();
             return Number(result["count"]);
@@ -234,7 +234,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.insert(model, ["id"], { includeTriggerModifications: true }).from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return { ...model, id : result[0]};
@@ -256,7 +256,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.insert(models, ["id"], { includeTriggerModifications: true }).from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result.length;
@@ -278,7 +278,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.update(model).from(tableName).where("id", model.id).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             if (result > 0 ) {
@@ -323,7 +323,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
             }
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await queryBuilder.on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;
@@ -345,7 +345,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.delete().from(tableName).where("id", id).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;
@@ -387,7 +387,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
             }
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await queryBuilder.from(tableName).on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;
@@ -409,7 +409,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
-            let afterExecute = "$executeError" in this ? (this as any).$afterExecute : () => void 0;
+            let afterExecute = "$afterExecute" in this ? (this as any).$afterExecute : () => void 0;
             let result = await trx.with("table", sql).select("*").from("table").on("query", beforeExecute).on("query-error", executeError).on("query-response", afterExecute);
             await trx.commit();
             return result;

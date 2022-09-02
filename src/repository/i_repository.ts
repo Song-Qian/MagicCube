@@ -5,7 +5,7 @@
  * @eMail: onlylove1172559463@vip.qq.com
  */
 import { Knex as KnexSchema } from "knex"
-import { ColumnPropertiesState } from "./schema_type";
+import { ColumnPropertiesState } from "./schema_type"
 
 export interface IRepository {
     

@@ -13,6 +13,9 @@ module.exports = merge(webpackConf, {
   output: {
     libraryTarget : 'umd'
   },
+  // externals: {
+  //   sqlite3: 'sqlite3'
+  // },
   //运行目标平台
   target : 'node',
   // 对 bundle renderer 提供 source map 支持

@@ -1,8 +1,9 @@
-/**
- * Developer    :   SongQian
- * Time         :   2020-06-01
- * eMail        :   onlylove1172559463@vip.qq.com
- * Description  :   Magic Cube Project Start
+/*
+ * @Author: SongQian
+ * @LastEditors: SongQian
+ * @Date: 2020/06/01 06:19
+ * @eMail: onlylove1172559463@vip.qq.com
+ * @Description: Magic Cube Project Start
  */
 import Config from './conf'
 import { Cube } from './cube'
@@ -35,6 +36,7 @@ export { default as IFileMultiplexer } from './services/i_file_multiplexer'
 export { default as CreateVueRoot } from './render/vue_entry_render'
 export { default as CreateReactRoot } from './render/react_entry_render'
 
+export { Business_UnitRepositroy } from './repository/implements/business_unit_repositroy'
 export { TableColumnEnum } from './repository/schema_type'
 
 export default { Config, Cube }

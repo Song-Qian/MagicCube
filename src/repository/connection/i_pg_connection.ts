@@ -31,7 +31,7 @@ export class PGConnection extends IPGConnection {
                 host: dbconfig.connection.host,
                 port: dbconfig.connection.port || 5432,
                 socketPath : dbconfig.connection.socketPath,
-                user: dbconfig.database.connection.user,
+                user: dbconfig.connection.user,
                 password: dbconfig.connection.password,
                 database: dbconfig.connection.database
             },

@@ -32,7 +32,7 @@ export class Sqlite3Connection extends ISqlite3Connection {
                 host: dbconfig.connection.host,
                 port: dbconfig.connection.port || 0,
                 socketPath : dbconfig.connection.socketPath,
-                user: dbconfig.database.connection.user,
+                user: dbconfig.connection.user,
                 password: dbconfig.connection.password,
                 database: dbconfig.connection.database
             },

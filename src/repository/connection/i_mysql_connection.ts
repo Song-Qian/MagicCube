@@ -29,15 +29,15 @@ export class MySqlConnection extends IMySqlConnection {
             acquireConnectionTimeout: dbconfig.connection.timeout,
             connection: {
                 host: dbconfig.connection.host,
-                port: dbconfig.connection.port || 3306,
+                port: Number(dbconfig.connection.port) || 3306,
                 socketPath : dbconfig.connection.socketPath,
-                user: dbconfig.database.connection.user,
+                user: dbconfig.connection.user,
                 password: dbconfig.connection.password,
                 database: dbconfig.connection.database
             },
             pool: {
-                min: dbconfig.pool.min,
-                max: dbconfig.pool.max,
+                min: Number(dbconfig.pool.min),
+                max: Number(dbconfig.pool.max),
                 afterCreate: (conn, done) => { 
                     try { 
                         this.emitter.emit("$onPoolCreated", conn);

@@ -1,10 +1,11 @@
-/**
- * Developer    :   SongQian
- * Time         :   2021-08-10
- * eMail        :   onlylove1172559463@vip.qq.com
- * Description  :   Controller 控制器基类
+/*
+ * @Author: SongQian
+ * @LastEditors: SongQian
+ * @Date: 2021/08/10 06:19
+ * @eMail: onlylove1172559463@vip.qq.com
+ * @Description: Controller 控制器基类
  */
-import { Params, Paginated, Id, ServiceMethods, Hook, HookMap } from '@feathersjs/feathers'
+import { Params, Paginated, Id, ServiceMethods, HookMap } from '@feathersjs/feathers'
 import { injectable } from 'inversify';
 
 @injectable()

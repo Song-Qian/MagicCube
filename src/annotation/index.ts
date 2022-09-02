@@ -6,7 +6,7 @@
  * @Description: Magic Cube 扩展注解
  */
 import 'reflect-metadata'
-import knex, { Knex as KnexSchema } from 'knex'
+import { Knex as KnexSchema } from 'knex'
 import { Hook } from '@feathersjs/feathers'
 import { HttpService } from '../services/http_service'
 import { TableColumnEnum, TableIndex, UniqueIndex, PrimaryKey } from '../repository/schema_type'
@@ -72,7 +72,7 @@ export const ViewMultiplexer = () => {
 export const MySqlSchema = (fn: (configure: any) => void) => {
     return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("Kind"), "MYSQL", target);
-        Reflect.defineProperty(target, "Initialize", {
+        Reflect.defineProperty(target.prototype, "Initialize", {
             configurable: true,
             enumerable: true,
             writable: false,
@@ -91,7 +91,7 @@ export const MySqlSchema = (fn: (configure: any) => void) => {
 export const OracleSchema = (fn: (configure: any) => void) => {
     return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("Kind"), "ORACLE", target);
-        Reflect.defineProperty(target, "Initialize", {
+        Reflect.defineProperty(target.prototype, "Initialize", {
             configurable: true,
             enumerable: true,
             writable: false,
@@ -110,7 +110,7 @@ export const OracleSchema = (fn: (configure: any) => void) => {
 export const PGSchema = (fn: (configure: any) => void) => {
     return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("Kind"), "PG", target);
-        Reflect.defineProperty(target, "Initialize", {
+        Reflect.defineProperty(target.prototype, "Initialize", {
             configurable: true,
             enumerable: true,
             writable: false,
@@ -129,7 +129,7 @@ export const PGSchema = (fn: (configure: any) => void) => {
 export const Sqlite3Schema = (fn: (configure: any) => void) => {
     return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("Kind"), "SQLITE3", target);
-        Reflect.defineProperty(target, "Initialize", {
+        Reflect.defineProperty(target.prototype, "Initialize", {
             configurable: true,
             enumerable: true,
             writable: false,
