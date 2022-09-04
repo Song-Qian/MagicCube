@@ -48,9 +48,9 @@ export default function(configure: any) {
                     const isBeforeTableInit = repository.$beforeTableInitialize ? (repository.$beforeTableInitialize() || true) : false;
                     if (!Boolean(tableViewExpression)) {
                         const createFn = (table) => {
-                            const tableEngine = Reflect.getMetadata(Symbol.for("magic:tableEngine"), repository)
-                            const tableCharset = Reflect.getMetadata(Symbol.for("magic:tableCharset"), repository)
-                            const tableCollate = Reflect.getMetadata(Symbol.for("magic:tableCollate"), repository)
+                            const tableEngine = Reflect.getMetadata(Symbol.for("magic:tableEngine"), repository.constructor)
+                            const tableCharset = Reflect.getMetadata(Symbol.for("magic:tableCharset"), repository.constructor)
+                            const tableCollate = Reflect.getMetadata(Symbol.for("magic:tableCollate"), repository.constructor)
                             table.charset(tableCharset);
                             table.engine(tableEngine);
                             table.collate(tableCollate);
@@ -101,6 +101,7 @@ export default function(configure: any) {
                             }
                             isBeforeTableInit && isPromise(isBeforeTableInit) ?  (<Promise<void>>isBeforeTableInit).then(initializeTablePropsDone).then(resolve, reject) : Promise.resolve(initializeTablePropsDone()).then(resolve, reject)
                         }
+                        
                         dbContext.schema.hasTable(tableName).then(yes => yes ? resolve(false) : dbContext.schema.createTable(tableName, createFn));
 
                         // dbContext.schema.createTableIfNotExists(tableName, (table) => {
