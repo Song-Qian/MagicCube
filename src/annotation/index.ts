@@ -198,6 +198,7 @@ export const DataView = (viewName: string, table: KnexSchema.QueryBuilder) => {
  */
 export const TableColumn = (columnName: string, dataType: TableColumnEnum, description?: string, options?: Readonly<any[]>) => {
     return (target: any, name: string) => {
+        Reflect.defineProperty(target, name,{ configurable: false, enumerable: true, value: void 0, writable: true });
         Reflect.defineMetadata(Symbol.for("magic:tableColumnName"), columnName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableColumnType"), dataType, target, name);
         description && Reflect.defineMetadata(Symbol.for("magic:tableColumnComment"), description, target, name);
@@ -258,7 +259,7 @@ export const NotNullableColumn = () => {
  * @param {TableIndex} 索引配置
  * @return {*} \@IndexColumn("idx_name", { indexType: "FULLTEXT", storageEngineIndexType: "hash", predicate: knex.whereNotNull('email') })
  */
-export const IndexColumn = (indexName: string, options: TableIndex) => {
+export const IndexColumn = (indexName: string, options?: TableIndex) => {
     return (target: any, name: string) => {
         Reflect.defineMetadata(Symbol.for("magic:tableIndexName"), indexName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableIndexOptions"), options, target, name);
@@ -290,12 +291,8 @@ export const UniqueColumn = (options: UniqueIndex = { indexName: "idx_name", def
  * @param {PrimaryKey} 主键配置
  * @return {*} \@PrimaryColumn("pk_name", { constraintName: "",  deferrable: "notdeferrable" })
  */
-export const PrimaryColumn = (columnName: string, options: PrimaryKey) => {
+export const PrimaryColumn = (columnName: string, options?: PrimaryKey) => {
     return (target: any, name: string) => {
-        let keys = Object.keys(target).filter(key => Reflect.getMetadata(Symbol.for("magic:tablePrimaryKey"), target, key));
-        if (keys.length > 0) {
-            throw new Error(`${target.constructor.name} contains more than one primary key (@PrimaryColumn) field configuration`);
-        }
         Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKey"), columnName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tablePrimaryOptions"), options, target, name);
     }
@@ -331,7 +328,7 @@ export const ForeignColumn = (columnName: string, inTable?: string, opts?: { onD
  * @param {object} 自培选项
  * @return {*} \@IncrementsColumn("columnName", { primaryKey : true })
  */
-export const IncrementsColumn = (columnName: string, options: { primaryKey: boolean }) => {
+export const IncrementsColumn = (columnName: string, options?: { primaryKey: boolean }) => {
     return (target: any, name: string) => {
         Reflect.defineMetadata(Symbol.for("magic:tableIncrementsColumn"), columnName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableIncrementsOptions"), options, target, name);
