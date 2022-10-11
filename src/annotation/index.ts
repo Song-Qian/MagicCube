@@ -291,10 +291,10 @@ export const UniqueColumn = (options: UniqueIndex = { indexName: "idx_name", def
  * @param {PrimaryKey} 主键配置
  * @return {*} \@PrimaryColumn("pk_name", { constraintName: "",  deferrable: "notdeferrable" })
  */
-export const PrimaryColumn = (columnName: string, options?: PrimaryKey) => {
+export const PrimaryColumn = (options: PrimaryKey) => {
     return (target: any, name: string) => {
-        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKey"), columnName, target, name);
-        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryOptions"), options, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKeyName"), options.constraintName , target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKeyType"), options.deferrable || 'not deferrable', target, name);
     }
 }
 

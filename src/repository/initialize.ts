@@ -69,8 +69,8 @@ export default function(configure: any) {
                                         const columnIndexOptions : TableIndex = <TableIndex>Reflect.getMetadata(Symbol.for("magic:tableIndexOptions"), repository, field);
                                         const columnUnique = Reflect.getMetadata(Symbol.for("magic:tableUniqueName"), repository, field);
                                         const columnUniqueOptions : UniqueIndex = <UniqueIndex>Reflect.getMetadata(Symbol.for("magic:tableUniqueOptions"), repository, field);
-                                        const columnPrimary = Reflect.getMetadata(Symbol.for("magic:tablePrimaryKey"), repository, field);
-                                        const columnPrimaryOptions : PrimaryKey = <PrimaryKey>Reflect.getMetadata(Symbol.for("magic:tablePrimaryOptions"), repository, field);
+                                        const tablePrimaryKeyName = Reflect.getMetadata(Symbol.for("magic:tablePrimaryKeyName"), repository, field);
+                                        const tablePrimaryKeyType = Reflect.getMetadata(Symbol.for("magic:tablePrimaryKeyType"), repository, field);
                                         const columnIncrements = Reflect.getMetadata(Symbol.for("magic:tableIncrementsColumn"), repository, field);
                                         const columnIncrementsOptions = Reflect.getMetadata(Symbol.for("magic:tableIncrementsOptions"), repository, field);
                                         const columnForeignKey = Reflect.getMetadata(Symbol.for("magic:tableForeignKey"), repository, field);
@@ -85,10 +85,10 @@ export default function(configure: any) {
                                         columnBuilder = columnNotNullable && columnBuilder.notNullable() || columnBuilder;
                                         columnIndex && table.index(columnName, columnIndex, columnIndexOptions);
                                         columnUnique && table.unique(columnName, columnUniqueOptions);
-                                        columnPrimary && table.primary(columnName, columnPrimaryOptions);
+                                        tablePrimaryKeyName && table.primary(columnName, { constraintName: tablePrimaryKeyName, deferrable: tablePrimaryKeyType });
                                         columnIncrements && table.increments(columnName, columnIncrementsOptions);
                                         columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.table}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
-                                        const properitesState : ColumnPropertiesState = { type: columnType, comment: Boolean(columnComment), default: Boolean(columnDefaultValue), nullable: !columnNotNullable && columnNullable, index: Boolean(columnIndex), unique: Boolean(columnUnique), primary: Boolean(columnPrimary), increments : Boolean(columnIncrements), foreign: Boolean(columnForeignKey) };
+                                        const properitesState : ColumnPropertiesState = { type: columnType, comment: Boolean(columnComment), default: Boolean(columnDefaultValue), nullable: !columnNotNullable && columnNullable, index: Boolean(columnIndex), unique: Boolean(columnUnique), primary: Boolean(tablePrimaryKeyName), increments : Boolean(columnIncrements), foreign: Boolean(columnForeignKey) };
                                         const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(table, columnName, properitesState);
                                         return isPromise(updateColumnPropsPromise) ? (<Promise<void>>updateColumnPropsPromise).then(() => true) : Promise.resolve(true);
                                     }
