@@ -201,8 +201,8 @@ export const TableColumn = (columnName: string, dataType: TableColumnEnum, descr
         Reflect.defineProperty(target, name,{ configurable: false, enumerable: true, value: void 0, writable: true });
         Reflect.defineMetadata(Symbol.for("magic:tableColumnName"), columnName, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableColumnType"), dataType, target, name);
-        description && Reflect.defineMetadata(Symbol.for("magic:tableColumnComment"), description, target, name);
-        options && Reflect.defineMetadata(Symbol.for("magic:tableColumnOptions"), options, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableColumnComment"), description || "", target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableColumnOptions"), options || [], target, name);
     }
 }
 
