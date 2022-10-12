@@ -25,7 +25,7 @@ export {
     UniqueColumn, 
     PrimaryColumn, 
     ForeignColumn, 
-    IncrementsColumn 
+    IncrementsColumn
 } from './annotation'
 export { HttpService } from './services/http_service'
 export { default as IServiceSynchResolverModule } from './dependency/i_service_synch_resolver_module'

@@ -74,7 +74,7 @@ export type UniqueIndex = {
  */
 export type PrimaryKey = {
     constraintName : string
-    deferrable: 'not deferrable' | 'immediate' | 'deferred'
+    deferrable?: 'not deferrable' | 'immediate' | 'deferred'
 }
 
 /**

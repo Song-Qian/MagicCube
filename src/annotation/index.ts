@@ -287,14 +287,13 @@ export const UniqueColumn = (options: UniqueIndex = { indexName: "idx_name", def
  * @Author: SongQian
  * @Date: 2022/05/26 10:40
  * @description: ORM模式中表字段主键修饰器
- * @param {string} 主键列名
- * @param {PrimaryKey} 主键配置
- * @return {*} \@PrimaryColumn("pk_name", { constraintName: "",  deferrable: "notdeferrable" })
+ * @param {array} 复合主键
+ * @return {*} \@PrimaryColumn()
  */
-export const PrimaryColumn = (options: PrimaryKey) => {
+export const PrimaryColumn = (columns ?: Array<string>) => {
     return (target: any, name: string) => {
-        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKeyName"), options.constraintName , target, name);
-        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKeyType"), options.deferrable || 'not deferrable', target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKey"), true, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tablePrimaryKeys"), columns, target, name);
     }
 }
 
@@ -308,14 +307,14 @@ export const PrimaryColumn = (options: PrimaryKey) => {
  * @param {object} 外键检查约束规则
  * @return {*} \@ForeignColumn("column", "table", { onDelete: "CASCADE", onUpdate: "CASCADE" })
  */
-export const ForeignColumn = (columnName: string, inTable?: string, opts?: { onDelete: "RESTRICT" | "CASCADE" | "SET NULL" | "NO ACTION", onUpdate: "RESTRICT" | "CASCADE" | "SET NULL" | "NO ACTION" }) => {
+export const ForeignColumn = (foreignColumn: string, foreignTable: string, inTable: string, opts?: { onDelete: "RESTRICT" | "CASCADE" | "SET NULL" | "NO ACTION", onUpdate: "RESTRICT" | "CASCADE" | "SET NULL" | "NO ACTION" }) => {
     return (target: any, name: string) => {
-        let table = inTable ? inTable : false;
+        let table = inTable ? inTable : target.constructor.name;
         let onDelete = opts && opts.onDelete ? opts.onDelete : false;
         let onUpdate = opts && opts.onUpdate ? opts.onUpdate : false;
-        let foreignKey = table ? `fk_${name}_${table}_${columnName}` : `fk_${name}_${columnName}`;
+        let foreignKey = `fk_${table}_${foreignTable}_${foreignColumn}`;
         Reflect.defineMetadata(Symbol.for("magic:tableForeignKey"), foreignKey, target, name);
-        Reflect.defineMetadata(Symbol.for("magic:tableForeignOptions"), { foreignColumn: columnName, table, onDelete, onUpdate }, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableForeignOptions"), { foreignColumn, foreignTable, onDelete, onUpdate }, target, name);
     }
 }
 
@@ -324,14 +323,13 @@ export const ForeignColumn = (columnName: string, inTable?: string, opts?: { onD
  * @Author: SongQian
  * @Date: 2022/05/30 22:43
  * @description: ORM模式中表字段自增修饰器
- * @param {string} 列名
- * @param {object} 自培选项
- * @return {*} \@IncrementsColumn("columnName", { primaryKey : true })
+ * @param {object} 自增列是否主键配置，MySQL自增列不支持非主键列
+ * @return {*} \@IncrementsColumn({ primaryKey : true })
  */
-export const IncrementsColumn = (columnName: string, options?: { primaryKey: boolean }) => {
+export const IncrementsColumn = (options?: { primaryKey: boolean }) => {
     return (target: any, name: string) => {
-        Reflect.defineMetadata(Symbol.for("magic:tableIncrementsColumn"), columnName, target, name);
-        Reflect.defineMetadata(Symbol.for("magic:tableIncrementsOptions"), options, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableIncrementsColumn"), true, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableIncrementsOptions"), options || { primaryKey: true }, target, name);
     }
 }
 

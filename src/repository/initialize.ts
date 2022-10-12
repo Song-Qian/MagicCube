@@ -11,7 +11,7 @@ import IServiceAsyncResolverModule from "~/dependency/i_service_async_resolver_m
 import ResolverModuleFactory from "~/dependency/resolver_module_factory"
 import ConnectionFactory from "./connection/connection_factory"
 import { isPromise } from "~/utils/common"
-import { ColumnPropertiesState, PrimaryKey, TableIndex, UniqueIndex } from "./schema_type"
+import { ColumnPropertiesState, TableIndex, UniqueIndex } from "./schema_type"
 import { Knex as KnexSchema } from "knex"
 import { IRepository } from "./i_repository"
 import ISchema from "./i_schema"
@@ -69,8 +69,8 @@ export default function(configure: any) {
                                         const columnIndexOptions : TableIndex = <TableIndex>Reflect.getMetadata(Symbol.for("magic:tableIndexOptions"), repository, field);
                                         const columnUnique = Reflect.getMetadata(Symbol.for("magic:tableUniqueName"), repository, field);
                                         const columnUniqueOptions : UniqueIndex = <UniqueIndex>Reflect.getMetadata(Symbol.for("magic:tableUniqueOptions"), repository, field);
-                                        const tablePrimaryKeyName = Reflect.getMetadata(Symbol.for("magic:tablePrimaryKeyName"), repository, field);
-                                        const tablePrimaryKeyType = Reflect.getMetadata(Symbol.for("magic:tablePrimaryKeyType"), repository, field);
+                                        const tablePrimaryKey = Reflect.getMetadata(Symbol.for("magic:tablePrimaryKey"), repository, field);
+                                        const tablePrimaryKeys = Reflect.getMetadata(Symbol.for("magic:tablePrimaryKeys"), repository, field);
                                         const columnIncrements = Reflect.getMetadata(Symbol.for("magic:tableIncrementsColumn"), repository, field);
                                         const columnIncrementsOptions = Reflect.getMetadata(Symbol.for("magic:tableIncrementsOptions"), repository, field);
                                         const columnForeignKey = Reflect.getMetadata(Symbol.for("magic:tableForeignKey"), repository, field);
@@ -85,10 +85,10 @@ export default function(configure: any) {
                                         columnBuilder = columnNotNullable && columnBuilder.notNullable() || columnBuilder;
                                         columnIndex && table.index(columnName, columnIndex, columnIndexOptions);
                                         columnUnique && table.unique(columnName, columnUniqueOptions);
-                                        tablePrimaryKeyName && table.primary(columnName, { constraintName: tablePrimaryKeyName, deferrable: tablePrimaryKeyType });
+                                        tablePrimaryKey && table.primary(tablePrimaryKeys || columnName);
                                         columnIncrements && table.increments(columnName, columnIncrementsOptions);
-                                        columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.table}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
-                                        const properitesState : ColumnPropertiesState = { type: columnType, comment: Boolean(columnComment), default: Boolean(columnDefaultValue), nullable: !columnNotNullable && columnNullable, index: Boolean(columnIndex), unique: Boolean(columnUnique), primary: Boolean(tablePrimaryKeyName), increments : Boolean(columnIncrements), foreign: Boolean(columnForeignKey) };
+                                        columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.foreignTable}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
+                                        const properitesState : ColumnPropertiesState = { type: columnType, comment: Boolean(columnComment), default: Boolean(columnDefaultValue), nullable: !columnNotNullable && columnNullable, index: Boolean(columnIndex), unique: Boolean(columnUnique), primary: Boolean(tablePrimaryKey), increments : Boolean(columnIncrements), foreign: Boolean(columnForeignKey) };
                                         const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(table, columnName, properitesState);
                                         return isPromise(updateColumnPropsPromise) ? (<Promise<void>>updateColumnPropsPromise).then(() => true) : Promise.resolve(true);
                                     }
