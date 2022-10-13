@@ -33,7 +33,7 @@ export default function(configure: any) {
             
             if (isDrop) {
                 const isPreventDropTable = repository.$beforeDropTable && repository.$beforeDropTable() || false;
-                const dropDone = (yes : boolean) => yes ? !yes : Boolean(tableViewExpression ? dbContext.schema.dropViewIfExists(tableName) : dbContext.schema.dropTableIfExists(tableName));
+                const dropDone = (yes : boolean) => yes ? !yes : Boolean(tableViewExpression ? dbContext.schema.dropViewIfExists(tableName) :  dbContext.schema.dropTableIfExists(tableName));
                 synchronousPipe = isPreventDropTable && isPromise(isPreventDropTable) ?  (<Promise<boolean>>isPreventDropTable).then(dropDone) : Promise.resolve(dropDone(Boolean(isPreventDropTable)));
                 synchronousPipe = synchronousPipe.then((yes : boolean) => {
                     if (yes && repository.$afterDropTable) {
@@ -75,7 +75,7 @@ export default function(configure: any) {
                                         const columnIncrementsOptions = Reflect.getMetadata(Symbol.for("magic:tableIncrementsOptions"), repository, field);
                                         const columnForeignKey = Reflect.getMetadata(Symbol.for("magic:tableForeignKey"), repository, field);
                                         const columnForeignOptions = Reflect.getMetadata(Symbol.for("magic:tableForeignOptions"), repository, field);
-                                        const columnFactory = [ table.integer, table.bigInteger, table.text, table.string, table.float, table.double, table.decimal, table.boolean, table.date, table.dateTime, table.time, table.timestamp, table.timestamps, table.binary, table.enum, table.json, table.jsonb, table.uuid, table.geometry, table.geography, table.point ];
+                                        const columnFactory = [ table.integer, table.bigInteger, table.text, table.string, table.float, table.double, table.decimal, table.boolean, table.date, table.dateTime, table.time, table.timestamp, table.binary, table.enum, table.json, table.jsonb, table.uuid, table.geometry, table.geography, table.point ];
                                         let properitesState : ColumnPropertiesState;
                                         if (columnIncrements) {
                                             // 增量列
@@ -84,16 +84,13 @@ export default function(configure: any) {
                                         } else {
                                             //非增量列
                                             let columnBuilder = <KnexSchema.ColumnBuilder>(<any>columnFactory[columnType]).apply(table, [columnName, ...columnOptions]);
-                                            if (clientName === "MYSQL") {
-                                                columnBuilder = columnDefaultValue && columnBuilder.defaultTo(columnDefaultValue, columnDefaultOptions) || columnBuilder;
-                                            }
                                             columnBuilder = columnComment && columnBuilder.comment(columnComment) || columnBuilder;
                                             columnBuilder = columnNullable && columnBuilder.nullable() || columnBuilder;
                                             columnBuilder = columnNotNullable && columnBuilder.notNullable() || columnBuilder;
+                                            columnBuilder = columnDefaultValue && columnBuilder.defaultTo(columnDefaultValue, columnDefaultOptions) || columnBuilder;
                                             columnIndex && table.index(columnName, columnIndex, columnIndexOptions);
                                             columnUnique && table.unique(columnName, columnUniqueOptions);
                                             tablePrimaryKey && table.primary(tablePrimaryKeys || columnName);
-                                            columnIncrements && table.increments(columnName);
                                             columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.foreignTable}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
                                             properitesState = { type: columnType, comment: columnComment, default: columnDefaultValue, nullable: !columnNotNullable && columnNullable, index: columnIndexOptions, unique: columnUniqueOptions, primary: Boolean(tablePrimaryKey), increments : false, foreign: Boolean(columnForeignKey) }
                                         }

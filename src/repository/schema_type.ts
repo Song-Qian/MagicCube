@@ -27,15 +27,14 @@ export enum TableColumnEnum {
     DateTime = 9,
     Time = 10,
     Timestamp = 11,
-    Timestamps = 12,
-    Binary = 13,
-    Enum = 14,
-    Json = 15,
-    Jsonb = 16,
-    UUID = 17,
-    Geometry = 18,
-    Geography = 19,
-    Point = 20
+    Binary = 12,
+    Enum = 13,
+    Json = 14,
+    Jsonb = 15,
+    UUID = 16,
+    Geometry = 17,
+    Geography = 18,
+    Point = 19
 }
 
 /**
@@ -46,8 +45,8 @@ export enum TableColumnEnum {
  * @return {*}
  */
 export type TableIndex = {
-    indexType :  "FULLTEXT" | "SPATIAL"
-    storageEngineIndexType: "btree" | "hash"
+    indexType ?:  "FULLTEXT" | "SPATIAL"
+    storageEngineIndexType ?: "btree" | "hash"
     predicate?: KnexSchema.QueryBuilder
 }
 
