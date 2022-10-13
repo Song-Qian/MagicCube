@@ -76,19 +76,28 @@ export default function(configure: any) {
                                         const columnForeignKey = Reflect.getMetadata(Symbol.for("magic:tableForeignKey"), repository, field);
                                         const columnForeignOptions = Reflect.getMetadata(Symbol.for("magic:tableForeignOptions"), repository, field);
                                         const columnFactory = [ table.integer, table.bigInteger, table.text, table.string, table.float, table.double, table.decimal, table.boolean, table.date, table.dateTime, table.time, table.timestamp, table.timestamps, table.binary, table.enum, table.json, table.jsonb, table.uuid, table.geometry, table.geography, table.point ];
-                                        let columnBuilder = <KnexSchema.ColumnBuilder>(<any>columnFactory[columnType]).apply(table, [columnName, ...columnOptions]);
-                                        if (clientName === "MYSQL") {
-                                            columnBuilder = columnDefaultValue && columnBuilder.defaultTo(columnDefaultValue, columnDefaultOptions) || columnBuilder;
+                                        let properitesState : ColumnPropertiesState;
+                                        if (columnIncrements) {
+                                            // 增量列
+                                            table.increments(columnName, columnIncrementsOptions);
+                                            properitesState = { type: 0, comment: '', nullable: false, primary: columnName, increments : true }
+                                        } else {
+                                            //非增量列
+                                            let columnBuilder = <KnexSchema.ColumnBuilder>(<any>columnFactory[columnType]).apply(table, [columnName, ...columnOptions]);
+                                            if (clientName === "MYSQL") {
+                                                columnBuilder = columnDefaultValue && columnBuilder.defaultTo(columnDefaultValue, columnDefaultOptions) || columnBuilder;
+                                            }
+                                            columnBuilder = columnComment && columnBuilder.comment(columnComment) || columnBuilder;
+                                            columnBuilder = columnNullable && columnBuilder.nullable() || columnBuilder;
+                                            columnBuilder = columnNotNullable && columnBuilder.notNullable() || columnBuilder;
+                                            columnIndex && table.index(columnName, columnIndex, columnIndexOptions);
+                                            columnUnique && table.unique(columnName, columnUniqueOptions);
+                                            tablePrimaryKey && table.primary(tablePrimaryKeys || columnName);
+                                            columnIncrements && table.increments(columnName);
+                                            columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.foreignTable}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
+                                            properitesState = { type: columnType, comment: columnComment, default: columnDefaultValue, nullable: !columnNotNullable && columnNullable, index: columnIndexOptions, unique: columnUniqueOptions, primary: Boolean(tablePrimaryKey), increments : false, foreign: Boolean(columnForeignKey) }
                                         }
-                                        columnBuilder = columnComment && columnBuilder.comment(columnComment) || columnBuilder;
-                                        columnBuilder = columnNullable && columnBuilder.nullable() || columnBuilder;
-                                        columnBuilder = columnNotNullable && columnBuilder.notNullable() || columnBuilder;
-                                        columnIndex && table.index(columnName, columnIndex, columnIndexOptions);
-                                        columnUnique && table.unique(columnName, columnUniqueOptions);
-                                        tablePrimaryKey && table.primary(tablePrimaryKeys || columnName);
-                                        columnIncrements && table.increments(columnName, columnIncrementsOptions);
-                                        columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.foreignTable}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
-                                        const properitesState : ColumnPropertiesState = { type: columnType, comment: Boolean(columnComment), default: Boolean(columnDefaultValue), nullable: !columnNotNullable && columnNullable, index: Boolean(columnIndex), unique: Boolean(columnUnique), primary: Boolean(tablePrimaryKey), increments : Boolean(columnIncrements), foreign: Boolean(columnForeignKey) };
+                                        
                                         const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(table, columnName, properitesState);
                                         return isPromise(updateColumnPropsPromise) ? (<Promise<void>>updateColumnPropsPromise).then(() => true) : Promise.resolve(true);
                                     }

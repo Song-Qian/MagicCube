@@ -9,7 +9,7 @@ import 'reflect-metadata'
 import { Knex as KnexSchema } from 'knex'
 import { Hook } from '@feathersjs/feathers'
 import { HttpService } from '../services/http_service'
-import { TableColumnEnum, TableIndex, UniqueIndex, PrimaryKey } from '../repository/schema_type'
+import { TableColumnEnum, TableIndex, UniqueIndex, DefaultValue } from '../repository/schema_type'
 
 const defineClassMetadata = (key: Symbol, value: any): ClassDecorator => {
     return (target: Function) => {
@@ -205,8 +205,6 @@ export const TableColumn = (columnName: string, dataType: TableColumnEnum, descr
         Reflect.defineMetadata(Symbol.for("magic:tableColumnOptions"), options || [], target, name);
     }
 }
-
-type DefaultValue = string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer;
 
 /**
  * @LastEditors: SongQian

@@ -80,18 +80,27 @@ export type PrimaryKey = {
 /**
  * @LastEditors: SongQian
  * @Author: SongQian
+ * @Date: 2022/05/26 13:11
+ * @description: 表默认值
+ * @return {*}
+ */
+export type DefaultValue = string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer;
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
  * @Date: 2022/06/01 14:05
  * @description: 表字段发生修改时的状态
  * @return {*}
  */
 export type ColumnPropertiesState = {
-    type : TableColumnEnum
-    comment: boolean
-    default: boolean
-    nullable: boolean
-    index: boolean
-    unique: boolean
-    primary: boolean
-    increments: boolean
-    foreign: boolean
+    type ?: TableColumnEnum
+    comment ?: string
+    default ?: DefaultValue
+    nullable ?: boolean
+    index ?: TableIndex
+    unique ?: UniqueIndex
+    primary ?: boolean
+    increments ?: boolean
+    foreign ?: boolean
 }
