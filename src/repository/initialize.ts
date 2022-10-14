@@ -24,7 +24,7 @@ export default function(configure: any) {
 
     const resolveLoadedModule = function() {
         let repositorys = ResolverModuleFactory.getInstance().GetAnyModels<IRepository>(Symbol.for("magic:table"));
-        repositorys.map((repository : IRepository) => {
+        repositorys.forEach((repository : IRepository) => {
             repository.dbContext = dbContext;
             const tableName = Reflect.getMetadata(Symbol.for("magic:table"), repository.constructor);
             const tableViewExpression = Reflect.getMetadata(Symbol.for("magic:tableViewExpression"), repository.constructor);
@@ -33,19 +33,17 @@ export default function(configure: any) {
             
             if (isDrop) {
                 const isPreventDropTable = repository.$beforeDropTable && repository.$beforeDropTable() || false;
-                const dropDone = (yes : boolean) => yes ? !yes : Boolean(tableViewExpression ? dbContext.schema.dropViewIfExists(tableName) :  dbContext.schema.dropTableIfExists(tableName));
-                synchronousPipe = isPreventDropTable && isPromise(isPreventDropTable) ?  (<Promise<boolean>>isPreventDropTable).then(dropDone) : Promise.resolve(dropDone(Boolean(isPreventDropTable)));
-                synchronousPipe = synchronousPipe.then((yes : boolean) => {
-                    if (yes && repository.$afterDropTable) {
-                        const isAfterDropDone =  repository.$afterDropTable();
-                        return isPromise(isAfterDropDone) ? (<Promise<void>>isAfterDropDone).then(() => Promise.resolve(true)) : Promise.resolve(true);
-                    }
-                    return Promise.resolve(false);
-                });
+                const afterDropDone = () => {
+                    const isAfterDropDone =  repository.$afterDropTable && repository.$afterDropTable() || false;
+                    return isAfterDropDone && isPromise(isAfterDropDone) ? (<Promise<void>>isAfterDropDone).then(() => Promise.resolve(true)) : Promise.resolve(Boolean(isAfterDropDone));
+                }
+                const beforeDropDone = (yes : boolean) => yes ? !yes : tableViewExpression ? dbContext.schema.dropViewIfExists(tableName).then(afterDropDone) : dbContext.schema.dropTableIfExists(tableName).then(afterDropDone);
+                synchronousPipe = isPreventDropTable && isPromise(isPreventDropTable) ?  (<Promise<boolean>>isPreventDropTable).then(beforeDropDone) :  Promise.resolve(beforeDropDone(Boolean(isPreventDropTable)));
             }
+
             const createDone = (yes: boolean) : PromiseLike<boolean> => {
                 return yes ? Promise.resolve(!yes) : new Promise((resolve, reject) => {
-                    const isBeforeTableInit = repository.$beforeTableInitialize ? (repository.$beforeTableInitialize() || true) : false;
+                    const isBeforeTableInit = repository.$beforeTableInitialize && repository.$beforeTableInitialize () || Promise.resolve();
                     if (!Boolean(tableViewExpression)) {
                         const createFn = (table) => {
                             const tableEngine = Reflect.getMetadata(Symbol.for("magic:tableEngine"), repository.constructor)
@@ -95,8 +93,8 @@ export default function(configure: any) {
                                             properitesState = { type: columnType, comment: columnComment, default: columnDefaultValue, nullable: !columnNotNullable && columnNullable, index: columnIndexOptions, unique: columnUniqueOptions, primary: Boolean(tablePrimaryKey), increments : false, foreign: Boolean(columnForeignKey) }
                                         }
                                         
-                                        const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(table, columnName, properitesState);
-                                        return isPromise(updateColumnPropsPromise) ? (<Promise<void>>updateColumnPropsPromise).then(() => true) : Promise.resolve(true);
+                                        const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(table, columnName, properitesState) || false;
+                                        return updateColumnPropsPromise && isPromise(updateColumnPropsPromise) ? (<Promise<void>>updateColumnPropsPromise).then(() => true) : Promise.resolve(true);
                                     }
                                     return Promise.resolve(false)
                                 }
@@ -108,7 +106,6 @@ export default function(configure: any) {
                             }
                             isBeforeTableInit && isPromise(isBeforeTableInit) ?  (<Promise<void>>isBeforeTableInit).then(initializeTablePropsDone).then(resolve, reject) : Promise.resolve(initializeTablePropsDone()).then(resolve, reject)
                         }
-                        
                         dbContext.schema.hasTable(tableName).then(yes => yes ? resolve(false) : dbContext.schema.createTable(tableName, createFn));
                     }
 
@@ -121,6 +118,7 @@ export default function(configure: any) {
                     }
                 })
             };
+
             synchronousPipe = synchronousPipe.then(() => {
                 const isPreventCreateTable = repository.$beforeCreateTable && repository.$beforeCreateTable() || false;
                 return isPreventCreateTable && isPromise(isPreventCreateTable) ? (<Promise<boolean>>isPreventCreateTable).then(createDone) : createDone(Boolean(isPreventCreateTable));
