@@ -2,16 +2,18 @@ import IConnectionFactory from './i_connection'
 import { MySqlConnection } from './i_mysql_connection'
 import { OracleConnection } from './i_oracle_connection'
 import { PGConnection } from './i_pg_connection'
+import { MSSQLConnection } from './i_mssql_connection'
 import { Sqlite3Connection } from './i_sqlite3_connection'
 import { Knex as KnexSchema } from 'knex'
 
-type ClientName = "MYSQL" | "ORACLE" | "PG" | "SQLITE3"
+type ClientName = "MYSQL" | "ORACLE" | "PG" | "SQLITE3" | "MSSQL"
 
 export default function ConnectionFactory (clientName: ClientName, configure: any, fn : (conn) => void) : KnexSchema {
     let factory =  ({ 
         "MYSQL": () => new MySqlConnection(),
         "ORACLE": () => new OracleConnection(),
         "PG": () => new PGConnection(),
+        "MSSQL": () => new MSSQLConnection(),
         "SQLITE3": () => new Sqlite3Connection()
     })
     const dbConnection : IConnectionFactory = factory[clientName]();

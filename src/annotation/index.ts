@@ -81,6 +81,26 @@ export const MySqlSchema = (fn: (configure: any) => void) => {
     }
 }
 
+
+/**
+ * @LastEditors: SongQian
+ * @Author: SongQian
+ * @Date: 2022/05/26 14:50
+ * @description: 内置MySQL架构修饰器,不对外公开
+ * @return {*} \@MySqlSchema()
+ */
+ export const MSSQLSchema = (fn: (configure: any) => void) => {
+    return (target: Function) => {
+        Reflect.defineMetadata(Symbol.for("Kind"), "MSSQL", target);
+        Reflect.defineProperty(target.prototype, "Initialize", {
+            configurable: true,
+            enumerable: true,
+            writable: false,
+            value: fn
+        })
+    }
+}
+
 /**
  * @LastEditors: SongQian
  * @Author: SongQian

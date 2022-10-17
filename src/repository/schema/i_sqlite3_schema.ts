@@ -8,7 +8,6 @@
 
 import { Sqlite3Schema } from '~/annotation'
 import ISchema from '~/repository/i_schema'
-import { IRepository } from '../i_repository'
 import EventEmitter from 'events'
 import Initialize from '../initialize'
 
