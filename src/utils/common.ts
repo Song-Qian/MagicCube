@@ -1,8 +1,9 @@
-/**
- *  Developer   : SongQian
- *  Time        : 2019/03/17
- *  Email       : onlylove1172559463@vip.qq.com
- *  Description : 所有公共函数
+/*
+ * @Author: SongQian
+ * @LastEditors: SongQian
+ * @Date: 2022/08/11 06:19
+ * @eMail: onlylove1172559463@vip.qq.com
+ * @Description: 所有公共函数
  */
 import * as fs from 'fs'
 import path from 'path'
@@ -89,5 +90,5 @@ export function inTypes<T extends Array<unknown>, M extends (T extends Array<inf
  * @return {*} 
  */
 export function isPromise(target: any) : boolean {
-    return target && ("then" in target && "catch" in target && target instanceof Promise);
+    return target && (target instanceof Promise && "then" in target && "catch" in target );
 }

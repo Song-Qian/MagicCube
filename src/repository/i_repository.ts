@@ -25,6 +25,8 @@ export interface IRepository {
 
     $afterCreateTable ?: () => Promise<void> | void;
 
+    $done ?: () => Promise<void> | void;
+
     $errorHandler ?:  (error : any) => Promise<void> | void;
 
     $beforeExecute ?: (data : any) =>  void;
