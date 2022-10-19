@@ -29,14 +29,16 @@ export class MSSQLConnection extends IMSSQLConnection {
             client: "mssql",
             connection: {
                 server: dbconfig.connection.host,
-                port: dbconfig.connection.port || 1433,
-                user: dbconfig.connection.user,
+                port: Number(dbconfig.connection.port) || 1433,
+                userName: dbconfig.connection.user,
                 password: dbconfig.connection.password,
-                database: dbconfig.connection.database
+                database: dbconfig.connection.database,
+                connectionTimeout: Number(dbconfig.connection.timeout) || 60000,
+                requestTimeout: Number(dbconfig.connection.timeout) || 60000
             },
             pool: {
-                min: dbconfig.pool.min,
-                max: dbconfig.pool.max,
+                min: Number(dbconfig.pool.min),
+                max: Number(dbconfig.pool.max),
                 afterCreate: (conn, done) => { 
                     try { 
                         this.emitter.emit("$onPoolCreated", conn);

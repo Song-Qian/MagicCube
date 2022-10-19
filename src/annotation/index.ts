@@ -81,7 +81,6 @@ export const MySqlSchema = (fn: (configure: any) => void) => {
     }
 }
 
-
 /**
  * @LastEditors: SongQian
  * @Author: SongQian
@@ -348,6 +347,20 @@ export const IncrementsColumn = (options?: { primaryKey: boolean }) => {
     return (target: any, name: string) => {
         Reflect.defineMetadata(Symbol.for("magic:tableIncrementsColumn"), true, target, name);
         Reflect.defineMetadata(Symbol.for("magic:tableIncrementsOptions"), options || { primaryKey: true }, target, name);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Date: 2022/10/19 11:36
+ * @description: 忽略字段在表中生成。
+ * @param {Array} Dbs 忽略条件
+ * @return {*} \@IgnoreColumn(['MSSQL', 'SQLITE3'])
+ */
+export const IgnoreColumn = (Dbs ?: Array<string>) => {
+    return (target: any, name: string) => {
+        Reflect.defineMetadata(Symbol.for("magic:tableIgnoreColumn"), true, target, name);
+        Reflect.defineMetadata(Symbol.for("magic:tableIgnoreColumnForDb"), Dbs || [], target, name);
     }
 }
 

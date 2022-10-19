@@ -26,18 +26,18 @@ export class PGConnection extends IPGConnection {
     public createConnection(dbconfig: any): KnexSchema<any, Record<string, any>[]> {
         return knex({
             client: "pg",
-            acquireConnectionTimeout: dbconfig.connection.timeout,
             connection: {
                 host: dbconfig.connection.host,
-                port: dbconfig.connection.port || 5432,
+                port: Number(dbconfig.connection.port) || 5432,
                 socketPath : dbconfig.connection.socketPath,
                 user: dbconfig.connection.user,
                 password: dbconfig.connection.password,
-                database: dbconfig.connection.database
+                database: dbconfig.connection.database,
+                connectionTimeoutMillis: Number(dbconfig.connection.timeout)
             },
             pool: {
-                min: dbconfig.pool.min,
-                max: dbconfig.pool.max,
+                min: Number(dbconfig.pool.min),
+                max: Number(dbconfig.pool.max),
                 afterCreate: (conn, done) => { 
                     try { 
                         this.emitter.emit("$onPoolCreated", conn);

@@ -26,14 +26,14 @@ export class MySqlConnection extends IMySqlConnection {
     public createConnection(dbconfig: any): KnexSchema<any, Record<string, any>[]> {
         return knex({
             client: "mysql2",
-            acquireConnectionTimeout: dbconfig.connection.timeout,
             connection: {
                 host: dbconfig.connection.host,
                 port: Number(dbconfig.connection.port) || 3306,
                 socketPath : dbconfig.connection.socketPath,
                 user: dbconfig.connection.user,
                 password: dbconfig.connection.password,
-                database: dbconfig.connection.database
+                database: dbconfig.connection.database,
+                connectTimeout: Number(dbconfig.connection.timeout) || 60000
             },
             pool: {
                 min: Number(dbconfig.pool.min),

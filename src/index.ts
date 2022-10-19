@@ -25,6 +25,7 @@ export {
     UniqueColumn, 
     PrimaryColumn, 
     ForeignColumn, 
+    IgnoreColumn,
     IncrementsColumn
 } from './annotation'
 export { HttpService } from './services/http_service'

@@ -52,13 +52,15 @@ export default function(configure: any) {
                                 const tableEngine = Reflect.getMetadata(Symbol.for("magic:tableEngine"), repository.constructor)
                                 const tableCharset = Reflect.getMetadata(Symbol.for("magic:tableCharset"), repository.constructor)
                                 const tableCollate = Reflect.getMetadata(Symbol.for("magic:tableCollate"), repository.constructor)
-                                table.charset(tableCharset);
-                                table.engine(tableEngine);
-                                table.collate(tableCollate);
+                                clientName === "MYSQL" && table.charset(tableCharset);
+                                clientName === "MYSQL" && table.engine(tableEngine);
+                                clientName === "MYSQL" && table.collate(tableCollate);
                                 const initializeTablePropsDone = () : Promise<boolean> => {
                                     const initializePropsDone = (field : string) : Promise<Boolean> => {
                                         const columnName = Reflect.getMetadata(Symbol.for("magic:tableColumnName"), repository, field);
-                                        if (columnName) {
+                                        const isIgnore = Reflect.getMetadata(Symbol.for("magic:tableIgnoreColumn"), repository, field);
+                                        const ignoreColumn = Reflect.getMetadata(Symbol.for("magic:tableIgnoreColumnForDb"), repository, field);
+                                        if (columnName && (!(isIgnore && (ignoreColumn.length === 0 || ignoreColumn.indexOf(clientName) > -1)) || !isIgnore)) {
                                             const columnType = Reflect.getMetadata(Symbol.for("magic:tableColumnType"), repository, field);
                                             const columnComment = Reflect.getMetadata(Symbol.for("magic:tableColumnComment"), repository, field);
                                             const columnOptions = Reflect.getMetadata(Symbol.for("magic:tableColumnOptions"), repository, field);
@@ -108,7 +110,7 @@ export default function(configure: any) {
                                 }
                                 isBeforeTableInit && isPromise(isBeforeTableInit) ?  (<Promise<void>>isBeforeTableInit).then(initializeTablePropsDone) : Promise.resolve(initializeTablePropsDone())
                             }
-                            dbContext.schema.hasTable(tableName).then((yes) => yes ? resolve(false) : dbContext.schema.createTable(tableName, createFn).transacting(trx).then(() => resolve(true)).catch(reject))
+                            dbContext.schema.hasTable(tableName).then((yes) => yes ? resolve(false) : dbContext.schema.createTable(tableName, createFn).transacting(trx).then(() => resolve(true)).catch(reject)).catch(reject);
                         }
 
                         if (Boolean(tableViewExpression)) {
