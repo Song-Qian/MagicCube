@@ -11,21 +11,21 @@ export interface IRepository {
     
     dbContext: KnexSchema;
 
-    $beforeDropTable ?: () => Promise<boolean> | boolean;
+    $beforeDropTable ?: (trx: KnexSchema.Transaction) => Promise<boolean> | boolean;
 
-    $afterDropTable ?:  () => Promise<void> | void;
+    $afterDropTable ?:  (trx: KnexSchema.Transaction) => Promise<void> | void;
 
-    $beforeCreateTable ?:  () => Promise<boolean> | boolean;
+    $beforeCreateTable ?:  (trx: KnexSchema.Transaction) => Promise<boolean> | boolean;
 
-    $beforeTableInitialize ?: () => Promise<void> | void;
+    $beforeTableInitialize ?: (trx: KnexSchema.Transaction) => Promise<void> | void;
 
-    $updateTableColumnProps ?:  (table : KnexSchema.CreateTableBuilder, columnName : string, state : ColumnPropertiesState) => Promise<void> | void;
+    $updateTableColumnProps ?:  (trx: KnexSchema.Transaction, table : KnexSchema.CreateTableBuilder, columnName : string, state : ColumnPropertiesState) => Promise<void> | void;
 
-    $afterTableInitialized ?: (table : KnexSchema.CreateTableBuilder) => Promise<void> | void;
+    $afterTableInitialized ?: (trx: KnexSchema.Transaction, table : KnexSchema.CreateTableBuilder) => Promise<void> | void;
 
-    $afterCreateTable ?: () => Promise<void> | void;
+    $afterCreateTable ?: (trx: KnexSchema.Transaction) => Promise<void> | void;
 
-    $done ?: () => Promise<void> | void;
+    $done ?: (trx: KnexSchema.Transaction) => Promise<void> | void;
 
     $errorHandler ?:  (error : any) => Promise<void> | void;
 

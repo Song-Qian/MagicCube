@@ -29,23 +29,34 @@ export default function(configure: any) {
             const tableName = Reflect.getMetadata(Symbol.for("magic:table"), repository.constructor);
             const tableViewExpression = Reflect.getMetadata(Symbol.for("magic:tableViewExpression"), repository.constructor);
             const isDrop = Reflect.getMetadata(Symbol.for("magic:dropTableIfExists"), repository.constructor);
-            dbContext.transaction(trx => {
+            dbContext.transaction().then(trx => {
                 let synchronousPipe : PromiseLike<boolean> = Promise.resolve(false);
                 if (isDrop) {
-                    const isPreventDropTable = repository.$beforeDropTable ? repository.$beforeDropTable() : false;
+                    const isPreventDropTable = repository.$beforeDropTable ? repository.$beforeDropTable(trx) : false;
                     //$afterDropTable 无返回值，但dbContext.schema.dropViewIfExists确实已持行，因此永远为Promise.resolve(true)
                     const afterDropDone = () => {
-                        const isAfterDropTable = repository.$afterDropTable && repository.$afterDropTable() || true; 
+                        const isAfterDropTable = repository.$afterDropTable && repository.$afterDropTable(trx) || true; 
                         return isAfterDropTable && isPromise(isAfterDropTable) ? (<Promise<void>>isAfterDropTable).then(() => Promise.resolve(true)) : Promise.resolve(true);
                     }; 
-                    const beforeDropDone = (yes : boolean) => yes ? Promise.resolve(!yes) : tableViewExpression ? dbContext.schema.dropViewIfExists(tableName).transacting(trx).then(afterDropDone) : dbContext.schema.dropTableIfExists(tableName).transacting(trx).then(afterDropDone);
+                    const beforeDropDone = (yes : boolean) => {
+                        debugger
+                        let exec = {
+                            "MSSQL" : () => dbContext.select(dbContext.raw("'alter table ['+ OBJECT_SCHEMA_NAME(parent_object_id) +'].['+ OBJECT_NAME(parent_object_id) +'] drop constraint ['+ name +'];' as dropContext")).from('sys.foreign_keys').where(dbContext.raw('referenced_object_id = object_id(?)', tableName)).transacting(trx).then((row) => {
+                                return row.length ? Promise.all(row.map((it) => dbContext.raw(it.dropContext))) : Promise.resolve([]);
+                            }).then(() => dbContext.schema.dropTableIfExists(tableName).transacting(trx)).then(afterDropDone),
+
+                            "MYSQL": () => dbContext.schema.dropTableIfExists(tableName).transacting(trx).then(afterDropDone)
+                        }
+
+                        return yes ? Promise.resolve(!yes) : tableViewExpression ? dbContext.schema.dropViewIfExists(tableName).transacting(trx).then(afterDropDone) : exec[clientName]()
+                    };
                     synchronousPipe = isPreventDropTable && isPromise(isPreventDropTable) ?  (<Promise<boolean>>isPreventDropTable).then(beforeDropDone) :  beforeDropDone(Boolean(isPreventDropTable));
                 }
 
                 const createDone = (yes: boolean) : PromiseLike<boolean> => {
                     // yes 来自 $beforeCreateTable Hook函数返回值，当yes = true时，用户需要创建数据表，返之则阻止数据表格被创建。
                     return !yes ? Promise.resolve(yes) : new Promise((resolve, reject) => {
-                        const isBeforeTableInit = repository.$beforeTableInitialize && repository.$beforeTableInitialize() || true;
+                        const isBeforeTableInit = repository.$beforeTableInitialize && repository.$beforeTableInitialize(trx) || true;
 
                         if (!Boolean(tableViewExpression)) {
                             const createFn = (table) => {
@@ -97,20 +108,20 @@ export default function(configure: any) {
                                                 columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.foreignTable}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
                                                 properitesState = { type: columnType, comment: columnComment, default: columnDefaultValue, nullable: !columnNotNullable && columnNullable, index: columnIndexOptions, unique: columnUniqueOptions, primary: Boolean(tablePrimaryKey), increments : false, foreign: Boolean(columnForeignKey) }
                                             }
-                                            const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(table, columnName, properitesState) || true;
+                                            const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(trx, table, columnName, properitesState) || true;
                                             return updateColumnPropsPromise && isPromise(updateColumnPropsPromise) ? (<Promise<void>>updateColumnPropsPromise).then(() => Promise.resolve(true)) : Promise.resolve(true);
                                         }
                                         return Promise.resolve(false)
                                     }
                                     const updateColumnsDone = () =>  Object.keys(Object.getPrototypeOf(repository)).map(initializePropsDone);
                                     return Promise.all(updateColumnsDone()).then(() => new Promise((resolve) => {
-                                        const isAfterTableInit  =  repository.$afterTableInitialized && repository.$afterTableInitialized(table) || true;
+                                        const isAfterTableInit  =  repository.$afterTableInitialized && repository.$afterTableInitialized(trx, table) || true;
                                         isAfterTableInit && isPromise(isAfterTableInit) ? (<Promise<void>>isAfterTableInit).then(() => resolve(true)) : resolve(true);
                                     }))
                                 }
                                 isBeforeTableInit && isPromise(isBeforeTableInit) ?  (<Promise<void>>isBeforeTableInit).then(initializeTablePropsDone) : Promise.resolve(initializeTablePropsDone())
                             }
-                            dbContext.schema.hasTable(tableName).then((yes) => yes ? resolve(false) : dbContext.schema.createTable(tableName, createFn).transacting(trx).then(() => resolve(true)).catch(reject)).catch(reject);
+                            trx.schema.hasTable(tableName).then((yes) => yes ? resolve(false) : dbContext.schema.createTable(tableName, createFn).transacting(trx).then(() => resolve(true)).catch(reject)).catch(reject);
                         }
 
                         if (Boolean(tableViewExpression)) {
@@ -128,7 +139,7 @@ export default function(configure: any) {
                 synchronousPipe = synchronousPipe.then((_) => {
                     // _ == true dbContext.schema.dropTableIfExists则被持行，yes == false $beforeDropTable 钩子函数阻止了表格删除。
                     // _ = boolean 任何值，都没有意义，因为创建当前表必需要持行，只能留给未来扩展需要。
-                    const isPreventCreateTable = repository.$beforeCreateTable ? repository.$beforeCreateTable() : true;
+                    const isPreventCreateTable = repository.$beforeCreateTable ? repository.$beforeCreateTable(trx) : true;
                     return isPreventCreateTable && isPromise(isPreventCreateTable) ? (<Promise<boolean>>isPreventCreateTable).then(createDone) : createDone(Boolean(isPreventCreateTable));
                 })
 
@@ -136,7 +147,7 @@ export default function(configure: any) {
                     // yes  == true 表示 $beforeCreateTable， $beforeTableInitialize, $updateTableColumnProps, $afterTableInitialized hooks 函数正常被调用。
                     // yes == fasel 表示 $beforeCreateTable 用户阻表被创建
                     if (yes) {
-                        const isCreatedDone = repository.$afterCreateTable && repository.$afterCreateTable() || true;
+                        const isCreatedDone = repository.$afterCreateTable && repository.$afterCreateTable(trx) || true;
                         return isCreatedDone && isPromise(isCreatedDone) ? (<Promise<void>>isCreatedDone).then(() => Promise.resolve(true)) : Promise.resolve(true);
                     } 
                     return Promise.resolve(!yes);
@@ -148,11 +159,10 @@ export default function(configure: any) {
                 };
                 const Done = () => {
                     trx.commit();
-                    repository.$done || (() => void 0);
+                    repository.$done && repository.$done(trx) || (() => void 0);
                 }
-                synchronousPipe.then(Done, Quit);
+                return synchronousPipe.then(Done, Quit);
             })
-            
         });
     }
 
