@@ -32,12 +32,10 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
         }; 
         const beforeDropDone = (yes : boolean) => {
             let exec = {
-                // "MSSQL" : () => dbContext.select(dbContext.raw("'alter table ['+ OBJECT_SCHEMA_NAME(parent_object_id) +'].['+ OBJECT_NAME(parent_object_id) +'] drop constraint ['+ name +'];' as dropContext")).from('sys.foreign_keys').where(dbContext.raw('referenced_object_id = object_id(?)', tableName)).transacting(trx).then((row) => {
-                //     return row.length ? Promise.all(row.map((it) => dbContext.raw(it.dropContext).transacting(trx))) : Promise.resolve([]);
-                // }).then(() => dbContext.schema.dropTableIfExists(tableName).transacting(trx)).then(afterDropDone),
-                "MSSQL": () => trx.raw(`IF OBJECT_ID(N'${tableName}', N'U') IS NOT NULL ALTER TABLE [${tableName}] NOCHECK CONSTRAINT ALL`)
-                        .then(() => trx.schema.dropTableIfExists(tableName))
-                        .then(() => trx.raw(`IF OBJECT_ID(N'${tableName}', N'U') IS NOT NULL ALTER TABLE [${tableName}] CHECK CONSTRAINT ALL`)).then(afterDropDone),
+                "MSSQL" : () => trx.select(trx.raw("'alter table ['+ OBJECT_SCHEMA_NAME(parent_object_id) +'].['+ OBJECT_NAME(parent_object_id) +'] drop constraint ['+ name +'];' as dropContext")).from('sys.foreign_keys').where(trx.raw('referenced_object_id = object_id(?)', tableName)).then((row) => {
+                    return row.length ? Promise.all(row.map((it) => trx.raw(it.dropContext))) : Promise.resolve([]);
+                }).then(() => trx.schema.dropTableIfExists(tableName)).then(afterDropDone),
+                "ORACLE": () => trx.raw(""),
                 "MYSQL": () => trx.raw("Set FOREIGN_KEY_CHECKS = 0")
                         .then(() => trx.schema.dropTableIfExists(tableName))
                         .then(() => trx.raw("Set FOREIGN_KEY_CHECKS = 0")).then(afterDropDone)
@@ -167,7 +165,6 @@ export default function(configure: any) {
         repositorys.forEach((repository : IRepository) => {
             tasks.push({ fn : createTransactionTask, args: [clientName, dbContext, repository, advance] })
         });
-        tasks.push({ fn: () => lock.next(false), args: [] });
         advance.next();
     }
 

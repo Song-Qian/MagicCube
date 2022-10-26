@@ -102,8 +102,8 @@ export function isPromise(target: any) : boolean {
  */
 export function* synchronizationLock(state : boolean) : Generator<boolean, void, unknown> {
     let stopped = true;
-    while(stopped) {
-        stopped = <boolean>(yield state = !state);
+    while(stopped = <boolean>(yield state = !state)) {
+        continue;
     }
 }
 
@@ -123,8 +123,8 @@ export function* walker(lock: Generator<boolean, void, any>, tasks: Array<{ fn: 
         if (isLock.value && !isLock.done && tasks.length > 0) {
             lock.next(true);
             let task = tasks.shift();
-            let returnValue = yield task?.fn.apply(task, <[]>task.args);
-            returnValue && isPromise(returnValue) ? (<Promise<any>>returnValue).finally(() => lock.next(true)) : lock.next(true);
+            yield task?.fn.apply(task, <[]>task.args);
+            isLock = lock.next(Boolean(tasks.length));
         }
         
         if (!isLock.value && isLock.done) {
