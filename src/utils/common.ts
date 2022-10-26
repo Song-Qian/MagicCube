@@ -92,3 +92,43 @@ export function inTypes<T extends Array<unknown>, M extends (T extends Array<inf
 export function isPromise(target: any) : boolean {
     return target && (target instanceof Promise && "then" in target && "catch" in target );
 }
+
+/**
+ * @LastEditors: SongQian
+ * @Date: 2022/10/23 13:35
+ * @description: 同步锁
+ * @param {boolean} state
+ * @return {*}
+ */
+export function* synchronizationLock(state : boolean) : Generator<boolean, void, unknown> {
+    let stopped = true;
+    while(stopped) {
+        stopped = <boolean>(yield state = !state);
+    }
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Date: 2022/10/23 16:39
+ * @description: 步进器
+ * @param {Generator} lock 同步锁
+ * @param {*} void
+ * @param {*} unknown
+ * @param {Array} tasks 同步任务
+ * @return {*}
+ */
+export function* walker(lock: Generator<boolean, void, any>, tasks: Array<{ fn: (...args) => any, args: Array<any> }>) : Generator {
+    let isLock = lock.next(true);
+    while(true) {
+        if (isLock.value && !isLock.done && tasks.length > 0) {
+            lock.next(true);
+            let task = tasks.shift();
+            let returnValue = yield task?.fn.apply(task, <[]>task.args);
+            returnValue && isPromise(returnValue) ? (<Promise<any>>returnValue).finally(() => lock.next(true)) : lock.next(true);
+        }
+        
+        if (!isLock.value && isLock.done) {
+            break;
+        }
+    }
+}
