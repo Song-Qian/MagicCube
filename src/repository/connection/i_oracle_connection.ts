@@ -26,10 +26,14 @@ export class OracleConnection extends IOracleConnection {
     public createConnection(dbconfig: any): KnexSchema<any, Record<string, any>[]> {
         return knex({
             client: "oracledb",
-            connection: {
+            connection: dbconfig.connection.connectString ? {
+                user: dbconfig.connection.user,
+                password: dbconfig.connection.password,
+                connectString: dbconfig.connection.connectString,
+                requestTimeout: Number(dbconfig.connection.timeout)
+            } : {
                 host: dbconfig.connection.host,
                 port: Number(dbconfig.connection.port) || 1521,
-                socketPath : dbconfig.connection.socketPath,
                 user: dbconfig.connection.user,
                 password: dbconfig.connection.password,
                 database: dbconfig.connection.database,

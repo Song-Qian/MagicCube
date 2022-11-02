@@ -1,8 +1,9 @@
-/**
- * Developer    :   SongQian
- * Time         :   2019/03/09
- * eMail        :   onlylove1172559463@vip.qq.com
- * Description  :   生产编译处理配置
+/*
+ * @Author: SongQian
+ * @LastEditors: SongQian
+ * @Date: 2022/08/11 06:19
+ * @eMail: onlylove1172559463@vip.qq.com
+ * @Description: 生产编译处理配置
  */
 
  const tsTransformPaths = require('@zerollup/ts-transform-paths');
@@ -35,6 +36,15 @@ module.exports = function() {
       }
     }
 
+    const Oracle_Loader = {
+      test: /oracledb\.js$/i,
+      loader: 'string-replace-loader',
+      options: {
+        search: 'requireBinary(binaryLocations[i])',
+        replace: "import(process.env.ORACLE_PATH + nodbUtil.BINARY_FILE)"
+      }
+    }
+
     const HTML_Loader = {
       test: /\.html$/,
       loader: "html-loader",
@@ -43,6 +53,7 @@ module.exports = function() {
     return [
       JS_Loader,
       TS_Loader,
-      HTML_Loader
+      HTML_Loader,
+      Oracle_Loader
     ]
 }
