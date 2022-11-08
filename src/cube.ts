@@ -21,7 +21,6 @@ import IServiceSynchResolverModule from '~/dependency/i_service_synch_resolver_m
 import IServiceAsyncResolverModule from '~/dependency/i_service_async_resolver_module'
 import ResolverModuleFactory from './dependency/resolver_module_factory'
 
-
 export class Cube {
 
     constructor({ config }) {

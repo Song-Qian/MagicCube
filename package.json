@@ -1,6 +1,6 @@
 {
   "name": "@skysong/magic-cube",
-  "version": "0.0.203",
+  "version": "0.0.221",
   "main": "index.js",
   "scripts": {
     "webpack:dev": "cross-env NODE_ENV=development webpack --mode development -w --config ./webpack/webpack.node.js --progress",
@@ -21,6 +21,7 @@
     "@babel/core": "^7.14.8",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-decorators": "^7.14.5",
+    "@babel/plugin-syntax-object-rest-spread": "^7.8.3",
     "@babel/plugin-transform-typescript": "^7.18.8",
     "@babel/preset-env": "^7.14.8",
     "@types/node": "^16.3.0",
@@ -40,7 +41,6 @@
     "pg": "^8.7.3",
     "pg-native": "^3.0.1",
     "pg-query-stream": "^4.2.3",
-    "string-replace-loader": "^3.1.0",
     "tedious": "^15.0.1",
     "ts-loader": "^9.3.1",
     "ts-node-dev": "^1.1.8",
@@ -67,7 +67,7 @@
     "knex": "^2.2.0",
     "oracledb": "^5.5.0",
     "reflect-metadata": "^0.1.13",
-    "socket.io": "^4.4.1",
+    "socket.io": "^4.5.3",
     "winston": "^3.3.3"
   },
   "repository": {

@@ -35,7 +35,7 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
                 "MSSQL" : () => trx.select(trx.raw("'alter table ['+ OBJECT_SCHEMA_NAME(parent_object_id) +'].['+ OBJECT_NAME(parent_object_id) +'] drop constraint ['+ name +'];' as dropContext")).from('sys.foreign_keys').where(trx.raw('referenced_object_id = object_id(?)', tableName)).then((row) => {
                     return row.length ? Promise.all(row.map((it) => trx.raw(it.dropContext))) : Promise.resolve([]);
                 }).then(() => trx.schema.dropTableIfExists(tableName)).then(afterDropDone),
-                "ORACLE": () => trx.raw(""),
+                "ORACLE": () => trx.schema.dropTableIfExists(tableName).then(afterDropDone),
                 "MYSQL": () => trx.raw("Set FOREIGN_KEY_CHECKS = 0")
                         .then(() => trx.schema.dropTableIfExists(tableName))
                         .then(() => trx.raw("Set FOREIGN_KEY_CHECKS = 0")).then(afterDropDone)
@@ -86,7 +86,11 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
                                 let properitesState : ColumnPropertiesState;
                                 if (columnIncrements) {
                                     // 增量列
-                                    table.increments(columnName, columnIncrementsOptions);
+                                    let modifyIncrement = {
+                                        'ORACLE' : () => trx.schema.alterTable(tableName, () => table.increments(columnName, columnIncrementsOptions)),
+                                        'DEFAULT': () => table.increments(columnName, columnIncrementsOptions)
+                                    }
+                                    modifyIncrement[clientName] && modifyIncrement[clientName]() || modifyIncrement['DEFAULT']();
                                     properitesState = { type: 0, comment: '', nullable: false, primary: columnName, increments : true }
                                 } else {
                                     //非增量列
@@ -94,10 +98,10 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
                                     columnBuilder = columnComment && columnBuilder.comment(columnComment) || columnBuilder;
                                     columnBuilder = columnNullable && columnBuilder.nullable() || columnBuilder;
                                     columnBuilder = columnNotNullable && columnBuilder.notNullable() || columnBuilder;
-                                    columnBuilder = columnDefaultValue && columnBuilder.defaultTo(columnDefaultValue, columnDefaultOptions) || columnBuilder;
+                                    columnBuilder = columnDefaultValue && columnBuilder.defaultTo(columnDefaultValue.startsWith('raw:') ? trx.raw(columnDefaultValue.match(/(?<=raw:).*/i)[0]) : columnDefaultValue, columnDefaultOptions) || columnBuilder;
+                                    tablePrimaryKey && table.primary(tablePrimaryKeys || columnName);
                                     columnIndex && table.index(columnName, columnIndex, columnIndexOptions);
                                     columnUnique && table.unique(columnName, columnUniqueOptions);
-                                    tablePrimaryKey && table.primary(tablePrimaryKeys || columnName);
                                     columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.foreignTable}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
                                     properitesState = { type: columnType, comment: columnComment, default: columnDefaultValue, nullable: !columnNotNullable && columnNullable, index: columnIndexOptions, unique: columnUniqueOptions, primary: Boolean(tablePrimaryKey), increments : false, foreign: Boolean(columnForeignKey) }
                                 }

@@ -9,16 +9,16 @@
  const tsTransformPaths = require('@zerollup/ts-transform-paths');
 
 module.exports = function() {
-
+  
     const JS_Loader = {
-        test: /\.(js)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets:[['@babel/preset-env', { targets : { node: "current" } }]]
-          }
+      test: /\.(js)$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets:[['@babel/preset-env', { targets : { node: "current" } }]]
         }
+      }
     }
 
     const TS_Loader = {
@@ -36,15 +36,6 @@ module.exports = function() {
       }
     }
 
-    const Oracle_Loader = {
-      test: /oracledb\.js$/i,
-      loader: 'string-replace-loader',
-      options: {
-        search: 'requireBinary(binaryLocations[i])',
-        replace: "import(process.env.ORACLE_PATH + nodbUtil.BINARY_FILE)"
-      }
-    }
-
     const HTML_Loader = {
       test: /\.html$/,
       loader: "html-loader",
@@ -53,7 +44,6 @@ module.exports = function() {
     return [
       JS_Loader,
       TS_Loader,
-      HTML_Loader,
-      Oracle_Loader
+      HTML_Loader
     ]
 }
