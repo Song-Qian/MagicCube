@@ -1,6 +1,6 @@
 {
   "name": "@skysong/magic-cube",
-  "version": "0.0.221",
+  "version": "0.0.230",
   "main": "index.js",
   "scripts": {
     "webpack:dev": "cross-env NODE_ENV=development webpack --mode development -w --config ./webpack/webpack.node.js --progress",

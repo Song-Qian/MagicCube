@@ -35,10 +35,10 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
                 "MSSQL" : () => trx.select(trx.raw("'alter table ['+ OBJECT_SCHEMA_NAME(parent_object_id) +'].['+ OBJECT_NAME(parent_object_id) +'] drop constraint ['+ name +'];' as dropContext")).from('sys.foreign_keys').where(trx.raw('referenced_object_id = object_id(?)', tableName)).then((row) => {
                     return row.length ? Promise.all(row.map((it) => trx.raw(it.dropContext))) : Promise.resolve([]);
                 }).then(() => trx.schema.dropTableIfExists(tableName)).then(afterDropDone),
-                "ORACLE": () => trx.schema.dropTableIfExists(tableName).then(afterDropDone),
-                "MYSQL": () => trx.raw("Set FOREIGN_KEY_CHECKS = 0")
-                        .then(() => trx.schema.dropTableIfExists(tableName))
-                        .then(() => trx.raw("Set FOREIGN_KEY_CHECKS = 0")).then(afterDropDone)
+                "ORACLE": () => trx.select('constraint_name').from('user_constraints').where(trx.raw('constraint_type = ? and table_name = ?', ['R', tableName])).then((row) => {
+                    return row.length ? Promise.all(row.map(it => trx.raw('alter table ?? drop constraint ?', [tableName, it.constraint_name]))) : Promise.resolve([]);
+                }).then(() => trx.schema.dropTableIfExists(tableName).then(afterDropDone)),
+                "MYSQL": () => trx.raw("Set FOREIGN_KEY_CHECKS = 0").then(() => trx.schema.dropTableIfExists(tableName)).then(() => trx.raw("Set FOREIGN_KEY_CHECKS = 0")).then(afterDropDone)
             }
 
             return yes ? Promise.resolve(!yes) : tableViewExpression ? trx.schema.dropViewIfExists(tableName).then(afterDropDone) : exec[clientName]()
@@ -86,11 +86,7 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
                                 let properitesState : ColumnPropertiesState;
                                 if (columnIncrements) {
                                     // 增量列
-                                    let modifyIncrement = {
-                                        'ORACLE' : () => trx.schema.alterTable(tableName, () => table.increments(columnName, columnIncrementsOptions)),
-                                        'DEFAULT': () => table.increments(columnName, columnIncrementsOptions)
-                                    }
-                                    modifyIncrement[clientName] && modifyIncrement[clientName]() || modifyIncrement['DEFAULT']();
+                                    table.increments(columnName, columnIncrementsOptions);
                                     properitesState = { type: 0, comment: '', nullable: false, primary: columnName, increments : true }
                                 } else {
                                     //非增量列
@@ -102,7 +98,9 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
                                     tablePrimaryKey && table.primary(tablePrimaryKeys || columnName);
                                     columnIndex && table.index(columnName, columnIndex, columnIndexOptions);
                                     columnUnique && table.unique(columnName, columnUniqueOptions);
-                                    columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.foreignTable}.${columnForeignOptions.foreignColumn}`).onDelete(columnForeignOptions.onDelete || "CASCADE").onUpdate(columnForeignOptions.onUpdate || "CASCADE");
+                                    let referencingColumnBuilder = columnForeignKey && table.foreign(columnName, columnForeignKey).references(`${columnForeignOptions.foreignTable}.${columnForeignOptions.foreignColumn}`);
+                                    columnForeignKey && columnForeignOptions.onDelete && referencingColumnBuilder.onDelete(columnForeignOptions.onDelete || "CASCADE");
+                                    columnForeignKey && columnForeignOptions.onUpdate && referencingColumnBuilder.onUpdate(columnForeignOptions.onUpdate || "CASCADE");
                                     properitesState = { type: columnType, comment: columnComment, default: columnDefaultValue, nullable: !columnNotNullable && columnNullable, index: columnIndexOptions, unique: columnUniqueOptions, primary: Boolean(tablePrimaryKey), increments : false, foreign: Boolean(columnForeignKey) }
                                 }
                                 const updateColumnPropsPromise = repository.$updateTableColumnProps && repository.$updateTableColumnProps(trx, table, columnName, properitesState) || true;
