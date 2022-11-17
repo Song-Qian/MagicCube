@@ -52,7 +52,7 @@ export class OracleConnection extends IOracleConnection {
                 }
             },
             postProcessResponse: (result: any) => result,
-            wrapIdentifier: (value, origImpl, queryContext) => origImpl(value),
+            wrapIdentifier: (value, origImpl, queryContext) => origImpl(value.toLowerCase()),
             log: dbconfig.logger ? logger : undefined
         })
     }

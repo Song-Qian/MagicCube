@@ -32,13 +32,12 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
         }; 
         const beforeDropDone = (yes : boolean) => {
             let exec = {
-                "MSSQL" : () => trx.select(trx.raw("'alter table ['+ OBJECT_SCHEMA_NAME(parent_object_id) +'].['+ OBJECT_NAME(parent_object_id) +'] drop constraint ['+ name +'];' as dropContext")).from('sys.foreign_keys').where(trx.raw('referenced_object_id = object_id(?)', tableName)).then((row) => {
-                    return row.length ? Promise.all(row.map((it) => trx.raw(it.dropContext))) : Promise.resolve([]);
-                }).then(() => trx.schema.dropTableIfExists(tableName)).then(afterDropDone),
-                "ORACLE": () => trx.select('constraint_name').from('user_constraints').where(trx.raw('constraint_type = ? and table_name = ?', ['R', tableName])).then((row) => {
-                    return row.length ? Promise.all(row.map(it => trx.raw('alter table ?? drop constraint ?', [tableName, it.constraint_name]))) : Promise.resolve([]);
-                }).then(() => trx.schema.dropTableIfExists(tableName).then(afterDropDone)),
-                "MYSQL": () => trx.raw("Set FOREIGN_KEY_CHECKS = 0").then(() => trx.schema.dropTableIfExists(tableName)).then(() => trx.raw("Set FOREIGN_KEY_CHECKS = 0")).then(afterDropDone)
+                "MSSQL" : () => trx.select(trx.raw("'alter table ['+ OBJECT_SCHEMA_NAME(parent_object_id) +'].['+ OBJECT_NAME(parent_object_id) +'] drop constraint ['+ name +'];' as dropContext")).from('sys.foreign_keys').where(trx.raw('referenced_object_id = object_id(?)', tableName))
+                    .then((rows) => rows.length ? Promise.all(rows.map((it) => trx.raw(it.dropContext))) : Promise.resolve([])).then(() => trx.schema.dropTableIfExists(tableName)).then(afterDropDone),
+                "ORACLE": () => trx.raw("begin execute immediate 'drop table ?? cascade constraints'; exception when others then if sqlcode != -942 then raise; end if; end;", tableName).then(afterDropDone),
+                "MYSQL": () => trx.raw("Set FOREIGN_KEY_CHECKS = 0").then(() => trx.schema.dropTableIfExists(tableName)).then(() => trx.raw("Set FOREIGN_KEY_CHECKS = 0")).then(afterDropDone),
+                "PG": () => trx.select(trx.raw("distinct cls.relname, attname, ty.typname")).from("pg_attribute").innerJoin(trx.raw("pg_class cls on attrelid = cls.oid")).innerJoin(trx.raw("pg_type ty on atttypid = ty.oid")).innerJoin(trx.raw("pg_enum en on en.enumtypid = ty.oid")).whereRaw("cls.relname = ?", tableName)
+                .then((rows) => rows.length ? Promise.all([trx.raw("DROP TABLE IF EXISTS ?? CASCADE", tableName), ...rows.map((it) => trx.raw("drop type ??", it.typname))]) : Promise.resolve(trx.raw("DROP TABLE IF EXISTS ?? CASCADE", tableName))).then(afterDropDone)
             }
 
             return yes ? Promise.resolve(!yes) : tableViewExpression ? trx.schema.dropViewIfExists(tableName).then(afterDropDone) : exec[clientName]()
@@ -91,10 +90,11 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
                                 } else {
                                     //非增量列
                                     let columnBuilder = <KnexSchema.ColumnBuilder>(<any>columnFactory[columnType]).apply(table, [columnName, ...columnOptions]);
+                                    let defaultValue = (typeof columnDefaultValue === 'string') && columnDefaultValue.startsWith('raw:') ? trx.raw((<RegExpMatchArray>columnDefaultValue.match(/(?<=raw:).*/i))[0]) : columnDefaultValue
                                     columnBuilder = columnComment && columnBuilder.comment(columnComment) || columnBuilder;
                                     columnBuilder = columnNullable && columnBuilder.nullable() || columnBuilder;
                                     columnBuilder = columnNotNullable && columnBuilder.notNullable() || columnBuilder;
-                                    columnBuilder = columnDefaultValue && columnBuilder.defaultTo(columnDefaultValue.startsWith('raw:') ? trx.raw(columnDefaultValue.match(/(?<=raw:).*/i)[0]) : columnDefaultValue, columnDefaultOptions) || columnBuilder;
+                                    columnBuilder = (typeof columnDefaultValue !== 'undefined') && columnBuilder.defaultTo(defaultValue, columnDefaultOptions) || columnBuilder;
                                     tablePrimaryKey && table.primary(tablePrimaryKeys || columnName);
                                     columnIndex && table.index(columnName, columnIndex, columnIndexOptions);
                                     columnUnique && table.unique(columnName, columnUniqueOptions);

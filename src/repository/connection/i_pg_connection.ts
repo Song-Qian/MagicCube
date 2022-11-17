@@ -29,7 +29,6 @@ export class PGConnection extends IPGConnection {
             connection: {
                 host: dbconfig.connection.host,
                 port: Number(dbconfig.connection.port) || 5432,
-                socketPath : dbconfig.connection.socketPath,
                 user: dbconfig.connection.user,
                 password: dbconfig.connection.password,
                 database: dbconfig.connection.database,
@@ -47,8 +46,9 @@ export class PGConnection extends IPGConnection {
                     }
                 }
             },
+            searchPath: ['public', '$user', 'public'],
             postProcessResponse: (result: any) => result,
-            wrapIdentifier: (value, origImpl, queryContext) => origImpl(value),
+            wrapIdentifier: (value, origImpl, queryContext) => origImpl(value.toLowerCase()),
             log: dbconfig.logger ? logger : undefined
         })
     }

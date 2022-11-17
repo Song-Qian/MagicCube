@@ -48,7 +48,7 @@ export class Sqlite3Connection extends ISqlite3Connection {
                 }
             },
             postProcessResponse: (result: any) => result,
-            wrapIdentifier: (value, origImpl, queryContext) => origImpl(value),
+            wrapIdentifier: (value, origImpl, queryContext) => origImpl(value.toLowerCase()),
             log: dbconfig.logger ? logger : undefined
         })
     }
