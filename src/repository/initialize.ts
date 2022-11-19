@@ -36,8 +36,7 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
                     .then((rows) => rows.length ? Promise.all(rows.map((it) => trx.raw(it.dropContext))) : Promise.resolve([])).then(() => trx.schema.dropTableIfExists(tableName)).then(afterDropDone),
                 "ORACLE": () => trx.raw("begin execute immediate 'drop table ?? cascade constraints'; exception when others then if sqlcode != -942 then raise; end if; end;", tableName).then(afterDropDone),
                 "MYSQL": () => trx.raw("Set FOREIGN_KEY_CHECKS = 0").then(() => trx.schema.dropTableIfExists(tableName)).then(() => trx.raw("Set FOREIGN_KEY_CHECKS = 0")).then(afterDropDone),
-                "PG": () => trx.select(trx.raw("distinct cls.relname, attname, ty.typname")).from("pg_attribute").innerJoin(trx.raw("pg_class cls on attrelid = cls.oid")).innerJoin(trx.raw("pg_type ty on atttypid = ty.oid")).innerJoin(trx.raw("pg_enum en on en.enumtypid = ty.oid")).whereRaw("cls.relname = ?", tableName)
-                .then((rows) => rows.length ? Promise.all([trx.raw("DROP TABLE IF EXISTS ?? CASCADE", tableName), ...rows.map((it) => trx.raw("drop type ??", it.typname))]) : Promise.resolve(trx.raw("DROP TABLE IF EXISTS ?? CASCADE", tableName))).then(afterDropDone)
+                "PG": () => trx.raw("DROP TABLE IF EXISTS ?? CASCADE", tableName).then(afterDropDone)
             }
 
             return yes ? Promise.resolve(!yes) : tableViewExpression ? trx.schema.dropViewIfExists(tableName).then(afterDropDone) : exec[clientName]()
