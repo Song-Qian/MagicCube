@@ -122,7 +122,7 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
                 const createFn = () => {
                     return trx.schema.createViewOrReplace(tableName, (view) => {
                         view.as(tableViewExpression);
-                        view.columns(Object.keys(repository).map((key : string) => Reflect.getMetadata(Symbol.for("magic:tableColumnName"), repository, key) ?? []).flat(2));
+                        view.columns(Object.keys(Object.getPrototypeOf(repository)).map((key : string) => Reflect.getMetadata(Symbol.for("magic:tableColumnName"), repository, key) ?? []).flat(2));
                     }).then(() => resolve(true))
                 }
                 isBeforeTableInit && isPromise(isBeforeTableInit) ? (<Promise<void>>isBeforeTableInit).then(createFn).catch(reject) : Promise.resolve(createFn()).catch(reject);

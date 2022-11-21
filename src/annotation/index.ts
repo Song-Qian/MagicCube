@@ -6,7 +6,6 @@
  * @Description: Magic Cube 扩展注解
  */
 import 'reflect-metadata'
-import { Knex as KnexSchema } from 'knex'
 import { Hook } from '@feathersjs/feathers'
 import { HttpService } from '../services/http_service'
 import { TableColumnEnum, TableIndex, UniqueIndex, DefaultValue } from '../repository/schema_type'
@@ -197,10 +196,10 @@ export const DataTable = (name: string, engine: string = "innodb", charset: stri
  * @param {Knex} 视图表达式
  * @return {*} \@DataView("user_view", kenx.raw("select user.name, user.email, role.name from user, role where user.id = role.userid"))
  */
-export const DataView = (viewName: string, table: KnexSchema.QueryBuilder) => {
+export const DataView = (viewName: string, sql: string) => {
     return (target: Function) => {
         Reflect.defineMetadata(Symbol.for("magic:table"), viewName, target);
-        Reflect.defineMetadata(Symbol.for("magic:tableViewExpression"), table, target);
+        Reflect.defineMetadata(Symbol.for("magic:tableViewExpression"), sql, target);
     }
 }
 
