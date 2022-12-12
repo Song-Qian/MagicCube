@@ -9,7 +9,6 @@ import express from '@feathersjs/express'
 import Feathers from '@feathersjs/feathers'
 import helmet from '~/helmet'
 import cors from '~/cors'
-// import { CubeContact } from '~/socket'
 import compress from 'compression'
 import logger from '~/utils/logger'
 import configure from '~/conf'
@@ -32,12 +31,10 @@ export class Cube {
             me.schema = CreateDbSchema(me.configure);
             me.schema?.Initialize(me.configure);
         }
-        // me.contact = new CubeContact(me.configure);
     }
 
     private server !: express.Application;
     private schema !: ISchema | null;
-    // private contact !: CubeContact;
     private name !: string;
     private configure !: any;
     private subServe !: Map<Symbol, express.Application>;
@@ -63,8 +60,6 @@ export class Cube {
         );
 
         me.server.use(...me.subServe.values());
-        // me.contact.run(me.server);
-
         me.server.use(express.notFound())
         me.server.use(express.errorHandler({
             logger : (logger as any),
@@ -75,15 +70,6 @@ export class Cube {
         }))
 
         me.server.listen({ port, host, path: me.configure.get("http.server.base") }, () => {
-            logger.info([
-                '\n\t\t江城子 . 程序员之歌', 
-                '\n\t\t十年生死两茫茫，写程序，到天亮。', 
-                '\n\t\t千行代码，Bug何处藏。', 
-                '\n\t\t纵使上线又怎样，朝令改，夕断肠。', 
-                '\n\t\t领导每天新想法，天天改，日日忙。', 
-                '\n\t\t相顾无言，惟有泪千行。',
-                '\n\t\t每晚灯火阑珊处，夜难寐，加班狂。'].join("")
-            );
             logger.info('magic cube application started on http://%s:%d', host, port)
         })
     }
