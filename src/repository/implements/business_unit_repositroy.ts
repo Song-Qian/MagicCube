@@ -22,7 +22,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */ 
     public async find(): Promise<T[]> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
@@ -44,7 +44,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */    
     public async get(id: string | number): Promise<T | null> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
@@ -66,7 +66,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */    
     public async getCondition(t: Readonly<any> | KnexSchema.Raw): Promise<T[]> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
@@ -90,7 +90,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */ 
     public async getConditionForPage(expression: () => { [key: string]: any | KnexSchema.Raw }, page: number, limit: number): Promise<T[]> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let andWhere = expression().andWhere;
             let orWhere = expression().orWhere;
@@ -143,7 +143,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */    
     public async getSingleModelForCondition(t : Readonly<any> | KnexSchema.Raw): Promise<T | null> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
@@ -165,7 +165,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */    
     public async getCount(columnName : string): Promise<number> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
@@ -188,7 +188,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */    
     public async getCountForCondinate(expression: () => { [key: string]: any | KnexSchema.Raw }, columnName : string): Promise<number> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let andWhere = expression().andWhere;
             let orWhere = expression().orWhere;
@@ -231,7 +231,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */    
     public async add(model: T): Promise<T | null> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
@@ -253,7 +253,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */    
     public async addList(models: T[]): Promise<number> { 
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
@@ -275,7 +275,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */    
     public async modify(model : Readonly<any>): Promise<T | null> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
@@ -300,7 +300,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */
     public async modifyCondition(expression: () => { [key: string]: any | KnexSchema.Raw }, model : Readonly<any>): Promise<number> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let andWhere = expression().andWhere;
             let orWhere = expression().orWhere;
@@ -342,7 +342,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */
     public async delete(id: string | number): Promise<number> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let beforeExecute = "$beforeExecute" in this ? (this as any).$beforeExecute : () => void 0;
             let executeError = "$executeError" in this ? (this as any).$executeError : () => void 0;
@@ -364,7 +364,7 @@ export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> 
      */    
     public async deleteCondintion(expression: () => { [key: string]: any | KnexSchema.Raw }): Promise<number> {
         let trx = await this.dbContext.transaction();
-        let tableName = Reflect.getMetadata(Symbol.for("magic:tableName"), this.constructor);
+        let tableName = Reflect.getMetadata(Symbol.for("magic:table"), this.constructor);
         try {
             let andWhere = expression().andWhere;
             let orWhere = expression().orWhere;
