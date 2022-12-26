@@ -16,6 +16,7 @@ export {
     FinallyHook, 
     DropTableIfExists, 
     DataTable, 
+    Repository,
     DataView, 
     TableColumn, 
     DefaultValueColumn, 
@@ -38,6 +39,7 @@ export { default as CreateVueRoot } from './render/vue_entry_render'
 export { default as CreateReactRoot } from './render/react_entry_render'
 
 export { Business_UnitRepositroy } from './repository/implements/business_unit_repositroy'
+export { default as ConnectionFactory } from './repository/connection/connection_factory'
 export { TableColumnEnum } from './repository/schema_type'
 
 export default { Config, Cube }

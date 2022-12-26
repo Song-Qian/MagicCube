@@ -5,18 +5,21 @@ import { PGConnection } from './i_pg_connection'
 import { MSSQLConnection } from './i_mssql_connection'
 import { Sqlite3Connection } from './i_sqlite3_connection'
 import { Knex as KnexSchema } from 'knex'
+import { interfaces } from 'inversify'
 
-type ClientName = "MYSQL" | "ORACLE" | "PG" | "SQLITE3" | "MSSQL"
+// type ClientName = "MYSQL" | "ORACLE" | "PG" | "SQLITE3" | "MSSQL"
 
-export default function ConnectionFactory (clientName: ClientName, configure: any, fn : (conn) => void) : KnexSchema {
-    let factory =  ({ 
-        "MYSQL": () => new MySqlConnection(),
-        "ORACLE": () => new OracleConnection(),
-        "PG": () => new PGConnection(),
-        "MSSQL": () => new MSSQLConnection(),
-        "SQLITE3": () => new Sqlite3Connection()
-    })
-    const dbConnection : IConnectionFactory = factory[clientName]();
-    (<any>dbConnection)?.emitter.on('$onPoolCreated', fn);
-    return dbConnection?.createConnection(configure.get("database"))
+export default function ConnectionFactory (dbconfig: any, fn ?: (conn) => void)  {
+    return (context: interfaces.Context) : KnexSchema => {
+        let factory =  ({ 
+            "mysql": () => new MySqlConnection(),
+            "oracle": () => new OracleConnection(),
+            "postgresql": () => new PGConnection(),
+            "mssql": () => new MSSQLConnection(),
+            "sqlite3": () => new Sqlite3Connection()
+        });
+        const dbConnection : IConnectionFactory = factory[dbconfig.client]();
+        fn && (<any>dbConnection)?.emitter.on('$onPoolCreated', fn);
+        return dbConnection?.createConnection(dbconfig);
+    }
 }

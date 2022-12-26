@@ -7,11 +7,12 @@
 
 import { Knex as KnexSchema } from 'knex'
 import { IUnitOfWorkRepositroy } from '../i_business_unit_repositroy'
-import { injectable } from 'inversify'
+import { injectable, inject } from 'inversify'
 
 @injectable()
 export abstract class Business_UnitRepositroy<T extends { [key: string]: any }> implements IUnitOfWorkRepositroy<T> {
 
+    @inject(Symbol.for("magic:dbContext"))
     dbContext !: KnexSchema;
 
     /**

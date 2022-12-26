@@ -9,15 +9,14 @@
 import IServiceSynchResolverModule from "~/dependency/i_service_synch_resolver_module"
 import IServiceAsyncResolverModule from "~/dependency/i_service_async_resolver_module"
 import ResolverModuleFactory from "~/dependency/resolver_module_factory"
-import ConnectionFactory from "./connection/connection_factory"
 import { isPromise, synchronizationLock, walker } from "~/utils/common"
 import { ColumnPropertiesState, TableIndex, UniqueIndex } from "./schema_type"
 import { Knex as KnexSchema } from "knex"
 import { IRepository } from "./i_repository"
 import ISchema from "./i_schema"
 
-const createTransactionTask = async (clientName: string, dbContext: KnexSchema, repository: IRepository, advance: Generator) => {
-    repository.dbContext = dbContext;
+const createTransactionTask = async (clientName: string, repository: IRepository, advance: Generator) => {
+    const dbContext: KnexSchema = repository.dbContext;
     const tableName = Reflect.getMetadata(Symbol.for("magic:table"), repository.constructor);
     const tableViewExpression = Reflect.getMetadata(Symbol.for("magic:tableViewExpression"), repository.constructor);
     const isDrop = Reflect.getMetadata(Symbol.for("magic:dropTableIfExists"), repository.constructor);
@@ -155,8 +154,6 @@ const createTransactionTask = async (clientName: string, dbContext: KnexSchema, 
 export default function(configure: any) {
     const me : ISchema = this;
     const clientName = Reflect.getMetadata(Symbol.for("Kind"), me.constructor);
-    const $onPoolCreated = (conn) => me.emit("$onPoolCreated", conn, configure.get("database"));
-    const dbContext = ConnectionFactory(clientName, configure, $onPoolCreated);
 
     const resolveLoadedModule = function() {
         let repositorys = ResolverModuleFactory.getInstance().GetAnyModels<IRepository>(Symbol.for("magic:table"));
@@ -164,7 +161,7 @@ export default function(configure: any) {
         let tasks: Array<{ fn: (...args) => any, args: Array<any> }> = [];
         let advance = walker(lock,  tasks);
         repositorys.forEach((repository : IRepository) => {
-            tasks.push({ fn : createTransactionTask, args: [clientName, dbContext, repository, advance] })
+            tasks.push({ fn : createTransactionTask, args: [clientName, repository, advance] })
         });
         advance.next();
     }

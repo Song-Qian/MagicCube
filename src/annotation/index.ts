@@ -8,6 +8,7 @@
 import 'reflect-metadata'
 import { Hook } from '@feathersjs/feathers'
 import { HttpService } from '../services/http_service'
+import { inject, named } from 'inversify'
 import { TableColumnEnum, TableIndex, UniqueIndex, DefaultValue } from '../repository/schema_type'
 
 const defineClassMetadata = (key: Symbol, value: any): ClassDecorator => {
@@ -100,9 +101,7 @@ export const MySqlSchema = (fn: (configure: any) => void) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
- * @Date: 2022/05/26 14:53
+ * @LastEditors: SongQianLazyServiceIdentifer
  * @description: 内置Oracle 架构修饰器,不对外公开
  * @return {*} \@OracleSchema()
  */
@@ -165,6 +164,20 @@ export const Sqlite3Schema = (fn: (configure: any) => void) => {
  */
 export const DropTableIfExists = () => {
     return defineClassMetadata(Symbol.for("magic:dropTableIfExists"), true);
+}
+
+/**
+ * @LastEditors: SongQian
+ * @Date: 2022/12/21 13:59
+ * @description: ORM模式获取DI容器数据库实例对象
+ * @param {string} key named => .whenTargetNamed
+ * @return {*} \@Repository(Symbol.for('magic:repository'))
+ */
+export const Repository = (key ?: string | number | symbol) => {
+    return (target: any, name: string) => {
+        inject(Symbol.for('magic:table'))(target, name);
+        key && named(key)(target, name);
+    }
 }
 
 /**
