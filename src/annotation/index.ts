@@ -384,85 +384,85 @@ export const IgnoreColumn = (Dbs ?: Array<string>) => {
  * @param {Hook} Function 钩子函数
  * @return {*} \@BeforeHook(() => Hook)
  */
-export const BeforeHook = (fn: Hook): ClassDecorator | MethodDecorator => {
+export const BeforeHook = (fn: Hook) => {
     return (...args) => {
         const target: any = args[0];
         const name: string = args[1];
-        const descriptors: any = args[2];
-        if (target.prototype && target.prototype.constructor instanceof HttpService) {
+        
+        if (target.prototype && target.prototype instanceof HttpService) {
             const beforeHooks = target.prototype.beforeHooks || { all: [] };
             beforeHooks.all = [...beforeHooks.all, fn];
             Reflect.defineProperty(target.prototype, "beforeHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...beforeHooks })
+                value: { ...beforeHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "find") {
+        if (target && target instanceof HttpService && name === "find") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { find: [] };
             beforeHooks.find = [...beforeHooks.find, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...beforeHooks })
+                value: { ...beforeHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "get") {
+        if (target && target instanceof HttpService && name === "get") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { get: [] };
             beforeHooks.get = [...beforeHooks.get, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...beforeHooks })
+                value: { ...beforeHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "create") {
+        if (target && target instanceof HttpService && name === "create") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { create: [] };
             beforeHooks.create = [...beforeHooks.create, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...beforeHooks })
+                value: { ...beforeHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "update") {
+        if (target && target instanceof HttpService && name === "update") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { update: [] };
             beforeHooks.update = [...beforeHooks.update, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...beforeHooks })
+                value: { ...beforeHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "patch") {
+        if (target && target instanceof HttpService && name === "patch") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { patch: [] };
             beforeHooks.patch = [...beforeHooks.patch, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...beforeHooks })
+                value: { ...beforeHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "remove") {
+        if (target && target instanceof HttpService && name === "remove") {
             const beforeHooks = Reflect.get(target, "beforeHooks", target) || { remove: [] };
             beforeHooks.remove = [...beforeHooks.remove, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...beforeHooks })
+                value: { ...beforeHooks }
             })
         }
     }
@@ -476,85 +476,85 @@ export const BeforeHook = (fn: Hook): ClassDecorator | MethodDecorator => {
  * @param {Hook} Function 钩子函数
  * @return {*} \@AfterHook(() => Hook)
  */
-export const AfterHook = (fn: Hook): ClassDecorator | MethodDecorator => {
+export const AfterHook = (fn: Hook) => {
     return (...args) => {
         const target: any = args[0];
         const name: string = args[1];
-        const descriptors: any = args[2];
-        if (target.prototype && target.prototype.constructor instanceof HttpService) {
+
+        if (target.prototype && target.prototype instanceof HttpService) {
             const afterHooks = target.prototype.afterHooks || { all: [] };
             afterHooks.all = [...afterHooks.all, fn];
             Reflect.defineProperty(target.prototype, "afterHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...afterHooks })
+                value: { ...afterHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "find") {
+        if (target && target instanceof HttpService && name === "find") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { find: [] };
             afterHooks.find = [...afterHooks.find, fn];
             Reflect.defineProperty(target, "afterHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...afterHooks })
+                value: { ...afterHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "get") {
+        if (target && target instanceof HttpService && name === "get") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { get: [] };
             afterHooks.get = [...afterHooks.get, fn];
             Reflect.defineProperty(target, "afterHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...afterHooks })
+                value: { ...afterHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "create") {
+        if (target && target instanceof HttpService && name === "create") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { create: [] };
             afterHooks.create = [...afterHooks.create, fn];
             Reflect.defineProperty(target, "afterHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...afterHooks })
+                value: { ...afterHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "update") {
+        if (target && target instanceof HttpService && name === "update") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { update: [] };
             afterHooks.update = [...afterHooks.update, fn];
             Reflect.defineProperty(target, "beforeHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...afterHooks })
+                value: { ...afterHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "patch") {
+        if (target && target instanceof HttpService && name === "patch") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { patch: [] };
             afterHooks.patch = [...afterHooks.patch, fn];
             Reflect.defineProperty(target, "afterHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...afterHooks })
+                value: { ...afterHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "remove") {
+        if (target && target instanceof HttpService && name === "remove") {
             const afterHooks = Reflect.get(target, "afterHooks", target) || { remove: [] };
             afterHooks.remove = [...afterHooks.remove, fn];
             Reflect.defineProperty(target, "afterHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...afterHooks })
+                value: { ...afterHooks }
             })
         }
     }
@@ -568,85 +568,85 @@ export const AfterHook = (fn: Hook): ClassDecorator | MethodDecorator => {
  * @param {Hook} Function 钩子函数
  * @return {*} \@ErrorHook(() => Hook)
  */
-export const ErrorHook = (fn: Hook): ClassDecorator | MethodDecorator => {
+export const ErrorHook = (fn: Hook) => {
     return (...args) => {
         const target: any = args[0];
         const name: string = args[1];
-        const descriptors: any = args[2];
-        if (target.prototype && target.prototype.constructor instanceof HttpService) {
+        
+        if (target.prototype && target.prototype instanceof HttpService) {
             const errorHooks = target.prototype.errorHooks || { all: [] };
             errorHooks.all = [...errorHooks.all, fn];
             Reflect.defineProperty(target.prototype, "errorHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...errorHooks })
+                value: { ...errorHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "find") {
+        if (target && target instanceof HttpService && name === "find") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { find: [] };
             errorHooks.find = [...errorHooks.find, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...errorHooks })
+                value: { ...errorHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "get") {
+        if (target && target instanceof HttpService && name === "get") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { get: [] };
             errorHooks.get = [...errorHooks.get, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...errorHooks })
+                value: { ...errorHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "create") {
+        if (target && target instanceof HttpService && name === "create") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { create: [] };
             errorHooks.create = [...errorHooks.create, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...errorHooks })
+                value: { ...errorHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "update") {
+        if (target && target instanceof HttpService && name === "update") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { update: [] };
             errorHooks.update = [...errorHooks.update, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...errorHooks })
+                value: { ...errorHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "patch") {
+        if (target && target instanceof HttpService && name === "patch") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { patch: [] };
             errorHooks.patch = [...errorHooks.patch, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...errorHooks })
+                value: { ...errorHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "remove") {
+        if (target && target instanceof HttpService && name === "remove") {
             const errorHooks = Reflect.get(target, "errorHooks", target) || { remove: [] };
             errorHooks.remove = [...errorHooks.remove, fn];
             Reflect.defineProperty(target, "errorHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...errorHooks })
+                value: { ...errorHooks }
             })
         }
     }
@@ -660,85 +660,85 @@ export const ErrorHook = (fn: Hook): ClassDecorator | MethodDecorator => {
  * @param {Hook} Function 钩子函数
  * @return {*} \@FinallyHook(() => Hook)
  */
-export const FinallyHook = (fn: Hook): ClassDecorator | MethodDecorator => {
+export const FinallyHook = (fn: Hook) => {
     return (...args) => {
         const target: any = args[0];
         const name: string = args[1];
-        const descriptors: any = args[2];
-        if (target.prototype && target.prototype.constructor instanceof HttpService) {
+        
+        if (target.prototype && target.prototype instanceof HttpService) {
             const finallyHooks = target.prototype.finallyHooks || { all: [] };
             finallyHooks.all = [...finallyHooks.all, fn];
             Reflect.defineProperty(target.prototype, "finallyHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...finallyHooks })
+                value: { ...finallyHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "find") {
+        if (target && target instanceof HttpService && name === "find") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { find: [] };
             finallyHooks.find = [...finallyHooks.find, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...finallyHooks })
+                value: { ...finallyHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "get") {
+        if (target && target instanceof HttpService && name === "get") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { get: [] };
             finallyHooks.get = [...finallyHooks.get, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...finallyHooks })
+                value: { ...finallyHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "create") {
+        if (target && target instanceof HttpService && name === "create") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { create: [] };
             finallyHooks.create = [...finallyHooks.create, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...finallyHooks })
+                value: { ...finallyHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "update") {
+        if (target && target instanceof HttpService && name === "update") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { update: [] };
             finallyHooks.update = [...finallyHooks.update, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...finallyHooks })
+                value: { ...finallyHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "patch") {
+        if (target && target instanceof HttpService && name === "patch") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { patch: [] };
             finallyHooks.patch = [...finallyHooks.patch, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...finallyHooks })
+                value: { ...finallyHooks }
             })
         }
 
-        if (target && target.constructor instanceof HttpService && name === "remove") {
+        if (target && target instanceof HttpService && name === "remove") {
             const finallyHooks = Reflect.get(target, "finallyHooks", target) || { remove: [] };
             finallyHooks.remove = [...finallyHooks.remove, fn];
             Reflect.defineProperty(target, "finallyHooks", {
                 configurable: false,
                 writable: true,
                 enumerable: false,
-                value: () => ({ ...finallyHooks })
+                value: { ...finallyHooks }
             })
         }
     }

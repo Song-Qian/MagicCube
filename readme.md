@@ -87,57 +87,57 @@ npm run build
 
 #### Vue 项目模板
 
-|-- app
-|  |--- dist [生产目录]
-|  |--- src  [源码目录]
-|  |   |---- commons [公共脚本]
-|  |   |    |----- api.ts [ajax 访问后端接口公共代码]
-|  |   |    |----- router_config.ts [vue-router 前端路由配置代码]
-|  |   |---- models [数据库实体模型代码目录]
-|  |   |---- repository [数据库实体操作代码目录]
-|  |   |    |----- resolver_modules [数据库实体IoC依赖注入模块目录]
-|  |   |---- services [后端服务实现接口目录]
-|  |   |    |----- resolver_modules [后端服务IoC依赖注入模块目录]
-|  |   |---- store [Pinia 前端状态管理代码]
-|  |   |---- view [前端UI视图界面目录]
-|  |   |    |----- entry-client.ts [打包项目，SSR 前端入口文件]
-|  |   |    |----- entry-server.ts [打包项目，SSR 后端入口文件]
-|  |   |    |----- index.tsx  [UI界面入口文件]
-|  |   |---- index.ts [工程入口文件]
-|  |   |---- variables.d.ts [ts 文件支持 sass, scss, css 文件引用兼容文件]
-|  |--- static [静态资源文件]
-|  |--- .babelrc [@babel 7+ 配置文件]
-|  |--- default.ini [项目启动配置文件]
-|  |--- index.html
-|  |--- package.json
-|  |--- tsconfig.jsoniy
+>|-- app
+>|  |--- dist [生产目录]
+>|  |--- src  [源码目录]
+>|  |   |---- commons [公共脚本]
+>|  |   |    |----- api.ts [ajax 访问后端接口公共代码]
+>|  |   |    |----- router_config.ts [vue-router 前端路由配置代码]
+>|  |   |---- models [数据库实体模型代码目录]
+>|  |   |---- repository [数据库实体操作代码目录]
+>|  |   |    |----- resolver_modules [数据库实体IoC依赖注入模块目录]
+>|  |   |---- services [后端服务实现接口目录]
+>|  |   |    |----- resolver_modules [后端服务IoC依赖注入模块目录]
+>|  |   |---- store [Pinia 前端状态管理代码]
+>|  |   |---- view [前端UI视图界面目录]
+>|  |   |    |----- entry-client.ts [打包项目，SSR 前端入口文件]
+>|  |   |    |----- entry-server.ts [打包项目，SSR 后端入口文件]
+>|  |   |    |----- index.tsx  [UI界面入口文件]
+>|  |   |---- index.ts [工程入口文件]
+>|  |   |---- variables.d.ts [ts 文件支持 sass, scss, css 文件引用兼容文件]
+>|  |--- static [静态资源文件]
+>|  |--- .babelrc [@babel 7+ 配置文件]
+>|  |--- default.ini [项目启动配置文件]
+>|  |--- index.html
+>|  |--- package.json
+>|  |--- tsconfig.jsoniy
 
 #### React 项目模板
 
-|-- app
-|  |--- dist [生产目录]
-|  |--- src  [源码目录]
-|  |   |---- commons [公共脚本]
-|  |   |    |----- api.ts [ajax 访问后端接口公共代码]
-|  |   |    |----- magic-suspense.tsx [React.Suspense不支持SSR, Magic.Suspense补全其模块功能]
-|  |   |    |----- provide.ts [React 全局状态上下文管理]
-|  |   |---- models [数据库实体模型代码目录]
-|  |   |---- repository [数据库实体操作代码目录]
-|  |   |    |----- resolver_modules [数据库实体IoC依赖注入模块目录]
-|  |   |---- services [后端服务实现接口目录]
-|  |   |    |----- resolver_modules  [后端服务IoC依赖注入模块目录]
-|  |   |---- view [前端UI视图界面目录]
-|  |   |    |----- entry-client-tsx [打包项目，SSR 前端入口文件]
-|  |   |    |----- entry-server.tsx [打包项目，SSR 后端入口文件]
-|  |   |    |----- index.tsx  [React 路由配置文件，也是UI界面入口文件]
-|  |   |---- index.ts [工程入口文件]
-|  |   |---- variables.d.ts [ts 文件支持 sass, scss, css 文件引用兼容文件]
-|  |--- static  [静态资源文件]
-|  |--- .babelrc  [@babel 7+ 配置文件]
-|  |--- default.ini [项目启动配置文件]
-|  |--- index.html
-|  |--- package.json
-|  |--- tsconfig.json
+>|-- app
+>|  |--- dist [生产目录]
+>|  |--- src  [源码目录]
+>|  |   |---- commons [公共脚本]
+>|  |   |    |----- api.ts [ajax 访问后端接口公共代码]
+>|  |   |    |----- magic-suspense.tsx [React.Suspense不支持SSR, Magic.Suspense补全其模块功能]
+>|  |   |    |----- provide.ts [React 全局状态上下文管理]
+>|  |   |---- models [数据库实体模型代码目录]
+>|  |   |---- repository [数据库实体操作代码目录]
+>|  |   |    |----- resolver_modules [数据库实体IoC依赖注入模块目录]
+>|  |   |---- services [后端服务实现接口目录]
+>|  |   |    |----- resolver_modules  [后端服务IoC依赖注入模块目录]
+>|  |   |---- view [前端UI视图界面目录]
+>|  |   |    |----- entry-client-tsx [打包项目，SSR 前端入口文件]
+>|  |   |    |----- entry-server.tsx [打包项目，SSR 后端入口文件]
+>|  |   |    |----- index.tsx  [React 路由配置文件，也是UI界面入口文件]
+>|  |   |---- index.ts [工程入口文件]
+>|  |   |---- variables.d.ts [ts 文件支持 sass, scss, css 文件引用兼容文件]
+>|  |--- static  [静态资源文件]
+>|  |--- .babelrc  [@babel 7+ 配置文件]
+>|  |--- default.ini [项目启动配置文件]
+>|  |--- index.html
+>|  |--- package.json
+>|  |--- tsconfig.json
 
 脚手架提供两种主流前端Vue & React框架模板，它们之间的目录内容大同小异，通过脚手架构建出来的环境，可以让你快速进入开发环节。
 
@@ -197,6 +197,8 @@ config.set("http.server", { base: "/api", extension: ["js", "css"] });
 ```
 
 #### default.ini 配置列表
+
+> **default.ini 文件需要放在持行环境目录根下面。**
 
 | 配置名                                         | 类型    | 功能描述                                                     |
 | ---------------------------------------------- | ------- | ------------------------------------------------------------ |
@@ -275,9 +277,13 @@ config.set("http.server", { base: "/api", extension: ["js", "css"] });
 
 ### Cube 应用实例
 
-useMultiplexer(multiplexerName: string, multiplexer: typeof IMultiplexer, ...args: any[])
+**useMultiplexer(multiplexerName: string, multiplexer: typeof IMultiplexer, ...args: any[])**
 
-设置服务端分发器，分发器是HTTP请求内容处理容器，不同的分发器，处理不同的请求。
+*设置服务端分发器，分发器是HTTP请求内容处理容器，不同的分发器，处理不同的请求。*
+
+- multiplexerName: String 分发器名称，用于应用实例管理处理容器实例的唯一键值。
+- multiplexer: IMultiplexer 分发器类型，Cube根据分发器类型，内部自动创建不同的分发器处理容器。
+- args: any[] 分发器处理容器的传参。
 
 ```javascript
 const mc = new MagicCube.Cube({ config });
@@ -285,6 +291,154 @@ mc.useMultiplexer<IRestMultiplexer>("defaultMultiplexer", IRestMultiplexer);
 mc.useMultiplexer<IViewMultiplexer>("viewMultiplexer", IViewMultiplexer, "./dist/index.html", CreateVueRoot(EntryVueSetup));
 ```
 
-dependencyResolvers(...module : Array<IServiceSynchResolverModule | IServiceAsyncResolverModule>)
+**dependencyResolvers(...module : Array<IServiceSynchResolverModule | IServiceAsyncResolverModule>)**
 
-IoC模块入口
+*IoC依赖注入加载器，加载器分同步和异步加载方式，module 必须是实现依赖注入绑定接口的类。*
+
+- module: IServiceSynchResolverModule | IServiceAsyncResolverModule 依赖注入模块加载器实现。
+
+```javascript
+/// serivce_syncjavascripth_resolve_module.ts
+import { interfaces } from 'inversify'
+import { IServiceSynchResolverModule, HttpService } from '@skysong/magic-cube'
+export default class ServiceSynchResolverModule implements IServiceSynchResolverModule {
+  constructor () {
+    this.registry = this.loader
+  }
+  id!: number
+  public registry!: interfaces.ContainerModuleCallBack
+  public get loader(): interfaces.ContainerModuleCallBack {
+    return (bind, unbind, isBound, rebind) => {
+      bind<HttpService<any>>(Symbol.for('magic:rest')).to(UserService);
+    }
+  }  
+}
+/// main.ts
+const mc = new MagicCube.Cube({ config });
+mc.dependencyResolvers(new ServiceSynchResolverModule(), new RepositorySynchResolverModule());
+```
+
+**Run()**
+
+*开始启动服务函数。主要完成服务的安全性加载、服务的注册等工作内容。*
+
+```javascript
+const mc = new MagicCube.Cube({ config });
+mc.Run();
+```
+
+### IMultiplexer 分发器
+
+分发器是Cube内部核心之一，它们有一个共同的父接口《IMultiplexer》，目前Cube只公开IRestMultiplexer、IViewMultiplexer、IFileMultiplexer三个已实现的类，已足够当前需求，未来可能会公开IMultiplexer，让用户自定义更强大的分发器容器，让Cube更强大。
+
+#### IRestMultiplexer 分发器
+
+Restful Api 请求的处理器，主要处理将Restful Api HTTP请求映射给实现《HttpService》接口的服务类，GET、PUT、POST、DELETE、PATCH请求分别对应《HttpService》中的find、get、update、create、remove、patch等函数。
+
+```javascript
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+	///查询列表 http://localhost:8080/api/user, method:get
+    public async find(params?: Params): Promise<User | User[] | Paginated<User>>;
+    ///获取单例 http://localhost:8080/api/123?arg1=xxx&arg2=xxx, method: get
+    public async get(id: Id, params?: Params): Promise<User>;
+	///新增 http://localhost:8080/api/user, method:post, application/json: { "id": '123', "name": 'test1'}
+    public async create(data: Partial<User> | Array<Partial<User>>, params?: Params): Promise<User | User[]>;
+	///新增或修改 http://localhost:8080/api/user/123, method:patch, application/json: { "name": 'test1'}
+    public async patch(id: Id, data: Partial<User>, params?: Params): Promise<User | User[]>;
+	///删除 http://localhost:8080/api/user/123?arg1=xxx&arg2=xxx, method:delete
+    public async remove(id: Id, params?: Params): Promise<User | User[]>;
+    ///修改 http://localhost:8080/api/user/123, method:put, application/json: { "name": 'test1'}
+    public async update(id: Id, data: User, params?: Params): Promise<User | User[]>;
+}
+```
+
+#### IViewMultiplexer分发器
+
+页面视图内容处理器，处理HTTP请求地址的html输出内容，并且已实现Vue & React SSR技术，动态处理解析Vue或React组件UI内容，让用户轻松使用SSR技术。
+
+```html
+<!--index.html-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title><%= htmlWebpackPlugin.options.title %></title>
+    </head>
+    <body>
+        <div id="app"><!-- vue ssr output --></div>
+    </body>
+</html>
+```
+
+index.html 是Vue & React 组件挂载内容的地方，其中 <!-- vue ssr output --> 是entry-server 服务端渲染内容的标记， id="app" 是entry-client 客户端渲染挂载内容的入口。
+
+##### Vue SSR 挂载
+
+
+```javascript
+/// entry-server.ts
+import { createSSRApp } from 'vue'
+import { createRouter, createMemoryHistory } from 'vue-router'
+import { renderToString } from '@vue/server-renderer'
+
+export default (iniConfig: any) => {
+	// 创建SSR APP对象
+    const app = createSSRApp(App);
+	// 挂载服务端内存路由
+    const router = createRouter({
+        history: createMemoryHistory(
+            //设置前端请求路径与服务端路径同步
+            iniConfig.get("http.server").base
+        ),
+        routes: routerConfig.getRouter()
+    })
+
+    app.use(router)
+    return { vue : app, router, store : pinia, transform: (SSRApp : any) => Promise.resolve(renderToString(SSRApp)) }
+}
+/// main.ts Vue挂载SSR内容
+import MagicCube, { CreateVueRoot } from '@skysong/magic-cube'
+import EntryVueSetup from './entry-server'
+
+const mc = new MagicCube.Cube({ config });
+mc.useMultiplexer<IViewMultiplexer>("viewMultiplexer", IViewMultiplexer, "./dist/index.html", CreateVueRoot(EntryVueSetup));
+```
+
+##### React SSR 挂载
+
+```javascript
+/// entry-server.ts
+import * as React from 'react'
+import { createStore } from 'redux'
+import { renderToString } from 'react-dom/server'
+import { StaticRouter } from 'react-router-dom/server'
+
+import App from './index'
+export default (iniConfig: any) => {
+    const store = createStore((state, payload) => state);
+    const router = <App base={ iniConfig.get("http.server").base } />
+
+    return { 
+        react : router, router, store, transform: (props: any) => Promise.resolve(renderToString(<StaticRouter basename={ props.basename } children={ props.children } location={ props.location } ></StaticRouter>)) 
+    }
+}
+/// main.ts React挂载SSR内容
+import MagicCube, { CreateReactRoot } from '@skysong/magic-cube'
+import EntryReactSetup from './entry-server'
+
+const mc = new MagicCube.Cube({ config });
+mc.useMultiplexer<IViewMultiplexer>("viewMultiplexer", IViewMultiplexer, "./dist/index.html", CreateReactRoot(EntryReactSetup));
+```
+
+@skysong/magic-cube 提供CreateVueRoot & CreateReactRoot 两个工厂方法兼容Vue 平台和React平台SSR需求的具体实现，只需要用户关注页面组件逻辑视图编写即可。
+
+#### IFileMultiplexer 分发器
+
+文件分发处理器，针对HTTP文件断点上传、下载等需求功能实现。（暂不公开）
+
+### HttpService 服务
+
+HttpService 服务是http restful 风格api 的接口约束，只有实现HttpService接口类，才能被IRestMultiplexer正确扫描到，并注册成http服务入口，HttpService提供了合理的钩子函数和请求处理函数。
+
+> 注意：HttpService 需要配合@ApiController修饰符使用，@ApiController 与 Vue-Router 服务端中定义的路由需要唯一，冲突可能会导致某个请求不可使用。供了合理的钩子函数和请求处理函数。
+
