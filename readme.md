@@ -87,12 +87,11 @@ npm run build
 
 #### Vue 项目模板
 
->|-- app
->
->|  |--- dist [生产目录]
->|  |--- src  [源码目录]
->|  |   |---- commons [公共脚本]
->|  |   |    |----- api.ts [ajax 访问后端接口公共代码]
+>|-- app  
+>|  |--- dist [生产目录]  
+>|  |--- src  [源码目录]  
+>|  |   |---- commons [公共脚本]  
+>|  |   |    |----- api.ts [ajax 访问后端接口公共代码]  
 >|  |   |    |----- router_config.ts [vue-router 前端路由配置代码]
 >|  |   |---- models [数据库实体模型代码目录]
 >|  |   |---- repository [数据库实体操作代码目录]
