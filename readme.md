@@ -88,6 +88,7 @@ npm run build
 #### Vue 项目模板
 
 >|-- app
+>
 >|  |--- dist [生产目录]
 >|  |--- src  [源码目录]
 >|  |   |---- commons [公共脚本]
