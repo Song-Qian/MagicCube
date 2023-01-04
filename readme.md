@@ -608,9 +608,4 @@ class UserService extends HttpService<User> {
 
 #### HttpService 请求生命周期
 
-∷∷∷∷∷∷         ∷∷∷∷∷∷∷∷         ∷∷∷∷∷        ∷∷∷∷∷∷∷∷         ∷∷∷∷∷∷∷
-∷Request ∷ ==> ∷ BeforeHook ∷ ==> ∷   api   ∷ ==> ∷   AfterHook  ∷ ==> ∷ FinallyHook
-∷∷∷∷∷∷         ∷∷∷∷∷∷∷∷         ∷∷∷∷∷        ∷∷∷∷∷∷∷∷         ∷∷∷∷∷∷∷
-                                                                                ||               ∷∷∷∷∷∷∷∷         ∷∷∷∷∷∷∷
-                                                                                 ==>            ∷  ErrorHook   ∷ ==> ∷ FinallyHook
-                                                                                                    ∷∷∷∷∷∷∷∷         ∷∷∷∷∷∷∷
+![method-draw-image](./docs/assets/method-draw-image.png)
