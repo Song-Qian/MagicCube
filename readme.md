@@ -442,3 +442,175 @@ HttpService 服务是http restful 风格api 的接口约束，只有实现HttpSe
 
 > 注意：HttpService 需要配合@ApiController修饰符使用，@ApiController 与 Vue-Router 服务端中定义的路由需要唯一，冲突可能会导致某个请求不可使用。供了合理的钩子函数和请求处理函数。
 
+#### Restful Api 接口
+
+**find(params ?: Params) Promise<T[]> | T[]**
+
+*Get 请求， 用于获取数据列表。请求如 ：http://localhost:8080/api/user?args=123*
+
+- params: { query, paginate, route, headers ... } Get请求参数信息。
+
+```javascript
+import { Paginated, Params } from '@feathersjs/feathers'
+import { ApiController, HttpService } from '@skysong/magic-cube'
+import User from './user'
+
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+    public async find(params?: Params): Promise<User | User[] | Paginated<User>> {
+    
+    }
+}
+or
+@ApiControler("/api/user")
+class UserService extends HttpService<User> {
+    public find(params?: Params): Promise<User | User[] | Paginated<User>> {
+    
+    }
+}
+```
+
+**get (id: Id, params?: Params): Promise<T> | T**
+
+*Get请求， 用于获取某个唯一数据，请求如：http://localhost:8080/api/user/1?args=123*
+
+- id: Id 用于匹配HTTP路径段中的ID段。
+- params: { query, paginate, route, headers ... } Get请求参数信息。
+
+```javascript
+import { Id, Paginated, Params } from '@feathersjs/feathers'
+import { ApiController, HttpService } from '@skysong/magic-cube'
+import User from './user'
+
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+    public async get(id: Id, params?: Params): Promise<User> {
+    
+    }
+}
+or
+@ApiControler("/api/user")
+class UserService extends HttpService<User> {
+    public get(id: Id, params?: Params): Promise<User> {
+    
+    }
+}
+```
+
+**create(data: Partial<T> | Array<Partial<T>>, params?: Params) : Promise<T | T[]> | T | T[]**
+
+*Post请求， 用于添加一条或多条数据， 请求如：http://localhost:8080/api/user*
+
+- data: Partial<T> | Array<Partial<T>> application/json 格式数据。
+- params:  { query, paginate, route, headers ... } POST请求参数信息。
+
+```javascript
+import { Id, Paginated, Params } from '@feathersjs/feathers'
+import { ApiController, HttpService } from '@skysong/magic-cube'
+import User from './user'
+
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+    public async create(data: Partial<User> | Array<Partial<User>>, params?: Params): Promise<User | User[]> {
+    
+    }
+}
+or
+@ApiControler("/api/user")
+class UserService extends HttpService<User> {
+    public create(data: Partial<User> | Array<Partial<User>>, params?: Params): User | User[] {
+    
+    }
+}
+```
+
+**patch(id: Id, data: Partial<T>, params?: Params) : Promise<T | T[]> | T | T[]**
+
+*Patch 请求， 用于添加或更新一条数据， 请求如：http://localhost:8080/api/user*
+
+- id: Id 用于匹配HTTP路径段中的ID段。
+- data: Partial<T> application/json 格式数据。
+- params:  { query, paginate, route, headers ... } POST请求参数信息。
+
+```javascript
+import { Id, Paginated, Params } from '@feathersjs/feathers'
+import { ApiController, HttpService } from '@skysong/magic-cube'
+import User from './user'
+
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+    public async patch(id: Id, data: Partial<User>, params?: Params): Promise<User | User[]> {
+    
+    }
+}
+or
+@ApiControler("/api/user")
+class UserService extends HttpService<User> {
+    public patch(id: Id, data: Partial<User>, params?: Params): User | User[] {
+    
+    }
+}
+```
+
+**remove(id: Id, params?: Params) : Promise<T | T[]> | T | T[]**
+
+*Delete 请求， 用于删除一条记录，返回删除的记录。*
+
+- id: Id 用于匹配HTTP路径段中的ID段。
+- params:  { query, paginate, route, headers ... } POST请求参数信息。
+
+```javascript
+import { Id, Paginated, Params } from '@feathersjs/feathers'
+import { ApiController, HttpService } from '@skysong/magic-cube'
+import User from './user'
+
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+    public async remove(id: Id, params?: Params): Promise<User | User[]> {
+    
+    }
+}
+or
+@ApiControler("/api/user")
+class UserService extends HttpService<User> {
+    public remove(id: Id, params?: Params): Promise<User | User[]> {
+    
+    }
+}
+```
+
+**update(id: Id, data: T, params: Params): Promise<T | T[]> | T | T[]**
+
+*Put请求， 用于更新一条记录，返回更新的数据。*
+
+- id: Id 用于匹配HTTP路径段中的ID段。
+- params:  { query, paginate, route, headers ... } POST请求参数信息。
+
+```javascript
+import { Id, Paginated, Params } from '@feathersjs/feathers'
+import { ApiController, HttpService } from '@skysong/magic-cube'
+import User from './user'
+
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+    public async update(id: Id, data: User, params?: Params): Promise<User | User[]> {
+    
+    }
+}
+or
+@ApiControler("/api/user")
+class UserService extends HttpService<User> {
+    public update(id: Id, data: User, params?: Params): Promise<User | User[]> {
+    
+    }
+}
+```
+
+#### HttpService 请求生命周期
+
+∷∷∷∷∷∷         ∷∷∷∷∷∷∷∷         ∷∷∷∷∷        ∷∷∷∷∷∷∷∷         ∷∷∷∷∷∷∷
+∷Request ∷ ==> ∷ BeforeHook ∷ ==> ∷   api   ∷ ==> ∷   AfterHook  ∷ ==> ∷ FinallyHook
+∷∷∷∷∷∷         ∷∷∷∷∷∷∷∷         ∷∷∷∷∷        ∷∷∷∷∷∷∷∷         ∷∷∷∷∷∷∷
+                                                                                ||               ∷∷∷∷∷∷∷∷         ∷∷∷∷∷∷∷
+                                                                                 ==>            ∷  ErrorHook   ∷ ==> ∷ FinallyHook
+                                                                                                    ∷∷∷∷∷∷∷∷         ∷∷∷∷∷∷∷
