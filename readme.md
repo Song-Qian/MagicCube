@@ -92,52 +92,52 @@ npm run build
 >|  |--- src  [源码目录]  
 >|  |   |---- commons [公共脚本]  
 >|  |   |    |----- api.ts [ajax 访问后端接口公共代码]  
->|  |   |    |----- router_config.ts [vue-router 前端路由配置代码]
->|  |   |---- models [数据库实体模型代码目录]
->|  |   |---- repository [数据库实体操作代码目录]
->|  |   |    |----- resolver_modules [数据库实体IoC依赖注入模块目录]
->|  |   |---- services [后端服务实现接口目录]
->|  |   |    |----- resolver_modules [后端服务IoC依赖注入模块目录]
->|  |   |---- store [Pinia 前端状态管理代码]
->|  |   |---- view [前端UI视图界面目录]
->|  |   |    |----- entry-client.ts [打包项目，SSR 前端入口文件]
->|  |   |    |----- entry-server.ts [打包项目，SSR 后端入口文件]
->|  |   |    |----- index.tsx  [UI界面入口文件]
->|  |   |---- index.ts [工程入口文件]
->|  |   |---- variables.d.ts [ts 文件支持 sass, scss, css 文件引用兼容文件]
->|  |--- static [静态资源文件]
->|  |--- .babelrc [@babel 7+ 配置文件]
->|  |--- default.ini [项目启动配置文件]
->|  |--- index.html
->|  |--- package.json
->|  |--- tsconfig.jsoniy
+>|  |   |    |----- router_config.ts [vue-router 前端路由配置代码]  
+>|  |   |---- models [数据库实体模型代码目录]  
+>|  |   |---- repository [数据库实体操作代码目录]  
+>|  |   |    |----- resolver_modules [数据库实体IoC依赖注入模块目录]  
+>|  |   |---- services [后端服务实现接口目录]  
+>|  |   |    |----- resolver_modules [后端服务IoC依赖注入模块目录]  
+>|  |   |---- store [Pinia 前端状态管理代码]  
+>|  |   |---- view [前端UI视图界面目录]  
+>|  |   |    |----- entry-client.ts [打包项目，SSR 前端入口文件]  
+>|  |   |    |----- entry-server.ts [打包项目，SSR 后端入口文件]  
+>|  |   |    |----- index.tsx  [UI界面入口文件]  
+>|  |   |---- index.ts [工程入口文件]  
+>|  |   |---- variables.d.ts [ts 文件支持 sass, scss, css 文件引用兼容文件]  
+>|  |--- static [静态资源文件]  
+>|  |--- .babelrc [@babel 7+ 配置文件]  
+>|  |--- default.ini [项目启动配置文件]  
+>|  |--- index.html  
+>|  |--- package.json  
+>|  |--- tsconfig.json  
 
 #### React 项目模板
 
->|-- app
->|  |--- dist [生产目录]
->|  |--- src  [源码目录]
->|  |   |---- commons [公共脚本]
->|  |   |    |----- api.ts [ajax 访问后端接口公共代码]
->|  |   |    |----- magic-suspense.tsx [React.Suspense不支持SSR, Magic.Suspense补全其模块功能]
->|  |   |    |----- provide.ts [React 全局状态上下文管理]
->|  |   |---- models [数据库实体模型代码目录]
->|  |   |---- repository [数据库实体操作代码目录]
->|  |   |    |----- resolver_modules [数据库实体IoC依赖注入模块目录]
->|  |   |---- services [后端服务实现接口目录]
->|  |   |    |----- resolver_modules  [后端服务IoC依赖注入模块目录]
->|  |   |---- view [前端UI视图界面目录]
->|  |   |    |----- entry-client-tsx [打包项目，SSR 前端入口文件]
->|  |   |    |----- entry-server.tsx [打包项目，SSR 后端入口文件]
->|  |   |    |----- index.tsx  [React 路由配置文件，也是UI界面入口文件]
->|  |   |---- index.ts [工程入口文件]
->|  |   |---- variables.d.ts [ts 文件支持 sass, scss, css 文件引用兼容文件]
->|  |--- static  [静态资源文件]
->|  |--- .babelrc  [@babel 7+ 配置文件]
->|  |--- default.ini [项目启动配置文件]
->|  |--- index.html
->|  |--- package.json
->|  |--- tsconfig.json
+>|-- app  
+>|  |--- dist [生产目录]  
+>|  |--- src  [源码目录]  
+>|  |   |---- commons [公共脚本]  
+>|  |   |    |----- api.ts [ajax 访问后端接口公共代码]  
+>|  |   |    |----- magic-suspense.tsx [React.Suspense不支持SSR, Magic.Suspense补全其模块功能]  
+>|  |   |    |----- provide.ts [React 全局状态上下文管理]  
+>|  |   |---- models [数据库实体模型代码目录]  
+>|  |   |---- repository [数据库实体操作代码目录]  
+>|  |   |    |----- resolver_modules [数据库实体IoC依赖注入模块目录]  
+>|  |   |---- services [后端服务实现接口目录]  
+>|  |   |    |----- resolver_modules  [后端服务IoC依赖注入模块目录]  
+>|  |   |---- view [前端UI视图界面目录]  
+>|  |   |    |----- entry-client-tsx [打包项目，SSR 前端入口文件]  
+>|  |   |    |----- entry-server.tsx [打包项目，SSR 后端入口文件]  
+>|  |   |    |----- index.tsx  [React 路由配置文件，也是UI界面入口文件]  
+>|  |   |---- index.ts [工程入口文件]  
+>|  |   |---- variables.d.ts [ts 文件支持 sass, scss, css 文件引用兼容文件]  
+>|  |--- static  [静态资源文件]  
+>|  |--- .babelrc  [@babel 7+ 配置文件]  
+>|  |--- default.ini [项目启动配置文件]  
+>|  |--- index.html  
+>|  |--- package.json  
+>|  |--- tsconfig.json  
 
 脚手架提供两种主流前端Vue & React框架模板，它们之间的目录内容大同小异，通过脚手架构建出来的环境，可以让你快速进入开发环节。
 
