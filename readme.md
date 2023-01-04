@@ -147,7 +147,7 @@ npm run build
 
 每个根应用都需要一个启动入口实例：
 
-```js
+```javascript
 import MagicCube from '@skysong/magic-cube'
 const mc = new MagicCube.Cube({ config });
 ```
