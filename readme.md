@@ -12,6 +12,8 @@
 - 一套代码，能够同时兼容Oracle，MySQL , Sql Server， Postgresql 四种数据库操作
 - 强大的扩展能力，框架内具有丰富的钩子函数和接口扩展能力， 支持更多用户行为
 - 分布式站点，多个MagicCube应用之间可以共享数据信息
+- 即时音视频通信模块，简单实现机器人、聊天室、监控传输应用。
+-  实体即数据库，快速建立前后台一体项目。
 
 ## Installation
 
@@ -454,14 +456,14 @@ HttpService 服务是http restful 风格api 的接口约束，只有实现HttpSe
 import { Paginated, Params } from '@feathersjs/feathers'
 import { ApiController, HttpService } from '@skysong/magic-cube'
 import User from './user'
-
+// 方式一
 @ApiController("/api/user")
 class UserService extends HttpService<User> {
     public async find(params?: Params): Promise<User | User[] | Paginated<User>> {
     
     }
 }
-or
+// 方式二
 @ApiControler("/api/user")
 class UserService extends HttpService<User> {
     public find(params?: Params): Promise<User | User[] | Paginated<User>> {
@@ -481,14 +483,14 @@ class UserService extends HttpService<User> {
 import { Id, Paginated, Params } from '@feathersjs/feathers'
 import { ApiController, HttpService } from '@skysong/magic-cube'
 import User from './user'
-
+// 方式一
 @ApiController("/api/user")
 class UserService extends HttpService<User> {
     public async get(id: Id, params?: Params): Promise<User> {
     
     }
 }
-or
+// 方式二
 @ApiControler("/api/user")
 class UserService extends HttpService<User> {
     public get(id: Id, params?: Params): Promise<User> {
@@ -508,14 +510,14 @@ class UserService extends HttpService<User> {
 import { Id, Paginated, Params } from '@feathersjs/feathers'
 import { ApiController, HttpService } from '@skysong/magic-cube'
 import User from './user'
-
+// 方式一
 @ApiController("/api/user")
 class UserService extends HttpService<User> {
     public async create(data: Partial<User> | Array<Partial<User>>, params?: Params): Promise<User | User[]> {
     
     }
 }
-or
+// 方式二
 @ApiControler("/api/user")
 class UserService extends HttpService<User> {
     public create(data: Partial<User> | Array<Partial<User>>, params?: Params): User | User[] {
@@ -536,14 +538,14 @@ class UserService extends HttpService<User> {
 import { Id, Paginated, Params } from '@feathersjs/feathers'
 import { ApiController, HttpService } from '@skysong/magic-cube'
 import User from './user'
-
+// 方式一
 @ApiController("/api/user")
 class UserService extends HttpService<User> {
     public async patch(id: Id, data: Partial<User>, params?: Params): Promise<User | User[]> {
     
     }
 }
-or
+// 方式二
 @ApiControler("/api/user")
 class UserService extends HttpService<User> {
     public patch(id: Id, data: Partial<User>, params?: Params): User | User[] {
@@ -563,14 +565,14 @@ class UserService extends HttpService<User> {
 import { Id, Paginated, Params } from '@feathersjs/feathers'
 import { ApiController, HttpService } from '@skysong/magic-cube'
 import User from './user'
-
+// 方式一
 @ApiController("/api/user")
 class UserService extends HttpService<User> {
     public async remove(id: Id, params?: Params): Promise<User | User[]> {
     
     }
 }
-or
+// 方式二
 @ApiControler("/api/user")
 class UserService extends HttpService<User> {
     public remove(id: Id, params?: Params): Promise<User | User[]> {
@@ -590,14 +592,14 @@ class UserService extends HttpService<User> {
 import { Id, Paginated, Params } from '@feathersjs/feathers'
 import { ApiController, HttpService } from '@skysong/magic-cube'
 import User from './user'
-
+// 方式一
 @ApiController("/api/user")
 class UserService extends HttpService<User> {
     public async update(id: Id, data: User, params?: Params): Promise<User | User[]> {
     
     }
 }
-or
+// 方式二
 @ApiControler("/api/user")
 class UserService extends HttpService<User> {
     public update(id: Id, data: User, params?: Params): Promise<User | User[]> {
@@ -609,3 +611,456 @@ class UserService extends HttpService<User> {
 #### HttpService 请求生命周期
 
 ![method-draw-image](./docs/assets/method-draw-image.png)
+
+##### Hook 钩子函数
+
+钩子函数主要是在整个请求生命周期过程中，对特定的业务需求定制特别内容，主要是干预请求行为的一个入口。
+
+> BeforeHook: 请求到达Api接口之前触发，包含有请求的信息和内容。
+>
+> AfterHook: 请求在Api返回结果之后触发，包含BeforeHook信息以外，还包含Api请求的结果内容。
+>
+> FinallyHook: 请求在所有钩子函数持行完成之后触发，包含持行过钩子函数的特点内容。
+>
+> ErrorHook: 请求在Api接口出现代码异常时触发，包含异常信息内容。
+
+![method-draw-image-1](./docs/assets/method-draw-image-1.png)
+
+**如何使用钩子函数**
+
+```javascript
+import { ApiController, HttpService } from '@skysong/magic-cube'
+import User from '../models/user'
+
+const fn = (context) => { let { method, type } = context; console.log("hook:", method, type) };
+
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+    
+	get afterHooks() {
+        return {
+            all: [fn]
+        }
+    }
+    
+    get beforeHooks() {
+        return {
+            all: [fn]
+        }
+    }
+
+	get errorHooks() {
+        return {
+            all: [fn]
+        }
+    }
+
+	get finallyHooks() {
+        return {
+            all: [fn]
+        }
+    }
+}
+```
+
+**不同请求的钩子使用**
+
+```javascript
+import { ApiController, HttpService } from '@skysong/magic-cube'
+import User from '../models/user'
+
+const fn = (context) => { let { method, type } = context; console.log("hook:", method, type) };
+
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+    
+	get afterHooks() {
+        return {
+            all: [fn],
+            find: [fn],
+            get: [fn],
+            create: [fn],
+            patch: [fn],
+            remove: [fn],
+            update: [fn]
+        }
+    }
+}
+```
+
+**修饰符方式使用钩子函数**
+
+```javascript
+import { ApiController, BeforeHook, HttpService } from '@skysong/magic-cube'
+import User from '../models/user'
+
+const fn = (context) => { let { method, type } = context; console.log("hook:", method, type) };
+
+@ApiController("/api/user")
+@BeforeHook(fn)
+class UserService extends HttpService<User> {
+}
+```
+
+**修饰符与钩子使用关系**
+
+```javascript
+import { ApiController, BeforeHook, AfterHook, HttpService } from '@skysong/magic-cube'
+import User from '../models/user'
+
+const fn = (context) => { let { method, type } = context; console.log("hook:", method, type) };
+// 示例一
+@ApiController("/api/user")
+@BeforeHook(fn)
+class UserService extends HttpService<User> {}
+// 等价于
+class UserService extends HttpService<User> {
+    get beforeHooks() {
+        return {
+            all: [fn]
+        }
+    }
+}
+
+// 示例二
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+	@BeforeHook(fn)
+    public async find(params?: Params): Promise<User | User[] | Paginated<User>> {}
+}
+//等价于
+class UserService extends HttpService<User> {
+    get beforeHooks() {
+        return {
+            find: [fn]
+        }
+    }
+}
+
+//示例三
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+    @AfterHook(fn)
+    public async find(params?: Params): Promise<User | User[] | Paginated<User>> {}
+}
+// 等价于
+class UserService extends HttpService<User> {
+    get afterHooks() {
+        return {
+            find: [fn]
+        }
+    }
+}
+
+//@ErrorHook, @FinallyHook 参考上述类推使用。
+```
+
+### IRepository 数据库服务
+
+MagicCube框架集成了一套ORM模型数据库支持API，它实现了一部份业务逻辑接口，同时也实现了模型即数据库，项目配置启动，框架则根据代码配置，自动生成数据库，不需要手动去建库，大大提高快速开发。
+
+IRepository 是数据库模型接口(interface)隔离，框架中具体实现ORM数据库功能的是Business_UnitRepositroy实现类，因此MagicCube 暴露出来的接口中是Business_UnitRepositroy，如果你对ORM数据实现感兴趣，你可以继承IRepository，重写Business_UnitRepositroy方式定制自己的模型。
+
+#### 如何启用数据库
+
+```ini
+# 查看项目根目录 default.ini 文件
+[database]
+; 连接客户端类型, mysql, oracle, postgresql, mssql, sqlite3
+client = "mysql"
+; log 日志是否启用
+logger = true
+; 连接配置项
+[database.connection]
+; 数据库服务tcp地址
+host = "localhost"
+; 数据库服务tcp端口
+port = 3306
+; 数据库用户名
+user = "root"
+; 数据库密码
+password = "123456"
+; 数据库库名
+database = "magic"
+; Oracle 数据库连接字符串
+; connectString = "(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1521))) (CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = ORCL)))"
+; 数据Socket连接地址，当tcp连接无效时，可以使用Socket连接。
+; socketPath = "/tmp/socket.sock",
+; 连接超时时间（秒）
+timeout = 6000
+; sqlite3 连接方式配置
+; filename = ":memory:"
+; sqlite3 连接方式参数
+; flags[] = 'OPEN_URI'
+; flags[] = 'OPEN_SHAREDCACHE'
+[database.pool]
+; 连接池最小值
+min = 0
+; 连接池最小值
+max = 100
+```
+
+#### **如何建表**
+
+```javascript
+import {
+    DataTable,
+    TableColumn, 
+    NullableColumn, 
+    NotNullableColumn, 
+    UniqueColumn, 
+    PrimaryColumn, 
+    ForeignColumn, 
+    TableColumnEnum,
+    DropTableIfExists,
+    Business_UnitRepositroy
+} from "@skysong/magic-cube"
+import User from '../models/user'
+
+@DropTableIfExists()
+@DataTable("user", "innodb", "utf8mb4", "utf8mb4_general_ci")
+export default class extends Business_UnitRepositroy<User> {
+
+    @TableColumn('id', TableColumnEnum.String, "主键唯一", [30])
+    @PrimaryColumn()
+    @NotNullableColumn()
+    id !: string;
+
+    @TableColumn('name', TableColumnEnum.String, "用户名", [50])
+    @UniqueColumn({ indexName: "idx_user_name", deferrable: "not deferrable", storageEngineIndexType: "btree", useConstraint: true })
+    @NotNullableColumn()
+    name !: string
+
+    @TableColumn('age', TableColumnEnum.Integer, "年龄", [2])
+    @NotNullableColumn()
+    age !: number
+
+    @TableColumn('email', TableColumnEnum.String, "email", [50])
+    @NullableColumn()
+    eMail !: string
+
+    @TableColumn('sex', TableColumnEnum.BigInteger, "性别", [1])
+    @NullableColumn()
+    sex !: boolean
+
+    @TableColumn('deptid', TableColumnEnum.String, "部门id", [30])
+    @ForeignColumn("id", "department", "user", { onDelete: "CASCADE", onUpdate: "CASCADE" })
+    @NotNullableColumn()
+    deptid !: string;
+    
+}
+```
+
+#### **如何建视图**
+
+```javascript
+import {
+    DataView,
+    TableColumn,
+    DropTableIfExists,
+    TableColumnEnum,
+    Business_UnitRepositroy
+} from '@skysong/magic-cube'
+
+import Model from '../models/view'
+
+@DropTableIfExists()
+@DataView("jurisdiction", "select u.id, u.`name`, u.email, d.`name` department_name, r.`name` role_name  from `user` u inner join department d on (u.deptid = d.id) inner join user_role ur on (u.id = ur.userid) inner join role r on (r.id = ur.roleid)")
+export default class extends Business_UnitRepositroy<Model> {
+
+    @TableColumn("id", TableColumnEnum.String, "主键", [30])
+    id !: string;
+
+    @TableColumn("name", TableColumnEnum.String, "名称", [30])
+    name !: string;
+
+    @TableColumn("email", TableColumnEnum.String, "邮箱", [30])
+    email !: string;
+
+    @TableColumn("department_name", TableColumnEnum.String, "部门名称", [30])
+    department_name !: string;
+
+    @TableColumn("role_name", TableColumnEnum.String, "角色名称", [30])
+    role_name !: string;
+
+}
+```
+
+#### 建库的钩子函数
+
+MagicCube在启动的时候，会自动扫描数据库实现类，根据类的修饰符信息，自动创建表、视图、索引、外键、主键、关系等等，在这个过程当中，同时也有钩子函数被触发。
+
+> $beforeDropTable: @DropTableIfExists 钩子函数，在创建表之前，如果该表存在，则触发此钩子函数。支持async & Promise操作。
+>
+> $afterDropTable:  @DropTableIfExists 规则正常持行，并且当前存在example表存在，则此钩子是表被删除后调用。
+>
+> $beforeCreateTable: 创建表之前持行。钩子函数被调用时，通过返回值判断是否创建表。
+>
+> $beforeTableInitialize: 创建表之后，初始化表的特性之前持行。$beforeCreateTable 返回值为 true, 则此函数持行，反之不会持行。
+>
+> $updateTableColumnProps: 创建表后，初始化表字段特性时持行。$beforeCreateTable 返回值为 true, 则此函数持行，反之不会持行。
+>
+> $afterTableInitialized: 表特性、字段、索引等特性完成初始化后持。$beforeCreateTable 返回值为 true, 则此函数持行，反之不会持行。
+>
+> $afterCreateTable: 创建表之后持行，$beforeCreateTable 返回值为 true, 则此函数持行，反之不会持行。
+>
+> $done: 创建表完成钩子，此钩子函数不受任何钩子函数影响。
+>
+> $errorHandler: 整个建表流程中，当出现代码或SQL异常，将会在这里捕获。
+
+![method-draw-image-2](./docs/assets/method-draw-image-2.png)
+
+```javascript
+import {
+    DataTable,
+    DropTableIfExists,
+    Business_UnitRepositroy
+} from '@skysong/magic-cube'
+import Example from '~/models/example'
+
+@DropTableIfExists()
+@DataTable("example", "innodb", "utf8mb4", "utf8mb4_general_ci")
+export default class example extends Business_UnitRepositroy<Example>{
+
+    /**
+     * @return {*} true 阻止数据表被删除, 反之则遵守 @DropTableIfExists 规则。
+     */    
+    $beforeDropTable(trx: any) : boolean | Promise<boolean> {
+        return false;
+    }
+
+    async $afterDropTable(trx: any) : Promise<void> { }
+
+    /**
+     * @return {*} true 创建表， false 阻止表被创建。
+     */    
+    $beforeCreateTable(trx: any) : boolean | Promise<boolean> {
+        return true;
+    }
+
+    $beforeTableInitialize(trx: any) : Promise<void> | void { }
+
+    $updateTableColumnProps(trx: any, table: any, columnName : string, state : any) : Promise<void> | void  { }
+
+    $afterTableInitialized(trx: any, table: any) : Promise<void> | void { }
+
+    $afterCreateTable(trx: any) : Promise<void> | void{ } 
+
+    $done(trx: any) : Promise<void> | void { }
+
+    $errorHandler(error : any) : Promise<void> | void { }
+}
+```
+
+#### 服务如何调用Repository
+
+> 我们需要先实现  IServiceSynchResolverModule 或者 IServiceAsyncResolverModule 注入接口，两者的区别只在于一个是异步、一个是同步运行。
+
+```javascript
+import { interfaces } from 'inversify'
+import MagicCube, { 
+    IServiceSynchResolverModule, 
+    ConnectionFactory 
+} from '@skysong/magic-cube'
+import UserRepository from './user_repositroy'
+
+export default class RepositorySynchResolverModule implements IServiceSynchResolverModule {
+  constructor () {
+    this.registry = this.loader
+  }
+ 
+  id!: number
+ 
+  public registry!: interfaces.ContainerModuleCallBack
+  
+  public get loader(): interfaces.ContainerModuleCallBack {
+     return (bind, unbind, isBound, rebind) => {
+       const config = MagicCube.Config();
+bind(Symbol.for('magic:dbContext')).toDynamicValue(ConnectionFactory(config.get("database"))).inSingletonScope();
+bind(Symbol.for('magic:table')).to(UserRepository).whenTargetNamed(Symbol.for('magic:user'));
+     }
+   }
+ }
+```
+
+> 完成了注入接口的配置后，我们就可以在服务类里面通过@Repository来调用数据库。
+
+```javascript
+import { Id, Paginated, Params } from '@feathersjs/feathers'
+import { ApiController, HttpService, Repository, Business_UnitRepositroy } from '@skysong/magic-cube'
+import User from './models/user'
+
+@ApiController("/api/user")
+class UserService extends HttpService<User> {
+
+    constructor() {
+        super();
+    }
+
+    @Repository(Symbol.for('magic:user'))
+    private userRepository !: Business_UnitRepositroy<User>;
+
+    public async find(params?: Params): Promise<User | User[] | Paginated<User>> {
+        const me = this;
+        me.state = 200;
+        return me.userRepository.find();
+    }
+
+    public async get(id: Id, params?: Params): Promise<User> {
+        const me = this;;
+        me.state = 200;
+        const result =  ((await me.userRepository.get(id)) || new User());
+        return result;
+    }
+}
+```
+
+### 修饰符
+
+| 修饰符              | 描述                                                        |
+| ------------------- | ----------------------------------------------------------- |
+| @ApiController      | api 地址路由                                                |
+| @BeforeHook         | Api HTTP 请求管道钩子, 在请求到达处理器之前持行             |
+| @AfterHook          | Api HTTP 请求管道钩子, 在请求在处理器持行完成之后持行       |
+| @ErrorHook          | Api HTTP 请求管道钩子, 钩子函数只有在处理器中发生异常时持行 |
+| @FinallyHook        | Api HTTP 请求管道钩子, 钩子函数总是会在处理器之后持行       |
+| @DropTableIfExists  | ORM模式启动时自动检测是否删除已存在的表                     |
+| @DataTable          | ORM模式中表信息修饰器                                       |
+| @Repository         | ORM模式获取DI容器数据库实例对象                             |
+| @DataView           | ORM模式中表视图修饰器                                       |
+| @TableColumn        | ORM模式中与表字段中对应关系映射和字段类型描述修饰器         |
+| @DefaultValueColumn | ORM模式中表字段默认值,只支持数据库.                         |
+| @NullableColumn     | ORM模式中表字段是否允许为NULL修饰器                         |
+| @NotNullableColumn  | ORM模式中表字段是否不为NULL修饰器                           |
+| @IndexColumn        | ORM模式中表字段的索引修饰器                                 |
+| @UniqueColumn       | ORM模式中表字段唯一索引修饰器                               |
+| @PrimaryColumn      | ORM模式中表字段主键修饰器                                   |
+| @ForeignColumn      | ORM模式中表外键修饰器                                       |
+| @IgnoreColumn       | 忽略字段在表中生成。                                        |
+| @IncrementsColumn   | ORM模式中表字段自增修饰器                                   |
+
+### 疑难杂症
+
+Oracle 
+
+## License
+
+The MIT License (MIT)
+
+Copyright © 2020-2030 宋骞 <onlylove1172559463@vip.qq.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

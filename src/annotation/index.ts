@@ -25,7 +25,7 @@ const defineClassMetadata = (key: Symbol, value: any): ClassDecorator => {
  * @param {any} api 地址路由
  * @return {*} \@ApiController("/api/a/path")
  */
-export const ApiController = (value: any) => {
+export const ApiController = (value: string) => {
     return defineClassMetadata(Symbol.for('magic:api'), value);
 }
 
@@ -330,7 +330,7 @@ export const PrimaryColumn = (columns ?: Array<string>) => {
  * @LastEditors: SongQian
  * @Author: SongQian
  * @Date: 2022/07/10 16:02
- * @description: Magic props with incredible abilities~~~
+ * @description: ORM模式中表外键修饰器
  * @param {string} 外键字段
  * @param {string} 外表
  * @param {object} 外键检查约束规则
