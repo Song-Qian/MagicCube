@@ -1041,7 +1041,23 @@ class UserService extends HttpService<User> {
 
 ### 疑难杂症
 
-Oracle 
+- windows 10  PowerShell 持行脚本显示 npm: 无法加载文件 C:\\\nodejs\npm.ps1, 因为在此系统上禁止运行脚本。
+
+
+```powershell
+set-executionpolicy remotesigned
+```
+
+- NJS-05：connot load a node-oracledb binary for Node.js 16.xx.xx (win32 x64) Looked for C:\xxxx
+
+  Oracel 连接需要安装Client端驱动才能使用，详细原理查看：https://oracle.github.io/node-oracledb/INSTALL.html.
+
+```shell
+# Windows 
+LD_LIBRARY_PATH=C:\oracle_client_install
+# Linux
+export LD_LIBRARY_PATH=/usr/local/oracle_client_install
+```
 
 ## License
 

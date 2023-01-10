@@ -1,4 +1,5 @@
 .gitignore
 .npmignore
+/docs/
 /webpack/
 /node_modules/
