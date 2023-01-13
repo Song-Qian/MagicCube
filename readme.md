@@ -1,4 +1,4 @@
-# MagicCube App
+# MagicCube
 
 
 ## 简介
