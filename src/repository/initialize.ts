@@ -1,6 +1,6 @@
 /*
- * @Author: SongQian
- * @LastEditors: SongQian
+ * @Author: @skysong
+ * @LastEditors: @skysong
  * @Date: 2022/06/14 11:45
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: 数据库架构初始化时,连接器和表对应生成逻辑和事件处理.

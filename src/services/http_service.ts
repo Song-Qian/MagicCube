@@ -1,12 +1,12 @@
 /*
- * @Author: SongQian
- * @LastEditors: SongQian
+ * @Author: @skysong
+ * @LastEditors: @skysong
  * @Date: 2021/08/10 06:19
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: Controller 控制器基类
  */
-import { Params, Paginated, Id, ServiceMethods, HookMap } from '@feathersjs/feathers'
-import { injectable } from 'inversify';
+import { Params, Paginated, Id, ServiceMethods, HookMap, SetupMethod } from '@feathersjs/feathers'
+import { injectable } from 'inversify'
 
 @injectable()
 export abstract class HttpService<T extends { [key : string] : any }> implements ServiceMethods<T> {

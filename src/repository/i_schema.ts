@@ -1,6 +1,6 @@
 /*
- * @Author: SongQian
- * @LastEditors: SongQian
+ * @Author: @skysong
+ * @LastEditors: @skysong
  * @Date: 2022/05/26 14:26
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: 数据库ORM架构入口

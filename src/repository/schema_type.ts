@@ -1,6 +1,6 @@
 /*
- * @Author: SongQian
- * @LastEditors: SongQian
+ * @Author: @skysong
+ * @LastEditors: @skysong
  * @Date: 2022/05/25 16:37
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: 数据库类型推断
@@ -8,8 +8,8 @@
 import { Knex as KnexSchema } from "knex"
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/25 16:50
  * @description: 数据库表字段数据类型枚举
  * @return {*}
@@ -38,8 +38,8 @@ export enum TableColumnEnum {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 13:10
  * @description: 表索引
  * @return {*}
@@ -51,8 +51,8 @@ export type TableIndex = {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 13:11
  * @description: 表唯一索引
  * @return {*}
@@ -65,8 +65,8 @@ export type UniqueIndex = {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 13:11
  * @description: 表主键
  * @return {*}
@@ -77,8 +77,8 @@ export type PrimaryKey = {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 13:11
  * @description: 表默认值
  * @return {*}
@@ -86,8 +86,8 @@ export type PrimaryKey = {
 export type DefaultValue = string | number | boolean | null | Date | Array<string> | Array<number> | Array<Date> | Array<boolean> | Buffer;
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/06/01 14:05
  * @description: 表字段发生修改时的状态
  * @return {*}

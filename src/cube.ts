@@ -1,8 +1,11 @@
-/**
- * Developer    :   SongQian
- * Time         :   2020-06-01
- * eMail        :   onlylove1172559463@vip.qq.com
- * Description  :   Magic Cube Main
+/*
+ * @Author: @skysong
+ * @Date: 2023-03-20 14:52:06
+ * @LastEditors: @skysong
+ * @LastEditTime: 2023-04-13 14:45:45
+ * @FilePath: /MagicCube/src/cube.ts
+ * @Description:  Magic Cube Main
+ * @eMail: onlylove1172559463@vip.qq.com
  */
 
 import express from '@feathersjs/express'

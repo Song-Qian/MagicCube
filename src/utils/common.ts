@@ -1,6 +1,6 @@
 /*
- * @Author: SongQian
- * @LastEditors: SongQian
+ * @Author: @skysong
+ * @LastEditors: @skysong
  * @Date: 2022/08/11 06:19
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: 所有公共函数
@@ -82,8 +82,8 @@ export function inTypes<T extends Array<unknown>, M extends (T extends Array<inf
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/30 11:00
  * @description: 判断对象是否是异步函数
  * @param {T} 判断目标
@@ -94,7 +94,7 @@ export function isPromise(target: any) : boolean {
 }
 
 /**
- * @LastEditors: SongQian
+ * @LastEditors: @skysong
  * @Date: 2022/10/23 13:35
  * @description: 同步锁
  * @param {boolean} state
@@ -108,7 +108,7 @@ export function* synchronizationLock(state : boolean) : Generator<boolean, void,
 }
 
 /**
- * @LastEditors: SongQian
+ * @LastEditors: @skysong
  * @Date: 2022/10/23 16:39
  * @description: 步进器
  * @param {Generator} lock 同步锁

@@ -1,6 +1,6 @@
 /*
- * @Author: SongQian
- * @LastEditors: SongQian
+ * @Author: @skysong
+ * @LastEditors: @skysong
  * @Date: 2022/05/25 16:32
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: Magic Cube 扩展注解
@@ -18,8 +18,8 @@ const defineClassMetadata = (key: Symbol, value: any): ClassDecorator => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 11:27
  * @description: RESTFUL Api 接口控制器修饰器
  * @param {any} api 地址路由
@@ -29,9 +29,16 @@ export const ApiController = (value: string) => {
     return defineClassMetadata(Symbol.for('magic:api'), value);
 }
 
+export const FileController = (value: string, opts = { mime: "application/stream" }) => {
+    return (target: Function) => {
+        Reflect.defineMetadata(Symbol.for('magic:file_property'), opts, target);
+        Reflect.defineMetadata(Symbol.for('magic:file'), value, target);
+    }
+} 
+
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 11:28
  * @description: 内置File Stream 文件上传上载复用器,不对外公开
  * @return {*} \@FileMultiplexer()
@@ -41,8 +48,8 @@ export const FileMultiplexer = () => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 11:30
  * @description:  内置RESTFUL 接口复用器,不对外公开
  * @return {*} \@RestMultiplexer()
@@ -52,8 +59,8 @@ export const RestMultiplexer = () => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 11:43
  * @description: 内置View UI接口复用器, 不对外公开
  * @return {*} \@ViewMultiplexer()
@@ -63,8 +70,8 @@ export const ViewMultiplexer = () => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 14:50
  * @description: 内置MySQL架构修饰器,不对外公开
  * @return {*} \@MySqlSchema()
@@ -82,8 +89,8 @@ export const MySqlSchema = (fn: (configure: any) => void) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 14:50
  * @description: 内置MySQL架构修饰器,不对外公开
  * @return {*} \@MySqlSchema()
@@ -101,7 +108,7 @@ export const MySqlSchema = (fn: (configure: any) => void) => {
 }
 
 /**
- * @LastEditors: SongQianLazyServiceIdentifer
+ * @LastEditors: @skysongLazyServiceIdentifer
  * @description: 内置Oracle 架构修饰器,不对外公开
  * @return {*} \@OracleSchema()
  */
@@ -118,8 +125,8 @@ export const OracleSchema = (fn: (configure: any) => void) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 14:54
  * @description: 内置PG架构修饰器,不对外公开
  * @return {*} \@PGSchema()
@@ -137,8 +144,8 @@ export const PGSchema = (fn: (configure: any) => void) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 14:54
  * @description: 内置SQLITE3架构修饰器,不对外公开
  * @return {*} \@Sqlite3Schema()
@@ -156,8 +163,8 @@ export const Sqlite3Schema = (fn: (configure: any) => void) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/29 23:19
  * @description: ORM模式启动时自动检测是否删除已存在的表
  * @return {*} \@DropTableIfExists()
@@ -167,7 +174,7 @@ export const DropTableIfExists = () => {
 }
 
 /**
- * @LastEditors: SongQian
+ * @LastEditors: @skysong
  * @Date: 2022/12/21 13:59
  * @description: ORM模式获取DI容器数据库实例对象
  * @param {string} key named => .whenTargetNamed
@@ -181,8 +188,8 @@ export const Repository = (key ?: string | number | symbol) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/25 17:17
  * @description: ORM模式中表信息修饰器
  * @param {string} 表名
@@ -201,8 +208,8 @@ export const DataTable = (name: string, engine: string = "innodb", charset: stri
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 11:05
  * @description: ORM模式中表视图修饰器
  * @param {string} 视图名
@@ -217,8 +224,8 @@ export const DataView = (viewName: string, sql: string) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/25 17:04
  * @description: ORM模式中与表字段中对应关系映射和字段类型描述修饰器
  * @param {string} 表字段名称
@@ -238,8 +245,8 @@ export const TableColumn = (columnName: string, dataType: TableColumnEnum, descr
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/31 17:41
  * @description: ORM模式中表字段默认值,只支持数据库.
  * @param {DefaultValue} value
@@ -254,8 +261,8 @@ export const DefaultValueColumn = (value: DefaultValue, constraintName: string =
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/25 17:33
  * @description: ORM模式中表字段是否允许为NULL修饰器
  * @return {*} \@NullableColumn()
@@ -267,8 +274,8 @@ export const NullableColumn = () => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/31 17:29
  * @description: ORM模式中表字段是否不为NULL修饰器
  * @return {*} \@NotNullableColumn()
@@ -280,8 +287,8 @@ export const NotNullableColumn = () => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/25 17:57
  * @description:  ORM模式中表字段的索引修饰器
  * @param {string} 索引名称
@@ -296,8 +303,8 @@ export const IndexColumn = (indexName: string, options?: TableIndex) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 10:35
  * @description: ORM模式中表字段唯一索引修饰器
  * @param {string} 索引名称
@@ -312,8 +319,8 @@ export const UniqueColumn = (options: UniqueIndex = { indexName: "idx_name", def
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 10:40
  * @description: ORM模式中表字段主键修饰器
  * @param {array} 复合主键
@@ -327,8 +334,8 @@ export const PrimaryColumn = (columns ?: Array<string>) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/07/10 16:02
  * @description: ORM模式中表外键修饰器
  * @param {string} 外键字段
@@ -348,8 +355,8 @@ export const ForeignColumn = (foreignColumn: string, foreignTable: string, inTab
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/30 22:43
  * @description: ORM模式中表字段自增修饰器
  * @param {object} 自增列是否主键配置，MySQL自增列不支持非主键列
@@ -363,7 +370,7 @@ export const IncrementsColumn = (options?: { primaryKey: boolean }) => {
 }
 
 /**
- * @LastEditors: SongQian
+ * @LastEditors: @skysong
  * @Date: 2022/10/19 11:36
  * @description: 忽略字段在表中生成。
  * @param {Array} Dbs 忽略条件
@@ -377,8 +384,8 @@ export const IgnoreColumn = (Dbs ?: Array<string>) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 11:45
  * @description: Api HTTP 请求管道钩子, 在请求到达处理器之前持行
  * @param {Hook} Function 钩子函数
@@ -469,8 +476,8 @@ export const BeforeHook = (fn: Hook) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 11:53
  * @description: Api HTTP 请求管道钩子, 在请求在处理器持行完成之后持行
  * @param {Hook} Function 钩子函数
@@ -561,8 +568,8 @@ export const AfterHook = (fn: Hook) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 11:53
  * @description: Api HTTP 请求管道钩子, 钩子函数只有在处理器中发生异常时持行
  * @param {Hook} Function 钩子函数
@@ -653,8 +660,8 @@ export const ErrorHook = (fn: Hook) => {
 }
 
 /**
- * @LastEditors: SongQian
- * @Author: SongQian
+ * @LastEditors: @skysong
+ * @Author: @skysong
  * @Date: 2022/05/26 11:53
  * @description: Api HTTP 请求管道钩子, 钩子函数总是会在处理器之后持行
  * @param {Hook} Function 钩子函数

@@ -1,14 +1,18 @@
-/**
- * Developer    :   SongQian
- * Time         :   2020-06-01
- * eMail        :   onlylove1172559463@vip.qq.com
- * Description  :   rest api 请求加载和分发器
+/*
+ * @Author: @skysong
+ * @Date: 2023-03-20 14:52:06
+ * @LastEditors: @skysong
+ * @LastEditTime: 2023-04-13 11:31:52
+ * @FilePath: /MagicCube/src/services/rest_multiplexer.ts
+ * @Description: rest api 请求加载和分发器
+ * @eMail: onlylove1172559463@vip.qq.com
  */
 import path from 'path'
 import { HttpService } from './http_service'
 import HttpRestFormatHook from './rest_format_hook'
 import express from '@feathersjs/express'
 import Feathers, { Hook } from '@feathersjs/feathers'
+import Container from './container'
 import IRestMultiplexer from './i_rest_multiplexer'
 import ResolverModuleFactory from '~/dependency/resolver_module_factory'
 import IServiceAsyncResolverModule from '~/dependency/i_service_async_resolver_module'
@@ -19,7 +23,7 @@ export default class RestMultiplexer extends IRestMultiplexer {
     constructor() {
         super()
         const me = this;
-        me._service_mapping = new Map<string, HttpService<(...args: any[]) => { [key: string] : any }>>();
+        me._service_mapping = Container.getInstance<HttpService<(...args: any[]) => { [key: string] : any }>>();
     }
 
     public CreateServeMultiplexer(configure): express.Application {

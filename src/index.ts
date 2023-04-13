@@ -1,6 +1,6 @@
 /*
- * @Author: SongQian
- * @LastEditors: SongQian
+ * @Author: @skysong
+ * @LastEditors: @skysong
  * @Date: 2020/06/01 06:19
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: Magic Cube Project Start
@@ -10,6 +10,7 @@ import { Cube } from './cube'
 
 export { 
     ApiController, 
+    FileController,
     BeforeHook, 
     AfterHook, 
     ErrorHook, 

@@ -1,6 +1,6 @@
 /*
- * @Author: SongQian
- * @LastEditors: SongQian
+ * @Author: @skysong
+ * @LastEditors: @skysong
  * @Date: 2022/05/26 14:36
  * @eMail: onlylove1172559463@vip.qq.com
  * @Description: PG 数据库架构
