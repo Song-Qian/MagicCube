@@ -2,16 +2,16 @@
  * @Author: @skysong
  * @Date: 2023-03-21 14:08:50
  * @LastEditors: @skysong
- * @LastEditTime: 2023-04-13 15:05:39
+ * @LastEditTime: 2023-04-13 16:33:32
  * @FilePath: /MagicCube/src/services/file_service.ts
  * @Description: 这是一个文件上传，下载处理类
  * @eMail: songqian6110@dingtalk.com
  */
 import { injectable } from "inversify"
-import { Request, Response, NextFunction } from "express"
+import { Request, Response } from "express"
 
 @injectable()
-export default abstract class FileService {
+export abstract class FileService {
 
     public abstract do_upload(res: Request, rep: Response);
 

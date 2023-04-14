@@ -31,6 +31,7 @@ export {
     IncrementsColumn
 } from './annotation'
 export { HttpService } from './services/http_service'
+export { FileService } from './services/file_service'
 export { default as IServiceSynchResolverModule } from './dependency/i_service_synch_resolver_module'
 export { default as IServiceAsyncResolverModule } from './dependency/i_service_async_resolver_module'
 export { default as IRestMultiplexer } from './services/i_rest_multiplexer'

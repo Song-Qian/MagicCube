@@ -9,7 +9,7 @@ import express from '@feathersjs/express'
 import IMultiplexer from './i_multiplexer'
 import Container from './container'
 import { FileMultiplexer } from '../annotation'
-import FileService from './file_service'
+import { FileService } from './file_service'
 
 @FileMultiplexer()
 export default abstract class IFileMultiplexer implements IMultiplexer {

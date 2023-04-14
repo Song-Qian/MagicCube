@@ -2,7 +2,7 @@
  * @Author: @skysong
  * @Date: 2023-03-20 14:52:06
  * @LastEditors: @skysong
- * @LastEditTime: 2023-04-13 14:45:45
+ * @LastEditTime: 2023-04-14 11:36:02
  * @FilePath: /MagicCube/src/cube.ts
  * @Description:  Magic Cube Main
  * @eMail: onlylove1172559463@vip.qq.com

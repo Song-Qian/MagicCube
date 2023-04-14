@@ -29,6 +29,14 @@ export const ApiController = (value: string) => {
     return defineClassMetadata(Symbol.for('magic:api'), value);
 }
 
+/**
+ * @LastEditors: @skysong
+ * @Author: @skysong
+ * @Date: 2022/05/26 11:27
+ * @description: 文件上传控制器修饰器
+ * @param {any} api 地址路由
+ * @return {*} \@FileController("/uplaod")
+ */
 export const FileController = (value: string, opts = { mime: "application/stream" }) => {
     return (target: Function) => {
         Reflect.defineMetadata(Symbol.for('magic:file_property'), opts, target);

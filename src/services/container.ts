@@ -2,7 +2,7 @@
  * @Author: @skysong
  * @Date: 2023-04-13 10:03:51
  * @LastEditors: @skysong
- * @LastEditTime: 2023-04-13 11:33:08
+ * @LastEditTime: 2023-04-13 17:27:13
  * @FilePath: /MagicCube/src/services/container.ts
  * @Description: 分发器容器
  * @eMail: onlylove1172559463@vip.qq.com
@@ -10,7 +10,7 @@
 
 export default class Container<T> {
 
-    private readonly multiplexerContainer !: Map<string, T>;
+    private readonly multiplexerContainer : Map<string, T> = new Map();
 
     private static instance : Container<any>;
 
