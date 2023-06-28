@@ -2,7 +2,7 @@
  * @Author: @skysong
  * @Date: 2023-03-20 14:52:06
  * @LastEditors: @skysong
- * @LastEditTime: 2023-05-26 13:28:21
+ * @LastEditTime: 2023-06-28 17:23:06
  * @FilePath: /MagicCube/src/services/file_multiplexer.ts
  * @Description: file api 请求加载和分发器
  * @eMail: songqian6110@dingtalk.com
@@ -34,7 +34,7 @@ export default class FileMultiplexer extends IFileMultiplexer {
         const Serve = express(Feathers());
         
         const resolveFileStorage = function(service) {
-            const getFilename = service.getFilename || (($0, file, cb) => cb(null, file.originalname));
+            const getFilename = service.getFilename || (($0, file, cb) => cb(null, Buffer.from(file.originalname, 'latin1').toString('utf8')));
             const getDestination = service.getDestination || (($0, $1, cb) => cb(null, configure.get('http.server.staticDir') || os.tmpdir()));
 
             const storage = function() {
@@ -45,8 +45,9 @@ export default class FileMultiplexer extends IFileMultiplexer {
             storage.prototype._handleFile = function _handleFile (req, file, cb) {
                 let that = this
                 let uid = req.headers['magic-uploader-mark-uid'];
-                let detritu = req.headers['magic-uploader-detritu'];
+                let detritu = +(req.headers['magic-uploader-detritu']);
                 let limit = req.headers['magic-uploader-limit'];
+                let md5 = req.headers["magic-uploader-detritu-md5"];
                 if (req.method.toUpperCase() === "POST" && uid && req.headers["x-requested-with"] === "XMLHttpRequest") {
                     that.getDestination(req, file, function(err, destination) {
                         if (err) return cb(err);
@@ -58,25 +59,29 @@ export default class FileMultiplexer extends IFileMultiplexer {
                                 let outStream = fs.createWriteStream(fullPath);
                                 file.stream.pipe(outStream);
                                 outStream.on('error', cb);
-                                outStream.on('finish', () => {
-                                    cb(null, { destination, filename, path: fullPath, size: outStream.bytesWritten });
-                                });
-                                req.res.header("magic-upload-detritu", 1);
+                                outStream.on('finish', () => cb(null, { originalname: filename, size: outStream.bytesWritten }));
+                                req.res.header("magic-upload-detritu", 0);
                                 return;
                             }
                             let mode = fs.statSync(fullPath);
-                            let total = Math.floor(mode.size / limit);
-                            if (mode.isFile() && detritu == total + 1) {
-                                let outStream = fs.createWriteStream(fullPath, { flags: 'w+', mode: 0o777, start: limit * detritu });
+                            let backpoint = Math.floor(mode.size / limit);
+                            let start = backpoint == detritu ? detritu : backpoint;
+                            if (isExists && backpoint > detritu) {
+                                req.res.header("magic-upload-detritu", backpoint);
+                                req.res.on("error", cb);
+                                req.res.on("finish", () => cb(null, { originalname: filename }));
+                                return req.res.end();
+                            }
+                            if (isExists && md5 && mode.isFile()) {
+                                let outStream = fs.createWriteStream(fullPath, { flags: 'a', mode: 0o777, start: start * limit });
                                 file.stream.pipe(outStream);
-                                outStream.on("error", cb);
-                                outStream.on("finish", () => {
-                                    cb(null, { destination, filename, path: fullPath, size: outStream.bytesWritten });
-                                });
-                                req.res.header("magic-upload-detritu", detritu);
+                                outStream.on('error', cb);
+                                outStream.on('finish', () => cb(null, { originalname: filename, size: outStream.bytesWritten }));
+                                req.res.header("magic-upload-detritu", start);
                                 return;
                             }
-                            req.res.header("magic-upload-detritu", total);
+                            req.res.header("magic-upload-detritu", 0);
+                            cb(new Error('上传文件已存在，并且非断点文件续写!'));
                         })
                     })
                 }
