@@ -2,7 +2,7 @@
  * @Author: @skysong
  * @Date: 2023-03-20 14:52:06
  * @LastEditors: @skysong
- * @LastEditTime: 2023-06-28 17:23:06
+ * @LastEditTime: 2023-06-29 15:21:40
  * @FilePath: /MagicCube/src/services/file_multiplexer.ts
  * @Description: file api 请求加载和分发器
  * @eMail: songqian6110@dingtalk.com
@@ -59,7 +59,7 @@ export default class FileMultiplexer extends IFileMultiplexer {
                                 let outStream = fs.createWriteStream(fullPath);
                                 file.stream.pipe(outStream);
                                 outStream.on('error', cb);
-                                outStream.on('finish', () => cb(null, { originalname: filename, size: outStream.bytesWritten }));
+                                outStream.on('finish', () => cb(null, { originalname: filename, size: outStream.bytesWritten, path: fullPath, action: 'upload' }));
                                 req.res.header("magic-upload-detritu", 0);
                                 return;
                             }
@@ -69,14 +69,14 @@ export default class FileMultiplexer extends IFileMultiplexer {
                             if (isExists && backpoint > detritu) {
                                 req.res.header("magic-upload-detritu", backpoint);
                                 req.res.on("error", cb);
-                                req.res.on("finish", () => cb(null, { originalname: filename }));
+                                req.res.on("finish", () => cb(null, { originalname: filename, size: 0, path: fullPath, action: 'upload' }));
                                 return req.res.end();
                             }
                             if (isExists && md5 && mode.isFile()) {
                                 let outStream = fs.createWriteStream(fullPath, { flags: 'a', mode: 0o777, start: start * limit });
                                 file.stream.pipe(outStream);
                                 outStream.on('error', cb);
-                                outStream.on('finish', () => cb(null, { originalname: filename, size: outStream.bytesWritten }));
+                                outStream.on('finish', () => cb(null, { originalname: filename, size: outStream.bytesWritten, path: fullPath, action: 'upload' }));
                                 req.res.header("magic-upload-detritu", start);
                                 return;
                             }
@@ -87,7 +87,25 @@ export default class FileMultiplexer extends IFileMultiplexer {
                 }
 
                 if (req.method.toUpperCase() === "GET" && uid && req.headers["x-requested-with"] === "XMLHttpRequest") {
-                    service.do_download(req, req.res);
+                    that.getDestination(req, file, function(err, destination) {
+                        if (err) return cb(err);
+                        that.getFilename(req, file, function(err, filename) {
+                            if (err) return cb(err);
+                            const cwd = process.cwd();
+                            let fullPath = path.join(cwd, destination, filename);
+                            let isExists = fs.existsSync(fullPath);
+                            if (!isExists) {
+                                return cb(new Error(`the download file does not exists, fullPath: (${fullPath}).`));
+                            }
+                            let mode = fs.statSync(fullPath);
+                            if (mode.isFile() && isExists) {
+                                let inStream = fs.createReadStream(fullPath, { flags: 'r', mode: 0o777, highWaterMark: bytes.parse(configure.get('http.downSize')) });
+                                inStream.on('error', cb);
+                                inStream.on('finish', () => cb(null, { originalname: filename, size: mode.size, path: fullPath, action: 'download' }));
+                                return;
+                            }
+                        })
+                    })
                 }
             }
               
@@ -115,9 +133,9 @@ export default class FileMultiplexer extends IFileMultiplexer {
                 me._service_mapping.set(fullPath, fileStorage);
                 const handlerMakeMiddleware = fileStorage.any();
                 Serve.use(fullPath, (req, res, next) => {
-                    return handlerMakeMiddleware(req, res, (err) => {
+                    return handlerMakeMiddleware(req, res, (err, state) => {
                         if (err) return next(err);
-                        it.do_upload(req, res);
+                        // it.do_upload(req, res);
                         res.end();
                     });
                 });
